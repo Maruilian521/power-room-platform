@@ -4,6 +4,13 @@ import Layout from '../views/Layout.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    // 登录页
+    {
+      path: '/login',
+      name: 'Login',
+      component: () => import('../views/Login.vue'),
+      meta: { title: '登录' }
+    },
     // 全屏大屏（独立路由，无Layout）
     {
       path: '/bigscreen',
@@ -14,7 +21,7 @@ const router = createRouter({
     {
       path: '/',
       component: Layout,
-      redirect: '/ai-brain',
+      redirect: '/login',
       children: [
         // AI大脑
         {
@@ -83,12 +90,19 @@ const router = createRouter({
           meta: { title: '图纸资料', icon: 'Document' }
         },
 
-        // 3.2 配电室运行概览
+        // 3.2 配电室运行概览 (矩阵入口)
         {
           path: 'room/overview/topology',
           name: 'RoomOverviewTopology',
-          component: () => import('../views/DeviceList.vue'),
+          component: () => import('../views/RoomMonitoring/index.vue'),
           meta: { title: '一次接线拓扑', icon: 'Monitor' }
+        },
+        // 新增：配电室详情页 (带参数)
+        {
+          path: 'room/detail/:id',
+          name: 'RoomDetail',
+          component: () => import('../views/RoomDetail/index.vue'),
+          meta: { title: '配电室详情', icon: 'Document' }
         },
         {
           path: 'room/overview/transformer-data',
@@ -189,7 +203,7 @@ const router = createRouter({
         {
           path: 'environment/monitoring',
           name: 'EnvironmentMonitoring',
-          component: () => import('../views/DeviceList.vue'),
+          component: () => import('../views/Environment/index.vue'),
           meta: { title: '环境监测', icon: 'Sunny' }
         },
         {

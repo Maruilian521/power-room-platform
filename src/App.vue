@@ -1,5 +1,10 @@
 <template>
-  <router-view />
+  <div class="app-frame">
+    <!-- Main Viewport -->
+    <div class="app-viewport">
+      <router-view />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -24,8 +29,20 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-#app {
-  width: 100%;
-  height: 100%;
+/* Base App Structure */
+.app-frame {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+.app-viewport {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
 }
 </style>

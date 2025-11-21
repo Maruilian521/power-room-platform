@@ -2,16 +2,22 @@
   <div class="ai-brain-page">
     <!-- 顶部统计卡片 -->
     <div class="stats-row">
-      <div class="stat-card" v-for="stat in stats" :key="stat.label">
-        <div class="stat-icon" :style="{ background: stat.bgColor }">
-          <el-icon :size="32" :color="stat.iconColor">
+      <div class="stat-card-item" v-for="stat in stats" :key="stat.label">
+        <div class="stat-icon-wrapper" :class="stat.type">
+          <el-icon :size="24">
             <component :is="stat.icon" />
           </el-icon>
         </div>
         <div class="stat-content">
           <div class="stat-label">{{ stat.label }}</div>
-          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-value-group">
+            <span class="stat-value">{{ stat.value }}</span>
+            <span class="stat-unit" v-if="stat.unit">{{ stat.unit }}</span>
+          </div>
         </div>
+        <!-- 装饰角标 -->
+        <div class="card-corner corner-tl"></div>
+        <div class="card-corner corner-br"></div>
       </div>
     </div>
 
@@ -22,36 +28,35 @@
         <!-- 常用功能 -->
         <div class="module-card">
           <div class="module-header">
-            <el-icon><Grid /></el-icon>
-            <span>常用功能</span>
-            <el-button text size="small">
+            <div class="header-left">
+              <el-icon><Grid /></el-icon>
+              <span>常用功能</span>
+            </div>
+            <el-button link class="action-btn">
               <el-icon><EditPen /></el-icon>
               自定义
             </el-button>
           </div>
           <div class="function-grid">
             <div class="function-item" v-for="func in functions" :key="func.name">
-              <div class="function-icon" :style="{ background: func.bgColor }">
-                <el-icon :size="28" :color="func.iconColor">
+              <div class="function-icon">
+                <el-icon :size="24">
                   <component :is="func.icon" />
                 </el-icon>
               </div>
               <div class="function-name">{{ func.name }}</div>
             </div>
           </div>
-          <!-- 左右翻页按钮 -->
-          <div class="function-nav">
-            <el-button circle size="small" :icon="ArrowLeft" />
-            <el-button circle size="small" :icon="ArrowRight" />
-          </div>
         </div>
 
         <!-- 历史统计 -->
         <div class="module-card">
           <div class="module-header">
-            <el-icon><PieChart /></el-icon>
-            <span>历史统计</span>
-            <span class="stat-tip">计量工单 5</span>
+            <div class="header-left">
+              <el-icon><PieChart /></el-icon>
+              <span>工单统计</span>
+            </div>
+            <span class="stat-tip">本月累计</span>
           </div>
           <div ref="pieChartRef" class="pie-chart"></div>
         </div>
@@ -61,29 +66,31 @@
       <div class="middle-section">
         <div class="module-card todo-module">
           <div class="module-header">
-            <el-icon><List /></el-icon>
-            <span>待办业务</span>
+            <div class="header-left">
+              <el-icon><List /></el-icon>
+              <span>待办业务</span>
+            </div>
+            <el-tag size="small" effect="dark" class="header-tag">3 项待处理</el-tag>
           </div>
+          
           <div class="todo-tabs">
-            <span class="todo-tab active">全部待办</span>
-            <span class="todo-tab">告警工单</span>
-            <span class="todo-tab">巡检工单</span>
-            <span class="todo-tab">缺陷工单</span>
-            <span class="todo-tab">维修工单</span>
-            <span class="todo-tab">故障抢修</span>
-            <span class="todo-tab">运维</span>
+            <div class="tab-item active">全部待办</div>
+            <div class="tab-item">告警工单</div>
+            <div class="tab-item">巡检工单</div>
+            <div class="tab-item">缺陷工单</div>
           </div>
+
           <div class="todo-list">
             <div class="todo-item" v-for="(todo, index) in todos" :key="index">
-              <div class="todo-tag" :class="todo.type">{{ todo.typeLabel }}</div>
-              <div class="todo-content">
-                <div class="todo-title">{{ todo.title }}</div>
-                <div class="todo-date">
-                  <el-icon><Calendar /></el-icon>
-                  {{ todo.date }}
+              <div class="todo-status-bar" :class="todo.type"></div>
+              <div class="todo-main">
+                <div class="todo-header">
+                  <span class="todo-type-badge" :class="todo.type">{{ todo.typeLabel }}</span>
+                  <span class="todo-time">{{ todo.date }}</span>
                 </div>
+                <div class="todo-title">{{ todo.title }}</div>
               </div>
-              <el-button type="primary" size="small" round>去处理</el-button>
+              <el-button type="primary" size="small" plain class="handle-btn">处理</el-button>
             </div>
           </div>
         </div>
@@ -93,18 +100,24 @@
       <div class="right-section">
         <div class="module-card knowledge-module">
           <div class="module-header">
-            <el-icon><Reading /></el-icon>
-            <span>知识库</span>
-            <el-button text size="small">查看更多 ></el-button>
+            <div class="header-left">
+              <el-icon><Reading /></el-icon>
+              <span>知识库</span>
+            </div>
+            <el-button link class="action-btn">更多 ></el-button>
           </div>
           <div class="knowledge-list">
             <div class="knowledge-item" v-for="(item, index) in knowledgeList" :key="index">
-              <div class="knowledge-dot" :class="item.type"></div>
-              <div class="knowledge-content">
-                <div class="knowledge-tag">[{{ item.tag }}]</div>
-                <div class="knowledge-title">{{ item.title }}</div>
+              <div class="k-icon">
+                <el-icon><Document /></el-icon>
               </div>
-              <div class="knowledge-date">{{ item.date }}</div>
+              <div class="k-content">
+                <div class="k-title">{{ item.title }}</div>
+                <div class="k-meta">
+                  <span class="k-tag">{{ item.tag }}</span>
+                  <span class="k-date">{{ item.date }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -114,22 +127,23 @@
     <!-- 底部 - 关注指标 -->
     <div class="bottom-section">
       <div class="module-header">
-        <el-icon><TrendCharts /></el-icon>
-        <span>关注指标</span>
+        <div class="header-left">
+          <el-icon><TrendCharts /></el-icon>
+          <span>关键指标监控</span>
+        </div>
       </div>
       <div class="metrics-grid">
         <div class="metric-card" v-for="metric in metrics" :key="metric.title">
-          <div class="metric-header">
+          <div class="metric-header-row">
             <div class="metric-title">{{ metric.title }}</div>
-            <div class="metric-line" :style="{ background: metric.lineColor }"></div>
+            <div class="status-light normal"></div>
           </div>
           <div class="metric-items">
             <div class="metric-item" v-for="item in metric.items" :key="item.label">
-              <div class="metric-label">{{ item.label }}</div>
-              <div class="metric-status">
-                <span class="status-dot" :class="item.status"></span>
-                <span class="metric-key">{{ item.key }}</span>
-                <span class="metric-value">{{ item.value }}</span>
+              <span class="m-label">{{ item.label }}</span>
+              <div class="m-value-group">
+                <span class="m-key">{{ item.key }}</span>
+                <span class="m-value">{{ item.value || '--' }}</span>
               </div>
             </div>
           </div>
@@ -144,82 +158,74 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import * as echarts from 'echarts'
 import {
   Document, Clock, Warning, Check, Position, Operation,
-  User, Monitor, Tools, Calendar, Files, DataAnalysis,
-  Grid, EditPen, ArrowLeft, ArrowRight, PieChart, List,
+  User, Monitor, Tools, Files,
+  Grid, EditPen, PieChart, List,
   Reading, TrendCharts
 } from '@element-plus/icons-vue'
 
 // 顶部统计数据
 const stats = ref([
-  { label: '工单总量', value: 10, icon: Document, bgColor: 'linear-gradient(135deg, #FFE5E5, #FFF)', iconColor: '#FF6B6B' },
-  { label: '待办工单', value: 0, icon: Clock, bgColor: 'linear-gradient(135deg, #E5FFE5, #FFF)', iconColor: '#51CF66' },
-  { label: '超期工单', value: 0, icon: Warning, bgColor: 'linear-gradient(135deg, #FFE5D5, #FFF)', iconColor: '#FF922B' },
-  { label: '已完成工单', value: 1, icon: Check, bgColor: 'linear-gradient(135deg, #E5E5FF, #FFF)', iconColor: '#5C7CFA' },
-  { label: '转派工单', value: 1, icon: Position, bgColor: 'linear-gradient(135deg, #FFE5F5, #FFF)', iconColor: '#FF6B9D' },
-  { label: '待审核', value: 109, icon: Operation, bgColor: 'linear-gradient(135deg, #FFE5E5, #FFF)', iconColor: '#FF8787' }
+  { label: '工单总量', value: 128, unit: '个', icon: Document, type: 'primary' },
+  { label: '待办工单', value: 12, unit: '个', icon: Clock, type: 'warning' },
+  { label: '超期工单', value: 3, unit: '个', icon: Warning, type: 'danger' },
+  { label: '已完成', value: 105, unit: '个', icon: Check, type: 'success' },
+  { label: '转派中', value: 8, unit: '个', icon: Position, type: 'info' },
+  { label: '待审核', value: 5, unit: '个', icon: Operation, type: 'primary' }
 ])
 
 // 常用功能
 const functions = ref([
-  { name: '值班统计', icon: User, bgColor: 'rgba(99, 152, 255, 0.1)', iconColor: '#6398FF' },
-  { name: '巡检报告', icon: Files, bgColor: 'rgba(82, 196, 26, 0.1)', iconColor: '#52C41A' },
-  { name: '维修报告', icon: Tools, bgColor: 'rgba(255, 146, 43, 0.1)', iconColor: '#FF922B' },
-  { name: '事件报告', icon: Warning, bgColor: 'rgba(250, 173, 20, 0.1)', iconColor: '#FAAD14' },
-  { name: '处置报告', icon: Check, bgColor: 'rgba(82, 196, 26, 0.1)', iconColor: '#52C41A' },
-  { name: '巡检工单', icon: Monitor, bgColor: 'rgba(114, 46, 209, 0.1)', iconColor: '#722ED1' }
+  { name: '值班统计', icon: User },
+  { name: '巡检报告', icon: Files },
+  { name: '维修报告', icon: Tools },
+  { name: '事件报告', icon: Warning },
+  { name: '处置报告', icon: Check },
+  { name: '巡检工单', icon: Monitor }
 ])
 
 // 待办业务
 const todos = ref([
-  { type: 'alarm', typeLabel: '缺陷', title: '线路绝缘故障段—D20251117123024', date: '10月11日~10月17日' },
-  { type: 'repair', typeLabel: '维修', title: '线路绝缘故障段—D20251117123024', date: '10月11日~10月13日' },
-  { type: 'inspection', typeLabel: '巡检', title: '线路绝缘故障段—D20251117123024', date: '10月11日~10月18日' },
-  { type: 'inspection', typeLabel: '巡检', title: '线路绝缘故障段—D20251117123024', date: '10月11日~10月18日' }
+  { type: 'danger', typeLabel: '紧急缺陷', title: '10kV II段母线绝缘异常报警', date: '10:23:45' },
+  { type: 'warning', typeLabel: '维修', title: '1#变压器温控器显示异常', date: '09:15:00' },
+  { type: 'success', typeLabel: '巡检', title: '每日例行设备巡视任务', date: '08:30:00' },
+  { type: 'success', typeLabel: '巡检', title: '消防设施专项检查', date: '昨天' }
 ])
 
 // 知识库
 const knowledgeList = ref([
-  { type: 'emergency', tag: '应急预案', title: '异常处理无人配电室管理..', date: '2022-10-11' },
-  { type: 'emergency', tag: '应急预案', title: '停电处理、关有关规定...', date: '2022-10-11' },
-  { type: 'emergency', tag: '应急预案', title: '触电处理、配电室有关...', date: '2022-10-11' },
-  { type: 'emergency', tag: '应急预案', title: '市暴雨处理、配电室有关...', date: '2022-10-11' },
-  { type: 'emergency', tag: '应急预案', title: '电器设备火灾事件处理...', date: '2022-10-11' },
-  { type: 'training', tag: '教育培训', title: '设备巡检', date: '2022-10-11' },
-  { type: 'training', tag: '教育培训', title: '自动化提醒', date: '2022-10-11' },
-  { type: 'training', tag: '教育培训', title: '操作安全生产', date: '2022-10-11' },
-  { type: 'training', tag: '教育培训', title: '应急救援', date: '2022-10-11' }
+  { type: 'emergency', tag: '应急预案', title: '配电室水浸事故应急处置流程', date: '2023-10-11' },
+  { type: 'emergency', tag: '操作规程', title: '10kV开关柜停送电操作规范', date: '2023-09-20' },
+  { type: 'emergency', tag: '安全规范', title: '触电急救与心肺复苏操作指南', date: '2023-08-15' },
+  { type: 'emergency', tag: '案例分析', title: '某变电站误操作���故分析报告', date: '2023-07-10' },
 ])
 
 // 关注指标
 const metrics = ref([
   {
-    title: '10kv 4# 母线 AH03柜',
-    lineColor: '#6398FF',
+    title: '10kV 4# 母线 AH03柜',
     items: [
-      { label: '综保跳闸', status: 'normal', key: 'UA电压', value: '10269V' },
-      { label: '综保合闸', status: 'normal', key: 'IA电流', value: '1.9A' },
-      { label: '综保超高温', status: 'normal', key: 'P正向有功', value: '453W' },
-      { label: '综保高温', status: 'normal', key: 'P正向无功', value: '' }
+      { label: 'A相电压', key: 'Ua', value: '10.2 kV' },
+      { label: 'A相电流', key: 'Ia', value: '12.5 A' },
+      { label: '有功功率', key: 'P', value: '453 kW' },
+      { label: '功率因数', key: 'PF', value: '0.92' }
     ]
   },
   {
-    title: '10kv 5# 母线 AH04柜',
-    lineColor: '#52C41A',
+    title: '10kV 5# 母线 AH04柜',
     items: [
-      { label: '综保跳闸', status: 'normal', key: 'UA电压', value: '10269V' },
-      { label: '综保合闸', status: 'normal', key: 'IA电流', value: '1.9A' },
-      { label: '综保超高温', status: 'normal', key: 'P正向有功', value: '453W' },
-      { label: '综保高温', status: 'normal', key: 'P正向无功', value: '' }
+      { label: 'A相电压', key: 'Ua', value: '10.3 kV' },
+      { label: 'A相电流', key: 'Ia', value: '11.8 A' },
+      { label: '有功功率', key: 'P', value: '420 kW' },
+      { label: '功率因数', key: 'PF', value: '0.94' }
     ]
   },
   {
-    title: '10kv 6# 母线 AH09柜',
-    lineColor: '#FF922B',
+    title: '10kV 6# 母线 AH09柜',
     items: [
-      { label: '综保跳闸', status: 'normal', key: 'UA电压', value: '10269V' },
-      { label: '综保合闸', status: 'normal', key: 'IA电流', value: '1.9A' },
-      { label: '综保超高温', status: 'normal', key: 'P正向有功', value: '453W' },
-      { label: '综保高温', status: 'normal', key: 'P正向无功', value: '' }
+      { label: 'A相电压', key: 'Ua', value: '10.2 kV' },
+      { label: 'A相电流', key: 'Ia', value: '13.1 A' },
+      { label: '有功功率', key: 'P', value: '480 kW' },
+      { label: '功率因数', key: 'PF', value: '0.91' }
     ]
   }
 ])
@@ -235,49 +241,53 @@ const initPieChart = () => {
 
   const option = {
     tooltip: {
-      trigger: 'item'
+      trigger: 'item',
+      backgroundColor: 'rgba(0,0,0,0.8)',
+      borderColor: '#00F3FF',
+      textStyle: { color: '#fff' }
     },
     legend: {
-      bottom: '10',
+      bottom: '0',
       left: 'center',
-      itemWidth: 12,
-      itemHeight: 12,
+      itemWidth: 10,
+      itemHeight: 10,
       textStyle: {
-        fontSize: 12,
-        color: '#666'
+        color: '#94A3B8'
       }
     },
     series: [
       {
         name: '工单统计',
         type: 'pie',
-        radius: ['40%', '70%'],
+        radius: ['45%', '70%'],
         center: ['50%', '40%'],
         avoidLabelOverlap: false,
         itemStyle: {
           borderRadius: 4,
-          borderColor: '#fff',
+          borderColor: '#0B1325',
           borderWidth: 2
         },
         label: {
-          show: true,
-          position: 'outside',
-          formatter: '{b}\n{d}%',
-          fontSize: 12
+          show: false,
+          position: 'center'
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: '#fff'
+          }
         },
         labelLine: {
-          show: true,
-          length: 10,
-          length2: 10
+          show: false
         },
         data: [
-          { value: 961, name: '合格', itemStyle: { color: '#5B8FF9' } },
-          { value: 283, name: '故障维修中', itemStyle: { color: '#61DDAA' } },
-          { value: 516, name: '技师维修中', itemStyle: { color: '#F6BD16' } },
-          { value: 22, name: '定期运维22', itemStyle: { color: '#E8684A' } },
-          { value: 5, name: '计量工单', itemStyle: { color: '#6DC8EC' } },
-          { value: 0, name: '报损', itemStyle: { color: '#9270CA' } },
-          { value: 0, name: '待评', itemStyle: { color: '#FF9845' } }
+          { value: 961, name: '已完成', itemStyle: { color: '#00F3FF' } },
+          { value: 283, name: '进行中', itemStyle: { color: '#0078D7' } },
+          { value: 116, name: '待接单', itemStyle: { color: '#1D4ED8' } },
+          { value: 22, name: '已超时', itemStyle: { color: '#FF2E63' } },
+          { value: 5, name: '挂起', itemStyle: { color: '#FFD600' } }
         ]
       }
     ]
@@ -301,411 +311,553 @@ onUnmounted(() => {
 
 <style scoped>
 .ai-brain-page {
+  /* 使用 CSS 变量自适应容器 */
+  height: 100%;
+  overflow-y: auto; /* 允许整体滚动 */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   padding: 20px;
-  background: var(--bg-color-page);
-  min-height: 100vh;
-  overflow-y: auto;
+  color: var(--text-main);
 }
 
-/* 顶部统计卡片 */
+/* 动态光效定义 */
+@keyframes scanline {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 0% 200%; }
+}
+
+@keyframes border-pulse {
+  0% { box-shadow: 0 0 5px #00F0FF, inset 0 0 5px rgba(0, 240, 255, 0.1); border-color: rgba(0, 240, 255, 0.5); }
+  50% { box-shadow: 0 0 15px #00F0FF, inset 0 0 10px rgba(0, 240, 255, 0.3); border-color: rgba(0, 240, 255, 1); }
+  100% { box-shadow: 0 0 5px #00F0FF, inset 0 0 5px rgba(0, 240, 255, 0.1); border-color: rgba(0, 240, 255, 0.5); }
+}
+
+@keyframes corner-flicker {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; filter: drop-shadow(0 0 5px #00F0FF); }
+  52% { opacity: 0.3; }
+  54% { opacity: 0.8; }
+}
+
+/* 通用卡片样式 */
+.module-card {
+  background: rgba(13, 18, 26, 0.85);
+  backdrop-filter: blur(10px);
+  border: none;
+  padding: 24px;
+  box-shadow: 
+    inset 0 0 20px rgba(0, 0, 0, 0.5),
+    0 5px 15px rgba(0, 0, 0, 0.3);
+  height: 100%; 
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  position: relative;
+  /* Tech Chamfered Corners */
+  clip-path: polygon(
+    20px 0, 100% 0, 
+    100% calc(100% - 20px), calc(100% - 20px) 100%, 
+    0 100%, 0 20px
+  );
+  overflow: hidden; /* 限制扫描线溢出 */
+}
+
+/* Border simulation + Scanning Light */
+.module-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  /* 动态扫描边框 */
+  background: linear-gradient(180deg, 
+    rgba(0, 240, 255, 0.1) 0%, 
+    rgba(0, 240, 255, 0.8) 50%, 
+    rgba(0, 240, 255, 0.1) 100%
+  );
+  background-size: 100% 200%;
+  animation: scanline 4s linear infinite;
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+/* Corner accents - Flickering */
+.module-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid transparent;
+  background: 
+    linear-gradient(135deg, #00F0FF 10px, transparent 0) top left,
+    linear-gradient(-45deg, #00F0FF 10px, transparent 0) bottom right;
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  opacity: 0.5;
+  animation: corner-flicker 3s infinite alternate; /* 角标闪烁 */
+}
+
+/* 悬停态增强 */
+.module-card:hover {
+  box-shadow: 
+    inset 0 0 30px rgba(0, 240, 255, 0.15),
+    0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.module-card:hover::before {
+  opacity: 1;
+  animation-duration: 2s; /* 悬停时扫描加速 */
+}
+
+.module-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+  position: relative;
+}
+
+/* Header accent bar - Static glow */
+.module-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: #00F0FF;
+  box-shadow: 0 0 10px #00F0FF;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #FFF;
+  letter-spacing: 1px;
+  font-family: "Microsoft YaHei", sans-serif;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+}
+
+.header-left .el-icon {
+  color: #00F0FF;
+  font-size: 18px;
+  filter: drop-shadow(0 0 5px #00F0FF);
+}
+
+.action-btn {
+  color: #5f748a;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.action-btn:hover {
+  color: #00F0FF;
+  text-shadow: 0 0 5px #00F0FF;
+}
+
+/* 顶部统计行 */
 .stats-row {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 16px;
-  margin-bottom: 20px;
 }
 
-.stat-card {
-  background: #FFFFFF;
-  border-radius: 12px;
+.stat-card-item {
+  position: relative;
+  background: rgba(13, 18, 26, 0.9);
   padding: 20px;
   display: flex;
   align-items: center;
   gap: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: all 0.3s ease;
+  clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
+  /* 静态边框 */
+  border: 1px solid rgba(0, 240, 255, 0.1); 
 }
 
-.stat-card:hover {
+/* Stat card border simulation - Animated on hover */
+.stat-card-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  background: linear-gradient(to bottom, rgba(0, 240, 255, 0.3), transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.stat-card-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: rgba(20, 30, 40, 1);
+  /* 呼吸边框动画 */
+  animation: border-pulse 2s infinite;
+  z-index: 1;
 }
 
-.stat-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
+.stat-card-item:hover::before {
+  background: #00F0FF;
+  box-shadow: 0 0 10px #00F0FF;
+  opacity: 1;
+}
+
+/* 装饰角标 (Removed old style, using ::after in module-card logic if needed, but keeping simple for stats) */
+.card-corner { display: none; } 
+
+.stat-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  border-radius: 2px; /* Square */
   display: flex;
   align-items: center;
   justify-content: center;
+  background: rgba(0, 240, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1);
 }
+
+.stat-icon-wrapper.primary { color: var(--tech-primary); background: rgba(0,243,255,0.1); }
+.stat-icon-wrapper.warning { color: var(--status-warning); background: rgba(255,214,0,0.1); }
+.stat-icon-wrapper.danger { color: var(--status-danger); background: rgba(255,46,99,0.1); }
+.stat-icon-wrapper.success { color: var(--status-success); background: rgba(0,230,118,0.1); }
+.stat-icon-wrapper.info { color: var(--status-info); background: rgba(0,176,255,0.1); }
 
 .stat-content {
   flex: 1;
 }
 
 .stat-label {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 8px;
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-bottom: 4px;
 }
 
 .stat-value {
-  font-size: 28px;
-  font-weight: 600;
-  color: #333;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-bright);
+  font-family: 'DIN Alternate', sans-serif;
 }
 
-/* 主要内容区 */
+.stat-unit {
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-left: 4px;
+}
+
+/* 布局结构 */
 .main-content {
   display: grid;
-  grid-template-columns: 360px 1fr 320px;
+  grid-template-columns: 320px 1fr 320px;
   gap: 20px;
-  margin-bottom: 20px;
+  /* flex: 1; 已移除，允许自然撑开 */
+  min-height: 600px;
 }
 
-.module-card {
-  background: #FFFFFF;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.module-header {
+.left-section, .right-section {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-}
-
-.module-header .el-icon {
-  color: #6398FF;
-}
-
-.module-header .el-button {
-  margin-left: auto;
-  color: #6398FF;
-}
-
-.stat-tip {
-  margin-left: auto;
-  font-size: 12px;
-  color: #999;
-  font-weight: normal;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /* 常用功能 */
 .function-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 12px;
 }
 
 .function-item {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid transparent;
+  padding: 16px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s;
 }
 
 .function-item:hover {
-  transform: translateY(-4px);
+  background: rgba(0,243,255,0.05);
+  border-color: var(--border-dim);
+  transform: translateY(-2px);
 }
 
 .function-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: var(--tech-secondary);
+  transition: color 0.3s;
+}
+
+.function-item:hover .function-icon {
+  color: var(--tech-primary);
 }
 
 .function-name {
-  font-size: 13px;
-  color: #666;
-}
-
-.function-nav {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
+  font-size: 12px;
+  color: var(--text-sub);
 }
 
 /* 饼图 */
 .pie-chart {
-  width: 100%;
-  height: 300px;
+  flex: 1;
+  min-height: 200px;
 }
 
 /* 待办业务 */
-.todo-module {
-  height: fit-content;
-}
-
 .todo-tabs {
   display: flex;
-  gap: 16px;
+  gap: 2px;
+  background: rgba(255,255,255,0.05);
+  padding: 2px;
+  border-radius: 4px;
   margin-bottom: 16px;
-  border-bottom: 1px solid #F0F0F0;
-  padding-bottom: 12px;
 }
 
-.todo-tab {
-  font-size: 14px;
-  color: #666;
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 13px;
   cursor: pointer;
-  padding: 4px 8px;
-  transition: all 0.3s ease;
+  color: var(--text-sub);
+  transition: all 0.3s;
+  border-radius: 2px;
 }
 
-.todo-tab.active {
-  color: #6398FF;
-  font-weight: 600;
-  position: relative;
-}
-
-.todo-tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: -13px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: #6398FF;
+.tab-item.active {
+  background: var(--tech-secondary);
+  color: #fff;
 }
 
 .todo-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 4px;
 }
 
 .todo-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 16px;
-  background: #FAFAFA;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  padding: 12px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border-dim);
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
 }
 
 .todo-item:hover {
-  background: #F5F5F5;
+  background: rgba(255,255,255,0.05);
+  border-color: var(--tech-secondary);
 }
 
-.todo-tag {
-  padding: 4px 12px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
+.todo-status-bar {
+  width: 3px;
+  height: 24px;
+  background: var(--text-sub);
+  border-radius: 2px;
 }
+.todo-status-bar.danger { background: var(--status-danger); box-shadow: 0 0 5px var(--status-danger); }
+.todo-status-bar.warning { background: var(--status-warning); box-shadow: 0 0 5px var(--status-warning); }
+.todo-status-bar.success { background: var(--status-success); box-shadow: 0 0 5px var(--status-success); }
 
-.todo-tag.alarm {
-  background: #FFE5E5;
-  color: #FF4D4F;
-}
-
-.todo-tag.repair {
-  background: #FFE7D5;
-  color: #FF922B;
-}
-
-.todo-tag.inspection {
-  background: #E5F7E5;
-  color: #52C41A;
-}
-
-.todo-content {
+.todo-main {
   flex: 1;
+  overflow: hidden;
+}
+
+.todo-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.todo-type-badge {
+  font-size: 12px;
+  padding: 0 6px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.1);
+}
+
+.todo-type-badge.danger { color: var(--status-danger); background: rgba(255,46,99,0.1); }
+.todo-type-badge.warning { color: var(--status-warning); background: rgba(255,214,0,0.1); }
+
+.todo-time {
+  font-size: 12px;
+  color: var(--text-sub);
 }
 
 .todo-title {
   font-size: 14px;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.todo-date {
-  font-size: 12px;
-  color: #999;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* 知识库 */
 .knowledge-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .knowledge-item {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px;
-  background: #FAFAFA;
-  border-radius: 6px;
-  transition: all 0.3s ease;
+  gap: 12px;
+  padding: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
 .knowledge-item:hover {
-  background: #F5F5F5;
+  background: rgba(255,255,255,0.02);
+  padding-left: 14px;
 }
 
-.knowledge-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
+.k-icon {
+  color: var(--tech-primary);
+  margin-top: 2px;
 }
 
-.knowledge-dot.emergency {
-  background: #FF4D4F;
-}
-
-.knowledge-dot.training {
-  background: #999;
-}
-
-.knowledge-content {
+.k-content {
   flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+}
+
+.k-title {
   font-size: 13px;
+  color: var(--text-main);
+  margin-bottom: 4px;
+  line-height: 1.4;
 }
 
-.knowledge-tag {
-  color: #FF4D4F;
-  font-weight: 600;
-}
-
-.knowledge-title {
-  color: #333;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.knowledge-date {
+.k-meta {
+  display: flex;
+  justify-content: space-between;
   font-size: 12px;
-  color: #999;
+  color: var(--text-sub);
 }
 
-/* 关注指标 */
-.bottom-section {
-  background: #FFFFFF;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+.k-tag {
+  color: var(--tech-secondary);
 }
 
+/* 底部指标 */
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 20px;
 }
 
 .metric-card {
-  border: 1px solid #E8E8E8;
-  border-radius: 8px;
-  padding: 16px;
-  background: #FAFAFA;
+  background: var(--bg-panel-transparent);
+  backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--border-light);
+  border-radius: var(--card-radius);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s ease;
 }
 
-.metric-header {
+.metric-card:hover {
+  border-color: var(--tech-primary);
+  box-shadow: var(--glow-box);
+  transform: translateY(-2px);
+}
+
+.metric-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--border-dim);
 }
 
 .metric-title {
-  font-size: 14px;
   font-weight: 600;
-  color: #333;
-  margin-bottom: 8px;
+  color: var(--tech-primary);
 }
 
-.metric-line {
-  height: 3px;
-  border-radius: 2px;
-  width: 60px;
+.status-light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--status-success);
+  box-shadow: 0 0 8px var(--status-success);
 }
 
 .metric-items {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
 }
 
 .metric-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.metric-label {
-  font-size: 13px;
-  color: #666;
+.m-label {
+  font-size: 12px;
+  color: var(--text-sub);
 }
 
-.metric-status {
+.m-value-group {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  justify-content: space-between;
+  align-items: baseline;
+  background: var(--bg-sidebar-input);
+  padding: 4px 8px;
+  border-radius: 2px;
 }
 
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
+.m-key {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: monospace;
 }
 
-.status-dot.normal {
-  background: #52C41A;
-}
-
-.metric-key {
-  color: #666;
-}
-
-.metric-value {
-  color: #333;
+.m-value {
+  font-size: 14px;
+  color: var(--text-bright);
   font-weight: 600;
-  min-width: 60px;
-  text-align: right;
+  font-family: 'DIN Alternate', sans-serif;
 }
 
+/* 响应式适配 */
 @media (max-width: 1600px) {
-  .stats-row {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .main-content {
-    grid-template-columns: 1fr;
-  }
-
-  .metrics-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .stats-row { grid-template-columns: repeat(3, 1fr); }
+  .main-content { grid-template-columns: 280px 1fr 280px; }
 }
 
 @media (max-width: 1200px) {
-  .stats-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .metrics-grid {
-    grid-template-columns: 1fr;
-  }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .main-content { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
+  .left-section, .right-section { height: auto; }
+  .metrics-grid { grid-template-columns: 1fr; }
 }
 </style>

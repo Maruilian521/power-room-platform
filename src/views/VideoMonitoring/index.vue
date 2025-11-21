@@ -100,7 +100,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { Grid, VideoCamera, Search, Expand, Fold } from '@element-plus/icons-vue'
+import { Grid, VideoCamera, Search } from '@element-plus/icons-vue'
 import CameraTree from './components/CameraTree.vue'
 import VideoWall from './components/VideoWall.vue'
 import PTZControl from './components/PTZControl.vue'
@@ -344,7 +344,7 @@ const handleTileDoubleClick = (index: number) => {
 }
 
 // 显示PTZ控制
-const handleShowPTZ = (video: any, index: number) => {
+const handleShowPTZ = (video: any) => {
   if (!video.supportPTZ) {
     ElMessage.warning('该摄像头不支持云台控制')
     return
@@ -354,7 +354,7 @@ const handleShowPTZ = (video: any, index: number) => {
 }
 
 // 截图
-const handleCapture = (video: any, index: number) => {
+const handleCapture = (video: any) => {
   ElMessage.success(`已截图: ${video.label}`)
   // TODO: 实现截图逻辑
 }

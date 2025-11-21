@@ -10,8 +10,8 @@ import './assets/styles/main.css'
 import './assets/styles/themes.css' // 导入双主题系统
 import './mock' // 导入模拟数据
 
-// 初始化主题（默认日间模式）
-const savedTheme = localStorage.getItem('app-theme') || 'light-blue'
+// 初始化主题（默认 IotMatrix 旗舰版）
+const savedTheme = localStorage.getItem('app-theme') || 'iot-matrix'
 document.documentElement.setAttribute('data-theme', savedTheme)
 
 const app = createApp(App)

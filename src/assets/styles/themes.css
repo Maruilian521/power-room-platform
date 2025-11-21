@@ -1,184 +1,1027 @@
-/* 🎨 蓝色主题系统 */
+/* 🎨 IotMatrix 核心主题系统 */
 
 /* ============================================
-   浅色蓝主题 (Light Blue Theme)
-   适合: 日常运维、专业展示
+   🌌 IotMatrix 旗舰版 (IoT Matrix Tech)
+   风格: 工业级、全息、精密、深空
+   ============================================ */
+[data-theme="iot-matrix"] {
+  /* 核心背景色系 - 极深蓝黑 */
+  --bg-deep: #050810;       /* 最底层背景 */
+  --bg-panel: #0B1325;      /* 面板背景 */
+  --bg-panel-transparent: rgba(11, 19, 37, 0.75); /* 毛玻璃面板 */
+  
+  /* 科技主色调 - 青空蓝体系 */
+  --tech-primary: #00F3FF;  /* 核心高亮，电光青 */
+  --tech-secondary: #0078D7; /* 次级蓝，工业蓝 */
+  --tech-accent: #1D4ED8;   /* 深邃蓝，用于渐变 */
+  --tech-glow: rgba(0, 243, 255, 0.5); /* 光晕色 */
+
+  /* 辅助功能色 - 高对比度 */
+  --status-success: #00E676; /* 荧光绿 */
+  --status-warning: #FFD600; /* 警示黄 */
+  --status-danger: #FF2E63;  /* 激光红 */
+  --status-info: #00B0FF;    /* 信息蓝 */
+
+  /* 边框与线条 */
+  --border-light: rgba(0, 243, 255, 0.3);
+  --border-dim: rgba(0, 120, 215, 0.2);
+  --line-grid: rgba(0, 243, 255, 0.05);
+
+  /* 文字系统 */
+  --text-bright: #FFFFFF;
+  --text-main: #E2E8F0;
+  --text-sub: #94A3B8;
+  --text-muted: #475569;
+
+  /* 阴影与光效 */
+  --glow-box: 0 0 20px rgba(0, 243, 255, 0.15);
+  --glow-text: 0 0 10px rgba(0, 243, 255, 0.5);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  /* 滤镜 */
+  --backdrop-blur: blur(12px);
+
+  /* 形状与装饰 */
+  --card-radius: 2px;        /* 工业风：硬朗直角 */
+  --tech-decoration-opacity: 1; /* 显示科技装饰 */
+
+  /* 侧边栏专属定义 (Matrix版) */
+  --bg-sidebar: #0B1325; /* 与面板一致的深蓝 */
+  --text-sidebar-logo: #FFFFFF;
+  --text-sidebar-menu: #94A3B8;
+  --text-sidebar-hover: #FFFFFF;
+  --bg-sidebar-hover: rgba(0, 243, 255, 0.05);
+  --bg-sidebar-active: rgba(0, 243, 255, 0.1);
+  --bg-sidebar-input: rgba(255, 255, 255, 0.05);
+}
+
+/* 核心背景设定 */
+[data-theme="iot-matrix"] body {
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  /* 移除默认背景图，使用CSS绘制网格 */
+  background-image: 
+    linear-gradient(var(--line-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-grid) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(0, 120, 215, 0.15) 0%, transparent 60%);
+  background-size: 40px 40px, 40px 40px, 100% 100%;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+/* 顶部光效装饰 */
+[data-theme="iot-matrix"] body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--tech-primary), transparent);
+  box-shadow: 0 0 20px var(--tech-primary);
+  z-index: 9999;
+  opacity: 0.8;
+}
+
+/* ============================================
+   🚀 Terran Command (SC2 Revamp Style)
+   参考: StarCraft II UI Revamp (Behance)
+   风格: 现代军工、高精机械、磨砂玻璃、全息蓝
+   ============================================ */
+[data-theme="terran-command"] {
+  /* 核心背景 - 战术岩灰/深空灰 */
+  --bg-deep: #0f1115;
+  --bg-panel: #1a1f26;
+  /* 核心：复合装甲材质 (磨砂玻璃 + 碳纤纹理) */
+  --bg-panel-transparent: 
+    linear-gradient(180deg, rgba(30, 39, 46, 0.85) 0%, rgba(20, 25, 30, 0.9) 100%);
+  
+  /* 战术主色调 - 幽灵战机蓝 */
+  --tech-primary: #00F0FF;   /* Electric Cyan */
+  --tech-secondary: #3B82F6; /* Tactical Blue */
+  --tech-accent: #FFD700;    /* Command Gold (Highlights) */
+  --tech-glow: rgba(0, 240, 255, 0.3);
+
+  /* 状态色 - 鲜亮高对比 */
+  --status-success: #00FF9D;
+  --status-warning: #FFB300;
+  --status-danger: #FF2A4D;
+  --status-info: #00F0FF;
+
+  /* 边框与线条 */
+  --border-light: rgba(0, 240, 255, 0.3);
+  --border-dim: rgba(255, 255, 255, 0.05);
+  --line-grid: rgba(0, 240, 255, 0.05);
+
+  /* 文字系统 */
+  --text-bright: #FFFFFF;
+  --text-main: #E2E8F0;
+  --text-sub: #94A3B8;
+  --text-muted: #64748B;
+
+  /* 特效 */
+  --shadow-card: 
+    0 0 0 1px rgba(0, 240, 255, 0.1),
+    0 4px 20px rgba(0, 0, 0, 0.6);
+  --card-radius: 2px; /* 稍微一点点圆角，不再是纯直角 */
+  --tech-decoration-opacity: 1;
+  --backdrop-blur: blur(12px); /* 开启磨砂玻璃 */
+
+  /* 侧边栏 */
+  --bg-sidebar: #13171c;
+  --text-sidebar-logo: #00F0FF;
+  --text-sidebar-menu: #94A3B8;
+  --text-sidebar-hover: #FFFFFF;
+  --bg-sidebar-hover: rgba(0, 240, 255, 0.1);
+  --bg-sidebar-active: rgba(0, 240, 255, 0.15);
+  --bg-sidebar-input: rgba(0, 0, 0, 0.2);
+}
+
+/* Terran Revamp - 背景 */
+[data-theme="terran-command"] body {
+  background-color: var(--bg-deep);
+  /* 现代战术网格背景 */
+  background-image: 
+    /* 蜂窝网格 - 极淡 */
+    radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.03) 0%, transparent 60%),
+    linear-gradient(0deg, transparent 24%, rgba(0, 240, 255, 0.03) 25%, rgba(0, 240, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 240, 255, 0.03) 75%, rgba(0, 240, 255, 0.03) 76%, transparent 77%, transparent),
+    linear-gradient(90deg, transparent 24%, rgba(0, 240, 255, 0.03) 25%, rgba(0, 240, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 240, 255, 0.03) 75%, rgba(0, 240, 255, 0.03) 76%, transparent 77%, transparent);
+  background-size: 100% 100%, 50px 50px, 50px 50px;
+  color: var(--text-main);
+}
+
+/* 
+   重构卡片样式 - Modern Tech Panel
+   风格: 干净、切割感、高科技面板
+*/
+[data-theme="terran-command"] .module-card,
+[data-theme="terran-command"] .stat-card-item,
+[data-theme="terran-command"] .metric-card,
+[data-theme="terran-command"] .stat-card-kpi {
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: 
+    /* 顶部高亮条 */
+    linear-gradient(90deg, var(--tech-primary) 0%, transparent 100%) top left / 40% 2px no-repeat,
+    /* 底部装饰条 */
+    linear-gradient(90deg, transparent 0%, var(--tech-secondary) 50%, transparent 100%) bottom center / 60% 1px no-repeat,
+    /* 主体背景 - 深色磨砂 */
+    linear-gradient(145deg, rgba(30, 39, 46, 0.6) 0%, rgba(20, 25, 30, 0.8) 100%);
+  
+  padding: 24px;
+  
+  /* 现代切角 - 仅左上和右下 */
+  clip-path: polygon(
+    12px 0, 100% 0, 
+    100% calc(100% - 12px), calc(100% - 12px) 100%, 
+    0 100%, 0 12px
+  );
+  
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+}
+
+/* 角标装饰 - 更加精致 */
+[data-theme="terran-command"] .module-card::before,
+[data-theme="terran-command"] .stat-card-item::before,
+[data-theme="terran-command"] .metric-card::before,
+[data-theme="terran-command"] .stat-card-kpi::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  
+  /* 精细的角落标记 */
+  background:
+    /* 左上角三角 */
+    linear-gradient(135deg, var(--tech-primary) 6px, transparent 6px) top left / 20px 20px no-repeat,
+    /* 右下角三角 */
+    linear-gradient(-45deg, var(--tech-secondary) 6px, transparent 6px) bottom right / 20px 20px no-repeat;
+  
+  opacity: 0.8;
+}
+
+/* 扫描线纹理 - 增加细节 */
+[data-theme="terran-command"] .module-card::after,
+[data-theme="terran-command"] .stat-card-item::after,
+[data-theme="terran-command"] .metric-card::after,
+[data-theme="terran-command"] .stat-card-kpi::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 240, 255, 0.03) 4px,
+    rgba(0, 240, 255, 0.03) 5px
+  );
+  z-index: 1;
+  mix-blend-mode: overlay;
+}
+
+/* 悬停态 - 激活全息投影 */
+[data-theme="terran-command"] .module-card:hover,
+[data-theme="terran-command"] .stat-card-item:hover,
+[data-theme="terran-command"] .metric-card:hover {
+  border-color: rgba(0, 240, 255, 0.4) !important;
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
+  
+  /* 顶部高亮条伸长 */
+  background-size: 100% 2px, 80% 1px, 100% 100%;
+}
+
+/* 标题装饰 */
+[data-theme="terran-command"] .module-card .module-header,
+[data-theme="terran-command"] .metric-card .metric-header-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+[data-theme="terran-command"] .module-card .module-header::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 50%;
+  width: 3px;
+  height: 14px;
+  background: var(--tech-accent); /* 金色点缀 */
+  transform: translateY(-50%);
+  box-shadow: 0 0 6px var(--tech-accent);
+}
+
+/* 
+
+   ============================================
+
+   🛸 SC2 HUD Frame Integration 
+
+   ============================================
+
+   These styles activate the global frame in App.vue
+
+*/
+
+
+
+/* 1. Activate HUD Elements */
+
+[data-theme="terran-command"] .sc2-top-bar {
+
+  display: flex;
+
+  height: 48px;
+
+  background: #151a21;
+
+  border-bottom: 1px solid #2b3645;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 0 20px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+
+  z-index: 100;
+
+  font-family: 'Orbitron', sans-serif;
+
+  letter-spacing: 1px;
+
+  
+
+  /* Top Bar Metallic Texture */
+
+  background-image: 
+
+    linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+
+  background-size: 20px 100%, 100% 4px;
+
+}
+
+
+
+[data-theme="terran-command"] .sc2-bottom-console {
+
+  display: flex;
+
+  height: 160px; /* Standard SC2 Console Height approximation */
+
+  background: #0f1216;
+
+  border-top: 1px solid #2b3645;
+
+  z-index: 100;
+
+  font-family: 'Rajdhani', sans-serif;
+
+  
+
+  /* Console Texture */
+
+  background-image: 
+
+    radial-gradient(circle at 50% 100%, rgba(10, 20, 30, 1) 0%, rgba(15, 18, 22, 1) 100%);
+
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
+
+}
+
+
+
+/* 2. HUD Sections Styling */
+
+/* Top Bar Items */
+
+[data-theme="terran-command"] .sc2-top-left,
+
+[data-theme="terran-command"] .sc2-top-right {
+
+  display: flex;
+
+  gap: 20px;
+
+  align-items: center;
+
+  color: var(--tech-primary);
+
+  font-weight: 700;
+
+  font-size: 14px;
+
+}
+
+
+
+[data-theme="terran-command"] .sc2-top-center {
+
+  position: absolute;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  color: var(--text-bright);
+
+  font-size: 18px;
+
+  text-shadow: 0 0 10px var(--tech-primary);
+
+}
+
+
+
+[data-theme="terran-command"] .sc2-logo {
+
+  color: #FFF;
+
+  text-shadow: 0 0 5px rgba(255,255,255,0.5);
+
+}
+
+
+
+[data-theme="terran-command"] .sc2-resource {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  color: #4ade80; /* Mineral Green */
+
+}
+
+[data-theme="terran-command"] .sc2-resource:nth-child(2) { color: #00F0FF; /* Vespene Blue */ }
+
+[data-theme="terran-command"] .sc2-resource:nth-child(3) { color: #FCD34D; /* Supply Yellow */ }
+
+
+
+/* Bottom Console Items */
+
+[data-theme="terran-command"] .sc2-console-left {
+
+  width: 200px;
+
+  padding: 10px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-right: 1px solid rgba(255,255,255,0.1);
+
+  background: #000;
+
+}
+
+
+
+[data-theme="terran-command"] .sc2-console-right {
+
+  width: 200px;
+
+  padding: 10px;
+
+  border-left: 1px solid rgba(255,255,255,0.1);
+
+  background: #1a1f26;
+
+}
+
+
+
+[data-theme="terran-command"] .sc2-console-center {
+
+  flex: 1;
+
+  padding: 10px 20px;
+
+  background: 
+
+    repeating-linear-gradient(
+
+      45deg,
+
+      rgba(0,0,0,0.2),
+
+      rgba(0,0,0,0.2) 10px,
+
+      transparent 10px,
+
+      transparent 20px
+
+    );
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+
+
+/* Console Widgets */
+
+[data-theme="terran-command"] .sc2-map-frame {
+
+  width: 100%;
+
+  height: 100%;
+
+  border: 2px solid #333;
+
+  border-radius: 4px;
+
+  background: #050505;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.1);
+
+}
+
+
+
+[data-theme="terran-command"] .sc2-map-placeholder {
+
+  color: #555;
+
+  font-size: 10px;
+
+  font-family: 'Orbitron';
+
+}
+
+
+
+[data-theme="terran-command"] .sc2-info-panel {
+
+  width: 100%;
+
+  max-width: 600px;
+
+  height: 100%;
+
+  border: 1px solid var(--tech-secondary);
+
+  background: rgba(0, 240, 255, 0.05);
+
+  padding: 10px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  clip-path: polygon(
+
+    10px 0, 100% 0, 
+
+    100% calc(100% - 10px), calc(100% - 10px) 100%, 
+
+    0 100%, 0 10px
+
+  );
+
+}
+
+
+
+[data-theme="terran-command"] .sc2-info-panel .info-header {
+
+  font-family: 'Orbitron';
+
+  color: var(--tech-accent);
+
+  font-size: 14px;
+
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+
+  padding-bottom: 5px;
+
+  margin-bottom: 5px;
+
+}
+
+
+
+[data-theme="terran-command"] .sc2-info-panel .info-content {
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr 1fr;
+
+  gap: 10px;
+
+  color: var(--tech-primary);
+
+  font-size: 12px;
+
+}
+
+
+
+/* Command Card (Bottom Right) */
+
+[data-theme="terran-command"] .sc2-command-card {
+
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 4px;
+
+  height: 100%;
+
+}
+
+
+
+[data-theme="terran-command"] .cmd-btn {
+
+  background: #222;
+
+  border: 1px solid #444;
+
+  border-radius: 2px;
+
+  position: relative;
+
+  cursor: pointer;
+
+  transition: all 0.1s;
+
+}
+
+
+
+[data-theme="terran-command"] .cmd-btn:hover {
+
+  border-color: var(--tech-primary);
+
+  box-shadow: 0 0 10px var(--tech-primary);
+
+  background: rgba(0, 240, 255, 0.2);
+
+}
+
+
+
+/* 
+
+   3. Scanline Overlay 
+
+   Adds a global CRT scanline effect to the viewport
+
+*/
+
+[data-theme="terran-command"] .app-viewport::after {
+
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+
+  left: 0;
+
+  width: 100%;
+
+  height: 100%;
+
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+
+  background-size: 100% 4px, 6px 100%;
+
+  z-index: 9999;
+
+  pointer-events: none;
+
+}
+
+
+
+/* 
+
+   ============================================
+
+   🛸 SC2 Sidebar / Main Menu Restoration 
+
+   ============================================
+
+*/
+
+
+
+/* Sidebar Container */
+
+[data-theme="terran-command"] .sidebar {
+
+  background: rgba(10, 12, 16, 0.85) !important; /* Deep space black/blue */
+
+  border-right: 1px solid rgba(0, 240, 255, 0.15) !important;
+
+  backdrop-filter: blur(10px);
+
+  position: relative;
+
+}
+
+
+
+/* Logo Area */
+
+[data-theme="terran-command"] .logo {
+
+  background: linear-gradient(180deg, rgba(0, 240, 255, 0.1) 0%, transparent 100%);
+
+  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+
+  font-family: 'Orbitron', sans-serif;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+
+  color: #00F0FF;
+
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+
+}
+
+
+
+/* Search Box */
+
+[data-theme="terran-command"] .search-box :deep(.el-input__wrapper) {
+
+  background: rgba(0, 0, 0, 0.3) !important;
+
+  border: 1px solid rgba(0, 240, 255, 0.2) !important;
+
+  border-radius: 0 !important; /* SC2 is angular */
+
+  box-shadow: none !important;
+
+}
+
+
+
+[data-theme="terran-command"] .search-box :deep(.el-input__inner) {
+
+  color: #00F0FF !important;
+
+  font-family: 'Rajdhani', sans-serif;
+
+}
+
+
+
+/* Menu Reset */
+
+[data-theme="terran-command"] .el-menu {
+
+  border: none !important;
+
+  background: transparent !important;
+
+}
+
+
+
+/* 
+
+   SC2 Menu Items (Vertical List) 
+
+   Style: "Battle.net / Campaign Menu"
+
+*/
+
+
+
+/* Parent Menu Items (Sub-menu titles) */
+
+[data-theme="terran-command"] .el-sub-menu__title {
+
+  color: #8b9bb4 !important; /* Passive Blue-Grey */
+
+  font-family: 'Orbitron', sans-serif;
+
+  font-size: 13px !important;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+
+  height: 50px !important;
+
+  line-height: 50px !important;
+
+  border-left: 3px solid transparent;
+
+  transition: all 0.2s ease;
+
+}
+
+
+
+[data-theme="terran-command"] .el-sub-menu__title:hover {
+
+  background: linear-gradient(90deg, rgba(0, 240, 255, 0.1) 0%, transparent 100%) !important;
+
+  color: #FFFFFF !important;
+
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+
+  border-left-color: rgba(0, 240, 255, 0.5);
+
+}
+
+
+
+/* Sub-menu container */
+
+[data-theme="terran-command"] .el-menu--inline {
+
+  background: rgba(0, 0, 0, 0.2) !important;
+
+  box-shadow: inset 0 10px 20px -10px rgba(0,0,0,0.8);
+
+}
+
+
+
+/* Leaf Menu Items (The actual links) */
+
+[data-theme="terran-command"] .el-menu-item {
+
+  font-family: 'Rajdhani', sans-serif;
+
+  font-weight: 600;
+
+  font-size: 14px !important;
+
+  color: #5A6B7C !important;
+
+  height: 40px !important;
+
+  line-height: 40px !important;
+
+  margin: 2px 0 !important;
+
+  border-left: 3px solid transparent;
+
+  position: relative;
+
+  overflow: hidden;
+
+}
+
+
+
+/* Hover State - Scanline Effect */
+
+[data-theme="terran-command"] .el-menu-item:hover {
+
+  background: rgba(0, 240, 255, 0.05) !important;
+
+  color: #00F0FF !important;
+
+  padding-left: 25px !important; /* Slide effect */
+
+}
+
+
+
+/* Active State - High Energy */
+
+[data-theme="terran-command"] .el-menu-item.is-active {
+
+  background: linear-gradient(90deg, rgba(0, 240, 255, 0.15) 0%, transparent 100%) !important;
+
+  color: #FFFFFF !important;
+
+  border-left: 3px solid #00F0FF;
+
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+
+  padding-left: 25px !important; /* Keep slide */
+
+}
+
+
+
+/* Active State Background Decoration */
+
+[data-theme="terran-command"] .el-menu-item.is-active::after {
+
+  content: '';
+
+  position: absolute;
+
+  top: 0;
+
+  right: 0;
+
+  width: 20px;
+
+  height: 100%;
+
+  background: repeating-linear-gradient(
+
+    45deg,
+
+    rgba(0, 240, 255, 0.2),
+
+    rgba(0, 240, 255, 0.2) 2px,
+
+    transparent 2px,
+
+    transparent 6px
+
+  );
+
+  opacity: 0.5;
+
+}
+
+
+
+/* Icons */
+
+[data-theme="terran-command"] .el-icon {
+
+  color: inherit !important; /* Follow text color */
+
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.5));
+
+}
+
+
+
+[data-theme="terran-command"] .el-sub-menu.is-active > .el-sub-menu__title .el-icon {
+
+  color: #00F0FF !important;
+
+  filter: drop-shadow(0 0 5px #00F0FF);
+
+}
+
+
+
+/* Scrollbar for Sidebar */
+
+[data-theme="terran-command"] .menu-scrollbar ::webkit-scrollbar-thumb {
+
+  background: #1a2635;
+
+  border: 1px solid #334;
+
+}
+
+
+
+
+
+/* ============================================
+   �� IotMatrix 实验室版 (Light Lab)
+   风格: 陶瓷质感、磨砂玻璃、弥散光影、极简
    ============================================ */
 [data-theme="light-blue"] {
-  /* 背景色系 */
-  --bg-gradient-1: #F8FAFC;
-  --bg-gradient-2: #F1F5F9;
-  --bg-gradient-3: #E2E8F0;
+  /* 核心背景 - 苹果灰/冷白 */
+  --bg-deep: #F0F3F5; /* 稍微加深一点背景，对比玻璃感 */
+  --bg-panel: #FFFFFF;
+  /* 核心：晶透渐变玻璃材质 (关键修改) */
+  --bg-panel-transparent: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.65) 100%);
+  
+  /* 科技主色调 - Apple System Blue 体系 */
+  --tech-primary: #0071E3;
+  --tech-secondary: #2997FF;
+  --tech-accent: #F5F9FF;
+  --tech-glow: rgba(0, 113, 227, 0.15);
 
-  /* 毛玻璃效果 */
-  --glass-bg: rgba(255, 255, 255, 0.9);
-  --glass-border: rgba(75, 124, 243, 0.15);
+  /* 辅助功能色 - iOS 风格 */
+  --status-success: #34C759;
+  --status-warning: #FF9500;
+  --status-danger: #FF3B30;
+  --status-info: #5AC8FA;
 
-  /* 主色调 - 蓝色系 */
-  --primary-blue: #4B7CF3;
-  --light-blue: #6B95F5;
-  --dark-blue: #3461E0;
-  --accent-blue: #5B8DEF;
+  /* 边框 - 玻璃边缘高光 */
+  --border-light: rgba(255, 255, 255, 0.8); /* 亮白边框 */
+  --border-dim: rgba(255, 255, 255, 0.4);
+  --line-grid: rgba(0, 113, 227, 0.04); /* 稍微蓝一点的网格 */
 
-  /* 基础色 */
-  --bg-primary: #FFFFFF;
-  --bg-secondary: rgba(255, 255, 255, 0.95);
-  --bg-tertiary: rgba(248, 250, 252, 0.8);
-  --bg-color-page: #F8FAFC;
-  --border-color: rgba(75, 124, 243, 0.12);
-  --text-primary: #1F2937;
-  --text-secondary: #6B7280;
-  --text-tertiary: #9CA3AF;
+  /* 文字系统 */
+  --text-bright: #1D1D1F;
+  --text-main: #333336;
+  --text-sub: #86868B;
+  --text-muted: #AEAEB2;
 
-  /* 状态颜色 */
-  --color-primary: #4B7CF3;
-  --color-success: #10B981;
-  --color-warning: #F59E0B;
-  --color-danger: #EF4444;
-  --color-info: #3B82F6;
+  /* 核心：弥散环境光阴影 */
+  --glow-box: 0 12px 32px rgba(0, 113, 227, 0.15);
+  --glow-text: none;
+  /* 卡片悬浮感 - 带一点点环境蓝 */
+  --shadow-card: 
+    0 2px 8px rgba(0, 0, 0, 0.02), 
+    0 8px 24px rgba(0, 64, 128, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5); /* 内发光增强质感 */
 
-  /* 阴影 */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
-  --shadow-glow: 0 0 20px rgba(75, 124, 243, 0.2);
+  /* 滤镜 - 强毛玻璃 */
+  --backdrop-blur: blur(30px) saturate(160%);
+
+  /* 形状与装饰 */
+  --card-radius: 20px;       /* Apple风：大圆角 */
+  --tech-decoration-opacity: 0; /* 隐藏科技装饰 */
+
+  /* 侧边栏专属 - 像 macOS Finder 侧栏 */
+  --bg-sidebar: rgba(245, 247, 249, 0.85);
+  --text-sidebar-logo: #1D1D1F;
+  --text-sidebar-menu: #515154;
+  --text-sidebar-hover: #0071E3;
+  --bg-sidebar-hover: rgba(0, 0, 0, 0.03);
+  --bg-sidebar-active: rgba(0, 113, 227, 0.08);
+  --bg-sidebar-input: #FFFFFF; /* 纯白输入框 */
 }
 
-/* 浅色主题 - 背景 */
+/* Air版 - 背景微纹理 */
 [data-theme="light-blue"] body {
-  background: var(--bg-gradient-1);
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  /* 极细微的网格，模拟高级纸张或精密仪器 */
+  background-image: 
+    linear-gradient(var(--line-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line-grid) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center top;
   background-attachment: fixed;
-  color: var(--text-primary);
 }
 
-/* ============================================
-   深色蓝主题 (Dark Blue Theme)
-   适合: 夜间模式、科技展示
-   ============================================ */
-[data-theme="dark-blue"] {
-  /* 背景色系 - 深邃蓝黑 */
-  --bg-gradient-1: #0a1628;
-  --bg-gradient-2: #0d2137;
-  --bg-gradient-3: #1a2f4a;
-
-  /* 毛玻璃效果 */
-  --glass-bg: rgba(255, 255, 255, 0.06);
-  --glass-border: rgba(0, 212, 255, 0.15);
-
-  /* 蓝色科技色系 */
-  --tech-blue: #00d4ff;
-  --light-blue: #33ddff;
-  --deep-blue: #0099cc;
-  --dark-blue: #006699;
-  --bright-blue: #00e5ff;
-  --sky-blue: #4dd0e1;
-
-  /* 基础色 */
-  --bg-primary: rgba(15, 23, 42, 0.95);
-  --bg-secondary: rgba(30, 41, 59, 0.9);
-  --bg-tertiary: rgba(51, 65, 85, 0.8);
-  --bg-color-page: #0F172A;
-  --border-color: rgba(148, 163, 184, 0.1);
-  --text-primary: #F1F5F9;
-  --text-secondary: #CBD5E1;
-  --text-tertiary: #94A3B8;
-
-  /* 状态颜色 */
-  --color-primary: #00d4ff;
-  --color-success: #10B981;
-  --color-warning: #F59E0B;
-  --color-danger: #EF4444;
-  --color-info: #3B82F6;
-
-  /* 阴影 - 柔和蓝光 */
-  --shadow-sm: 0 2px 8px rgba(0, 212, 255, 0.1);
-  --shadow-md: 0 4px 20px rgba(0, 212, 255, 0.15);
-  --shadow-lg: 0 8px 40px rgba(0, 212, 255, 0.2);
-  --shadow-glow: 0 0 30px rgba(0, 212, 255, 0.3);
-}
-
-/* 深色主题 - 背景 */
-[data-theme="dark-blue"] body {
-  background: linear-gradient(135deg,
-    var(--bg-gradient-1) 0%,
-    var(--bg-gradient-2) 50%,
-    var(--bg-gradient-3) 100%
-  );
-  background-attachment: fixed;
-  color: var(--text-primary);
-}
-
-/* 深色主题 - 动态背景 */
-[data-theme="dark-blue"] body::before {
+/* 顶部不再需要强烈的装饰线，改为细腻的顶部光晕 */
+[data-theme="light-blue"] body::before {
   content: '';
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 200px;
+  background: radial-gradient(50% 50% at 50% 0%, rgba(0, 113, 227, 0.08) 0%, transparent 100%);
   pointer-events: none;
   z-index: 0;
-  background:
-    radial-gradient(ellipse at 20% 30%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 70%, rgba(123, 47, 247, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(0, 153, 204, 0.05) 0%, transparent 50%);
-  animation: backgroundPulse 10s ease-in-out infinite;
-}
-
-/* 深色主题 - 光点 */
-[data-theme="dark-blue"] body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-  background-image:
-    radial-gradient(2px 2px at 20% 30%, rgba(0, 212, 255, 0.3), transparent),
-    radial-gradient(2px 2px at 60% 70%, rgba(123, 47, 247, 0.3), transparent),
-    radial-gradient(1px 1px at 50% 50%, rgba(0, 229, 255, 0.3), transparent),
-    radial-gradient(1px 1px at 80% 10%, rgba(0, 153, 204, 0.3), transparent),
-    radial-gradient(2px 2px at 90% 60%, rgba(77, 208, 225, 0.2), transparent),
-    radial-gradient(1px 1px at 15% 80%, rgba(0, 212, 255, 0.2), transparent);
-  background-size: 300% 300%;
-  animation: particleShift 15s ease infinite;
-}
-
-/* ============================================
-   全局动画
-   ============================================ */
-@keyframes backgroundPulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.85;
-  }
-}
-
-@keyframes particleShift {
-  0%, 100% {
-    background-position: 0% 0%;
-  }
-  50% {
-    background-position: 100% 100%;
-  }
-}
-
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 5px var(--color-primary), 0 0 10px var(--color-primary);
-  }
-  50% {
-    box-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary);
-  }
-}
-
-/* ============================================
-   通用过渡效果
-   ============================================ */
-* {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }

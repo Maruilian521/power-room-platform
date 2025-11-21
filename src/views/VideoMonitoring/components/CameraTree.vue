@@ -11,7 +11,7 @@
       ref="treeRef"
       @node-click="handleNodeClick"
     >
-      <template #default="{ node, data }">
+      <template #default="{ data }">
         <div
           class="tree-node"
           :class="{
@@ -108,7 +108,7 @@ interface Props {
   selectedCamera?: string
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   selectedCamera: ''
 })
 
