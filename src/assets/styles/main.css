@@ -214,3 +214,158 @@ html, body, #app {
   background: var(--tech-primary);
   box-shadow: 0 0 8px var(--tech-primary);
 }
+
+/* 
+   ☢️ SC2 Confirm Box Custom Style 
+*/
+.sc2-confirm-box {
+  background: rgba(5, 10, 15, 0.95) !important;
+  border: 1px solid #333 !important;
+  box-shadow: 
+    0 0 0 1px rgba(0, 240, 255, 0.2),
+    0 0 30px rgba(0, 0, 0, 0.8) !important;
+  border-radius: 0 !important; /* SC2 is sharp */
+  padding-bottom: 20px !important;
+  width: 400px !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Top Bar Decoration */
+.sc2-confirm-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #FF2E63, transparent); /* Red for danger/logout */
+  box-shadow: 0 0 10px #FF2E63;
+}
+
+/* Corner Accents */
+.sc2-confirm-box::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 20px; height: 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  border-right: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.sc2-confirm-box .el-message-box__header {
+  padding-top: 20px;
+}
+
+.sc2-confirm-box .el-message-box__title {
+  color: #FF2E63 !important; /* Red for logout alert */
+  font-family: 'Orbitron', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 18px;
+  text-shadow: 0 0 5px rgba(255, 46, 99, 0.5);
+}
+
+.sc2-confirm-box .el-message-box__message {
+  color: #ddd !important;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+}
+
+.sc2-confirm-box .el-message-box__btns {
+  padding-top: 20px;
+}
+
+.sc2-confirm-box .el-button {
+  border-radius: 0 !important; /* Sharp buttons */
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #888 !important;
+  transition: all 0.2s;
+}
+
+.sc2-confirm-box .el-button:hover {
+  color: #fff !important;
+  border-color: #fff !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.sc2-confirm-box .el-button--primary {
+  background: rgba(255, 46, 99, 0.1) !important;
+  border: 1px solid #FF2E63 !important;
+  color: #FF2E63 !important;
+  box-shadow: inset 0 0 10px rgba(255, 46, 99, 0.2);
+}
+
+.sc2-confirm-box .el-button--primary:hover {
+  background: #FF2E63 !important;
+  color: #000 !important;
+  box-shadow: 0 0 20px #FF2E63 !important;
+}
+
+/* 
+   🔽 SC2 Dropdown Menu Custom Style 
+   Targeting .sc2-dropdown-popper (defined in el-dropdown popper-class)
+*/
+.el-popper.sc2-dropdown-popper {
+  background: rgba(5, 10, 15, 0.95) !important;
+  border: 1px solid rgba(0, 240, 255, 0.3) !important;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Arrow styling */
+.el-popper.sc2-dropdown-popper .el-popper__arrow::before {
+  background: rgba(5, 10, 15, 0.95) !important;
+  border: 1px solid rgba(0, 240, 255, 0.3) !important;
+  border-bottom-color: transparent !important;
+  border-right-color: transparent !important;
+}
+
+/* Menu container override */
+.sc2-dropdown-popper .el-dropdown-menu {
+  background: transparent !important;
+  border: none !important;
+  padding: 5px 0;
+}
+
+/* List Item Styling */
+.sc2-dropdown-popper .el-dropdown-menu__item {
+  color: #aab !important;
+  font-family: 'Rajdhani', 'Microsoft YaHei', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 10px 20px;
+  transition: all 0.2s;
+}
+
+.sc2-dropdown-popper .el-dropdown-menu__item:hover,
+.sc2-dropdown-popper .el-dropdown-menu__item:focus {
+  background: rgba(0, 240, 255, 0.1) !important;
+  color: #fff !important;
+  text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+  box-shadow: inset 2px 0 0 #00F0FF; /* Left accent bar */
+}
+
+/* Divider Line */
+.sc2-dropdown-popper .el-dropdown-menu__item--divided {
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  margin-top: 5px;
+}
+
+.sc2-dropdown-popper .el-dropdown-menu__item--divided::before {
+  display: none !important; /* Remove default element plus divider overlay if any */
+}
+
+/* Danger Item (Logout) */
+.sc2-dropdown-popper .el-dropdown-menu__item:last-child {
+   color: #FF2E63 !important;
+   margin-top: 2px;
+}
+
+.sc2-dropdown-popper .el-dropdown-menu__item:last-child:hover {
+   background: rgba(255, 46, 99, 0.15) !important;
+   text-shadow: 0 0 5px #FF2E63;
+   color: #FF2E63 !important;
+   box-shadow: inset 2px 0 0 #FF2E63; /* Red accent bar */
+}

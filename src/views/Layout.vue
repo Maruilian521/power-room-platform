@@ -26,12 +26,24 @@
           <el-icon><Bell /></el-icon>
           <span class="status-val text-danger">{{ unreadAlarms }}</span>
         </div>
-        <div class="status-item user-profile">
-          <el-avatar :size="24" :src="avatarUrl" class="user-avatar">
-            <el-icon><User /></el-icon>
-          </el-avatar>
-          <span class="user-name">指挥官</span>
-        </div>
+        
+        <el-dropdown trigger="click" @command="handleUserCommand" popper-class="sc2-dropdown-popper">
+          <div class="status-item user-profile">
+            <el-avatar :size="24" :src="avatarUrl" class="user-avatar">
+              <el-icon><User /></el-icon>
+            </el-avatar>
+            <span class="user-name">指挥官</span>
+            <el-icon class="el-icon--right text-gray-400"><ArrowDown /></el-icon>
+          </div>
+          <template #dropdown>
+            <el-dropdown-menu class="sc2-dropdown">
+              <el-dropdown-item command="profile">个人档案</el-dropdown-item>
+              <el-dropdown-item command="settings">系统设置</el-dropdown-item>
+              <el-dropdown-item divided command="logout" style="color: #F56C6C;">退出系统</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+
         <div class="status-item clock">
           {{ currentTime }}
         </div>
@@ -70,7 +82,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Bell, User } from '@element-plus/icons-vue'
+import { Bell, User, ArrowDown } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { navigationData, type NavItem } from '../config/navigation'
 
 const route = useRoute()
@@ -129,6 +142,34 @@ const handleLevel1Hover = (item: NavItem) => {
 const handleLevel2Click = (item: NavItem) => {
   if (item.path) {
     router.push(item.path)
+  }
+}
+
+const handleUserCommand = (command: string) => {
+  if (command === 'logout') {
+    ElMessageBox.confirm(
+      '确认要退出当前指挥系统吗？',
+      '系统提示',
+      {
+        confirmButtonText: '确认退出',
+        cancelButtonText: '取消',
+        type: 'warning',
+        customClass: 'sc2-confirm-box',
+        center: true
+      }
+    ).then(() => {
+      // 清除可能的 token
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      ElMessage.success('已安全登出')
+      router.push('/login')
+    }).catch(() => {
+      // cancel
+    })
+  } else if (command === 'profile') {
+    ElMessage.info('指挥官档案访问受限 [权限不足]')
+  } else if (command === 'settings') {
+    router.push('/system/users')
   }
 }
 

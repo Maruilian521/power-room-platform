@@ -31,6 +31,12 @@ const router = createRouter({
           meta: { title: '运行总览', icon: 'DataBoard' }
         },
         {
+          path: 'dashboard/orbital-command',
+          name: 'OrbitalCommand',
+          component: () => import('../views/Dashboard/OrbitalCommand.vue'),
+          meta: { title: '轨道指挥中心', icon: 'Aim' }
+        },
+        {
           path: 'dashboard/command-center',
           name: 'CommandCenter',
           component: () => import('../views/Dashboard/CommandCenter.vue'),

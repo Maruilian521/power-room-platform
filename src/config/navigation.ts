@@ -22,6 +22,7 @@ export const navigationData: NavItem[] = [
     icon: DataBoard,
     children: [
       { id: 'overview', label: '运行总览', subLabel: 'OVERVIEW', path: '/dashboard/overview', icon: DataBoard },
+      { id: 'orbital-command', label: '轨道指挥中心', subLabel: 'ORBITAL', path: '/dashboard/orbital-command', icon: Aim },
       { id: 'command-center', label: '战术指挥中心', subLabel: 'COMMAND', path: '/dashboard/command-center', icon: Aim },
       { id: 'security-situation', label: 'AI安全态势', subLabel: 'AI SECURITY', path: '/dashboard/ai-security', icon: Warning }
     ]
