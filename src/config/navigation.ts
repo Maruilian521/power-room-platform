@@ -2,7 +2,7 @@ import {
   DataBoard, Warning, Monitor, VideoCamera, Sunny, 
   Bell, Files, Position, Document, Tools, 
   Histogram, TrendCharts, DataAnalysis, Setting, 
-  User, Collection, MapLocation, List
+  User, Collection, MapLocation, List, Reading, Aim
 } from '@element-plus/icons-vue'
 
 export interface NavItem {
@@ -22,6 +22,7 @@ export const navigationData: NavItem[] = [
     icon: DataBoard,
     children: [
       { id: 'overview', label: '运行总览', subLabel: 'OVERVIEW', path: '/dashboard/overview', icon: DataBoard },
+      { id: 'command-center', label: '战术指挥中心', subLabel: 'COMMAND', path: '/dashboard/command-center', icon: Aim },
       { id: 'security-situation', label: 'AI安全态势', subLabel: 'AI SECURITY', path: '/dashboard/ai-security', icon: Warning }
     ]
   },
@@ -46,7 +47,8 @@ export const navigationData: NavItem[] = [
       { id: 'alarm-center', label: '告警与事件', subLabel: 'ALARMS', path: '/om/alarms', icon: Bell },
       { id: 'work-order', label: '工单管理', subLabel: 'WORK ORDERS', path: '/om/work-orders', icon: Files },
       { id: 'inspection', label: '巡检管理', subLabel: 'INSPECTION', path: '/om/inspection', icon: Position },
-      { id: 'tickets', label: '两票管理', subLabel: 'TICKETS', path: '/om/tickets', icon: Document }
+      { id: 'tickets', label: '两票管理', subLabel: 'TICKETS', path: '/om/tickets', icon: Document },
+      { id: 'knowledge-base', label: '知识库', subLabel: 'KNOWLEDGE', path: '/om/knowledge', icon: Reading }
     ]
   },
   {

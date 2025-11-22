@@ -112,7 +112,7 @@
                    </el-table-column>
                    <el-table-column prop="p2" label="重大缺陷" width="100" />
                    <el-table-column prop="p3" label="一般缺陷" width="100" />
-                   <el-table-column prop="total" label="总���" width="100" sortable />
+                   <el-table-column prop="total" label="总计" width="100" sortable />
                 </el-table>
              </div>
           </div>
@@ -302,7 +302,7 @@ const generateTables = () => {
   ticketData.value = Array.from({length: 8}, (_, i) => ({
     id: `T-20231122-${100+i}`,
     type: Math.random() > 0.5 ? '工作票' : '操作票',
-    content: Math.random() > 0.5 ? '1#变压器检修' : '10kV 母线倒闸操作',
+    content: Math.random() > 0.5 ? '1#变压器检修' : '10kV 母线倒闸��作',
     site: '总部大楼 #1',
     date: '2023-11-' + (22 - i),
     status: 'Qualified'
@@ -513,6 +513,49 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* Tab Fixes */
+.sc2-tabs {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden; /* Prevent tab container itself from overflowing */
+}
+
+:deep(.el-tabs__content) { 
+  flex: 1; 
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; /* Critical for nested flex scroll */
+}
+:deep(.el-tab-pane) { 
+  height: 100%; 
+  overflow-y: auto; 
+  padding-bottom: 20px; /* Prevent bottom cutoff */
+}
+:deep(.el-tabs__header) {
+  margin-bottom: 0; /* Remove default margin to control spacing manually */
+  flex-shrink: 0;
+}
+:deep(.el-tabs__item) {
+  color: var(--text-sub);
+  font-family: 'Rajdhani';
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+:deep(.el-tabs__item.is-active) {
+  color: var(--tech-primary);
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+}
+:deep(.el-tabs__item:hover) {
+  color: var(--tech-primary);
+}
+:deep(.el-tabs__nav-wrap::after) {
+  background-color: rgba(0, 240, 255, 0.1);
+  height: 1px;
+}
+
 .operation-report {
   display: flex;
   flex-direction: column;
@@ -576,48 +619,5 @@ onUnmounted(() => {
   border: 1px solid rgba(255,255,255,0.05);
   border-radius: 4px;
   padding: 16px;
-}
-
-/* Tab Fixes */
-.sc2-tabs {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden; /* Prevent tab container itself from overflowing */
-}
-
-:deep(.el-tabs__content) { 
-  flex: 1; 
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  min-height: 0; /* Critical for nested flex scroll */
-}
-:deep(.el-tab-pane) { 
-  height: 100%; 
-  overflow-y: auto; 
-  padding-bottom: 20px; /* Prevent bottom cutoff */
-}
-:deep(.el-tabs__header) {
-  margin-bottom: 0; /* Remove default margin to control spacing manually */
-  flex-shrink: 0;
-}
-:deep(.el-tabs__item) {
-  color: var(--text-sub);
-  font-family: 'Rajdhani';
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.3s;
-}
-:deep(.el-tabs__item.is-active) {
-  color: var(--tech-primary);
-  text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
-}
-:deep(.el-tabs__item:hover) {
-  color: var(--tech-primary);
-}
-:deep(.el-tabs__nav-wrap::after) {
-  background-color: rgba(0, 240, 255, 0.1);
-  height: 1px;
 }
 </style>

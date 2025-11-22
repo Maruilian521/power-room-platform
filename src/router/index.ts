@@ -31,6 +31,12 @@ const router = createRouter({
           meta: { title: '运行总览', icon: 'DataBoard' }
         },
         {
+          path: 'dashboard/command-center',
+          name: 'CommandCenter',
+          component: () => import('../views/Dashboard/CommandCenter.vue'),
+          meta: { title: '战术指挥中心', icon: 'Aim' }
+        },
+        {
           path: 'dashboard/ai-security',
           name: 'AISecurity',
           component: () => import('../views/AIBrain/index.vue'), // Using existing AI Brain
@@ -94,6 +100,12 @@ const router = createRouter({
           name: 'TicketManagement',
           component: () => import('../views/TicketManagement.vue'),
           meta: { title: '两票管理', icon: 'Document' }
+        },
+        {
+          path: 'om/knowledge',
+          name: 'KnowledgeBase',
+          component: () => import('../views/KnowledgeBase.vue'),
+          meta: { title: '知识库', icon: 'Reading' }
         },
 
         // 4. 资产台账管理 (Assets)
