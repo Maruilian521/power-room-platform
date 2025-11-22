@@ -197,11 +197,11 @@ onUnmounted(() => {
   display: flex;
   height: 100%;
   gap: 0;
-  padding-left: 40px;
+  justify-content: center;
   overflow-x: auto; /* 允许横向滚动 */
   overflow-y: hidden;
   scrollbar-width: none; /* Firefox 隐藏滚动条 */
-  -ms-overflow-style: none; /* IE 10+ 隐藏滚动条 */
+  -ms-overflow-style: none; /* IE 10+ 隐��滚动条 */
 }
 
 .nav-items::-webkit-scrollbar { /* Chrome/Safari 隐藏滚动条 */

@@ -83,180 +83,529 @@
   opacity: 0.8;
 }
 
-/* ============================================
-   🚀 Terran Command (SC2 Revamp Style)
-   参考: StarCraft II UI Revamp (Behance)
-   风格: 现代军工、高精机械、磨砂玻璃、全息蓝
-   ============================================ */
-[data-theme="terran-command"] {
-  /* 核心背景 - 战术岩灰/深空灰 */
-  --bg-deep: #0f1115;
-  --bg-panel: #1a1f26;
-  /* 核心：复合装甲材质 (磨砂玻璃 + 碳纤纹理) */
-  --bg-panel-transparent: 
-    linear-gradient(180deg, rgba(30, 39, 46, 0.85) 0%, rgba(20, 25, 30, 0.9) 100%);
-  
-  /* 战术主色调 - 幽灵战机蓝 */
-  --tech-primary: #00F0FF;   /* Electric Cyan */
-  --tech-secondary: #3B82F6; /* Tactical Blue */
-  --tech-accent: #FFD700;    /* Command Gold (Highlights) */
-  --tech-glow: rgba(0, 240, 255, 0.3);
-
-  /* 状态色 - 鲜亮高对比 */
-  --status-success: #00FF9D;
-  --status-warning: #FFB300;
-  --status-danger: #FF2A4D;
-  --status-info: #00F0FF;
-
-  /* 边框与线条 */
-  --border-light: rgba(0, 240, 255, 0.3);
-  --border-dim: rgba(255, 255, 255, 0.05);
-  --line-grid: rgba(0, 240, 255, 0.05);
-
-  /* 文字系统 */
-  --text-bright: #FFFFFF;
-  --text-main: #E2E8F0;
-  --text-sub: #94A3B8;
-  --text-muted: #64748B;
-
-  /* 特效 */
-  --shadow-card: 
-    0 0 0 1px rgba(0, 240, 255, 0.1),
-    0 4px 20px rgba(0, 0, 0, 0.6);
-  --card-radius: 2px; /* 稍微一点点圆角，不再是纯直角 */
-  --tech-decoration-opacity: 1;
-  --backdrop-blur: blur(12px); /* 开启磨砂玻璃 */
-
-  /* 侧边栏 */
-  --bg-sidebar: #13171c;
-  --text-sidebar-logo: #00F0FF;
-  --text-sidebar-menu: #94A3B8;
-  --text-sidebar-hover: #FFFFFF;
-  --bg-sidebar-hover: rgba(0, 240, 255, 0.1);
-  --bg-sidebar-active: rgba(0, 240, 255, 0.15);
-  --bg-sidebar-input: rgba(0, 0, 0, 0.2);
-}
-
-/* Terran Revamp - 背景 */
-[data-theme="terran-command"] body {
-  background-color: var(--bg-deep);
-  /* 现代战术网格背景 */
-  background-image: 
-    /* 蜂窝网格 - 极淡 */
-    radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.03) 0%, transparent 60%),
-    linear-gradient(0deg, transparent 24%, rgba(0, 240, 255, 0.03) 25%, rgba(0, 240, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 240, 255, 0.03) 75%, rgba(0, 240, 255, 0.03) 76%, transparent 77%, transparent),
-    linear-gradient(90deg, transparent 24%, rgba(0, 240, 255, 0.03) 25%, rgba(0, 240, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 240, 255, 0.03) 75%, rgba(0, 240, 255, 0.03) 76%, transparent 77%, transparent);
-  background-size: 100% 100%, 50px 50px, 50px 50px;
-  color: var(--text-main);
-}
-
-/* 
-   重构卡片样式 - Modern Tech Panel
-   风格: 干净、切割感、高科技面板
-*/
-[data-theme="terran-command"] .module-card,
-[data-theme="terran-command"] .stat-card-item,
-[data-theme="terran-command"] .metric-card,
-[data-theme="terran-command"] .stat-card-kpi {
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  background: 
-    /* 顶部高亮条 */
-    linear-gradient(90deg, var(--tech-primary) 0%, transparent 100%) top left / 40% 2px no-repeat,
-    /* 底部装饰条 */
-    linear-gradient(90deg, transparent 0%, var(--tech-secondary) 50%, transparent 100%) bottom center / 60% 1px no-repeat,
-    /* 主体背景 - 深色磨砂 */
-    linear-gradient(145deg, rgba(30, 39, 46, 0.6) 0%, rgba(20, 25, 30, 0.8) 100%);
-  
-  padding: 24px;
-  
-  /* 现代切角 - 仅左上和右下 */
-  clip-path: polygon(
-    12px 0, 100% 0, 
-    100% calc(100% - 12px), calc(100% - 12px) 100%, 
-    0 100%, 0 12px
-  );
-  
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(12px);
-}
-
-/* 角标装饰 - 更加精致 */
-[data-theme="terran-command"] .module-card::before,
-[data-theme="terran-command"] .stat-card-item::before,
-[data-theme="terran-command"] .metric-card::before,
-[data-theme="terran-command"] .stat-card-kpi::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  pointer-events: none;
-  
-  /* 精细的角落标记 */
-  background:
-    /* 左上角三角 */
-    linear-gradient(135deg, var(--tech-primary) 6px, transparent 6px) top left / 20px 20px no-repeat,
-    /* 右下角三角 */
-    linear-gradient(-45deg, var(--tech-secondary) 6px, transparent 6px) bottom right / 20px 20px no-repeat;
-  
-  opacity: 0.8;
-}
-
-/* 扫描线纹理 - 增加细节 */
-[data-theme="terran-command"] .module-card::after,
-[data-theme="terran-command"] .stat-card-item::after,
-[data-theme="terran-command"] .metric-card::after,
-[data-theme="terran-command"] .stat-card-kpi::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 3px,
-    rgba(0, 240, 255, 0.03) 4px,
-    rgba(0, 240, 255, 0.03) 5px
-  );
-  z-index: 1;
-  mix-blend-mode: overlay;
-}
-
-/* 悬停态 - 激活全息投影 */
-[data-theme="terran-command"] .module-card:hover,
-[data-theme="terran-command"] .stat-card-item:hover,
-[data-theme="terran-command"] .metric-card:hover {
-  border-color: rgba(0, 240, 255, 0.4) !important;
-  box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
-  
-  /* 顶部高亮条伸长 */
-  background-size: 100% 2px, 80% 1px, 100% 100%;
-}
-
-/* 标题装饰 */
-[data-theme="terran-command"] .module-card .module-header,
-[data-theme="terran-command"] .metric-card .metric-header-row {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 12px;
-  margin-bottom: 16px;
-}
-
-[data-theme="terran-command"] .module-card .module-header::before {
-  content: '';
-  position: absolute;
-  left: -4px;
-  top: 50%;
-  width: 3px;
-  height: 14px;
-  background: var(--tech-accent); /* 金色点缀 */
-  transform: translateY(-50%);
-  box-shadow: 0 0 6px var(--tech-accent);
-}
-
 /* 
 
    ============================================
 
+   🚀 Terran Command (SC2 Revamp Style)
+
+   参考: StarCraft II UI Revamp (Behance)
+
+   风格: 现代军工、高精机械、磨砂玻璃、全息蓝
+
+   ============================================ */
+
+
+
+/* 1. Global Animations (From AI Brain) */
+
+@keyframes scanline {
+
+  0% { background-position: 0% 0%; }
+
+  100% { background-position: 0% 200%; }
+
+}
+
+
+
+@keyframes border-pulse {
+
+  0% { box-shadow: 0 0 5px #00F0FF, inset 0 0 5px rgba(0, 240, 255, 0.1); border-color: rgba(0, 240, 255, 0.5); }
+
+  50% { box-shadow: 0 0 15px #00F0FF, inset 0 0 10px rgba(0, 240, 255, 0.3); border-color: rgba(0, 240, 255, 1); }
+
+  100% { box-shadow: 0 0 5px #00F0FF, inset 0 0 5px rgba(0, 240, 255, 0.1); border-color: rgba(0, 240, 255, 0.5); }
+
+}
+
+
+
+@keyframes corner-flicker {
+
+  0%, 100% { opacity: 0.5; }
+
+  50% { opacity: 1; filter: drop-shadow(0 0 5px #00F0FF); }
+
+  52% { opacity: 0.3; }
+
+  54% { opacity: 0.8; }
+
+}
+
+
+
+[data-theme="terran-command"] {
+
+  /* 核心背景 - 战术岩灰/深空灰 */
+
+  --bg-deep: #0f1115;
+
+  --bg-panel: #1a1f26;
+
+  /* 核心：复合装甲材质 (磨砂玻璃 + 碳纤纹理) */
+
+  --bg-panel-transparent: linear-gradient(180deg, rgba(30, 39, 46, 0.85) 0%, rgba(20, 25, 30, 0.9) 100%);
+
+  
+
+  /* 战术主色调 - 幽灵战机蓝 */
+
+  --tech-primary: #00F0FF;   /* Electric Cyan */
+
+  --tech-secondary: #3B82F6; /* Tactical Blue */
+
+  --tech-accent: #FFD700;    /* Command Gold (Highlights) */
+
+  --tech-glow: rgba(0, 240, 255, 0.3);
+
+
+
+  /* 状态色 - 鲜亮高对比 */
+
+  --status-success: #00FF9D;
+
+  --status-warning: #FFB300;
+
+  --status-danger: #FF2A4D;
+
+  --status-info: #00F0FF;
+
+
+
+  /* 边框与线�� */
+
+  --border-light: rgba(0, 240, 255, 0.3);
+
+  --border-dim: rgba(255, 255, 255, 0.05);
+
+  --line-grid: rgba(0, 240, 255, 0.05);
+
+
+
+  /* 文字系统 */
+
+  --text-bright: #FFFFFF;
+
+  --text-main: #E2E8F0;
+
+  --text-sub: #94A3B8;
+
+  --text-muted: #64748B;
+
+
+
+  /* 特效 */
+
+  --shadow-card: 0 5px 15px rgba(0, 0, 0, 0.3);
+
+  --card-radius: 0; /* SC2 is angular */
+
+  --tech-decoration-opacity: 1;
+
+  --backdrop-blur: blur(10px);
+
+
+
+  /* 侧边栏 */
+
+  --bg-sidebar: #13171c;
+
+  --text-sidebar-logo: #00F0FF;
+
+  --text-sidebar-menu: #94A3B8;
+
+  --text-sidebar-hover: #FFFFFF;
+
+  --bg-sidebar-hover: rgba(0, 240, 255, 0.1);
+
+  --bg-sidebar-active: rgba(0, 240, 255, 0.15);
+
+  --bg-sidebar-input: rgba(0, 0, 0, 0.2);
+
+}
+
+
+
+/* Terran Revamp - 背景 */
+
+[data-theme="terran-command"] body {
+
+  background-color: var(--bg-deep);
+
+  /* 现代战术网格背景 */
+
+  background-image: 
+
+    /* 蜂窝网格 - 极淡 */
+
+    radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.03) 0%, transparent 60%),
+
+    linear-gradient(0deg, transparent 24%, rgba(0, 240, 255, 0.03) 25%, rgba(0, 240, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 240, 255, 0.03) 75%, rgba(0, 240, 255, 0.03) 76%, transparent 77%, transparent),
+
+    linear-gradient(90deg, transparent 24%, rgba(0, 240, 255, 0.03) 25%, rgba(0, 240, 255, 0.03) 26%, transparent 27%, transparent 74%, rgba(0, 240, 255, 0.03) 75%, rgba(0, 240, 255, 0.03) 76%, transparent 77%, transparent);
+
+  background-size: 100% 100%, 50px 50px, 50px 50px;
+
+  color: var(--text-main);
+
+}
+
+
+
+/* 
+
+   重构卡片样式 - Using AI Brain Template
+
+*/
+
+[data-theme="terran-command"] .module-card,
+
+[data-theme="terran-command"] .stat-card-item,
+
+[data-theme="terran-command"] .metric-card {
+
+  background: rgba(13, 18, 26, 0.85);
+
+  backdrop-filter: blur(10px);
+
+  border: none;
+
+  padding: 24px;
+
+  box-shadow: 
+
+    inset 0 0 20px rgba(0, 0, 0, 0.5),
+
+    0 5px 15px rgba(0, 0, 0, 0.3);
+
+  position: relative;
+
+  transition: all 0.3s ease;
+
+  /* Tech Chamfered Corners */
+
+  clip-path: polygon(
+
+    20px 0, 100% 0, 
+
+    100% calc(100% - 20px), calc(100% - 20px) 100%, 
+
+    0 100%, 0 20px
+
+  );
+
+  overflow: hidden;
+
+}
+
+
+
+/* Border simulation + Scanning Light */
+
+[data-theme="terran-command"] .module-card::before,
+
+[data-theme="terran-command"] .stat-card-item::before,
+
+[data-theme="terran-command"] .metric-card::before {
+
+  content: '';
+
+  position: absolute;
+
+  inset: 0;
+
+  padding: 1px;
+
+  /* 动态扫描边框 */
+
+  background: linear-gradient(180deg, 
+
+    rgba(0, 240, 255, 0.1) 0%, 
+
+    rgba(0, 240, 255, 0.8) 50%, 
+
+    rgba(0, 240, 255, 0.1) 100%
+
+  );
+
+  background-size: 100% 200%;
+
+  animation: scanline 4s linear infinite;
+
+  -webkit-mask: 
+
+     linear-gradient(#fff 0 0) content-box, 
+
+     linear-gradient(#fff 0 0);
+
+  -webkit-mask-composite: xor;
+
+  mask-composite: exclude;
+
+  pointer-events: none;
+
+  z-index: 1;
+
+  opacity: 0.6;
+
+}
+
+
+
+/* Corner accents - Flickering */
+
+[data-theme="terran-command"] .module-card::after,
+
+[data-theme="terran-command"] .metric-card::after {
+
+  content: '';
+
+  position: absolute;
+
+  inset: 0;
+
+  border: 1px solid transparent;
+
+  background: 
+
+    linear-gradient(135deg, #00F0FF 10px, transparent 0) top left,
+
+    linear-gradient(-45deg, #00F0FF 10px, transparent 0) bottom right;
+
+  background-size: 20px 20px;
+
+  background-repeat: no-repeat;
+
+  pointer-events: none;
+
+  opacity: 0.5;
+
+  animation: corner-flicker 3s infinite alternate;
+
+}
+
+
+
+/* 悬停态增强 */
+
+[data-theme="terran-command"] .module-card:hover,
+
+[data-theme="terran-command"] .stat-card-item:hover,
+
+[data-theme="terran-command"] .metric-card:hover {
+
+  box-shadow: 
+
+    inset 0 0 30px rgba(0, 240, 255, 0.15),
+
+    0 10px 30px rgba(0, 0, 0, 0.5);
+
+  transform: translateY(-2px);
+
+}
+
+
+
+[data-theme="terran-command"] .module-card:hover::before,
+
+[data-theme="terran-command"] .stat-card-item:hover::before,
+
+[data-theme="terran-command"] .metric-card:hover::before {
+
+  opacity: 1;
+
+  animation-duration: 2s;
+
+}
+
+
+
+/* Module Header - From AI Brain */
+
+[data-theme="terran-command"] .module-header {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 20px;
+
+  padding-bottom: 12px;
+
+  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+
+  position: relative;
+
+}
+
+
+
+/* Header accent bar */
+
+[data-theme="terran-command"] .module-header::after {
+
+  content: '';
+
+  position: absolute;
+
+  bottom: -1px;
+
+  left: 0;
+
+  width: 50px;
+
+  height: 3px;
+
+  background: #00F0FF;
+
+  box-shadow: 0 0 10px #00F0FF;
+
+}
+
+
+
+[data-theme="terran-command"] .module-header .title,
+
+[data-theme="terran-command"] .module-header .header-left span {
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  color: #FFF;
+
+  letter-spacing: 1px;
+
+  font-family: "Microsoft YaHei", sans-serif;
+
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+
+}
+
+
+
+[data-theme="terran-command"] .module-header .el-icon {
+
+  color: #00F0FF;
+
+  margin-right: 8px;
+
+  filter: drop-shadow(0 0 5px #00F0FF);
+
+}
+
+
+
+/* Stat Card Item Specifics (Layout only, base card style above) */
+
+[data-theme="terran-command"] .stat-card-item {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  padding: 20px;
+
+  background: rgba(13, 18, 26, 0.9);
+
+  border: 1px solid rgba(0, 240, 255, 0.1); /* Base border */
+
+}
+
+
+
+/* Stat Card Hover - Breathing Border */
+
+[data-theme="terran-command"] .stat-card-item:hover {
+
+  background: rgba(20, 30, 40, 1);
+
+  animation: border-pulse 2s infinite;
+
+  z-index: 1;
+
+}
+
+
+
+[data-theme="terran-command"] .stat-card-item:hover::before {
+
+  background: #00F0FF;
+
+  box-shadow: 0 0 10px #00F0FF;
+
+  opacity: 1;
+
+}
+
+
+
+[data-theme="terran-command"] .stat-card-item .icon-wrapper {
+
+  width: 48px;
+
+  height: 48px;
+
+  border-radius: 2px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: rgba(0, 240, 255, 0.05);
+
+  border: 1px solid rgba(0, 240, 255, 0.2);
+
+  box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1);
+
+}
+
+
+
+[data-theme="terran-command"] .stat-card-item .info .label {
+
+  font-size: 12px;
+
+  color: var(--text-sub);
+
+  margin-bottom: 4px;
+
+}
+
+
+
+[data-theme="terran-command"] .stat-card-item .info .value {
+
+  font-size: 24px;
+
+  font-weight: 700;
+
+  color: var(--text-bright);
+
+  font-family: 'DIN Alternate', sans-serif;
+
+}
+
+
+
+/* 
+
+
+
+   ============================================
+
+
+
    🛸 SC2 HUD Frame Integration 
+
+
 
    ============================================
 
@@ -657,6 +1006,220 @@
 }
 
 
+
+/* SC2 Global Element Plus Overrides */
+[data-theme="terran-command"] .el-table,
+[data-theme="terran-command"] .el-table__inner-wrapper,
+[data-theme="terran-command"] .el-table__body-wrapper,
+[data-theme="terran-command"] .el-table__header-wrapper,
+[data-theme="terran-command"] .el-table__footer-wrapper {
+  background: transparent !important;
+  background-color: transparent !important;
+  --el-table-bg-color: transparent !important;
+  --el-table-tr-bg-color: transparent !important;
+  --el-table-header-bg-color: rgba(0, 240, 255, 0.05) !important;
+  --el-table-row-hover-bg-color: rgba(0, 240, 255, 0.1) !important;
+  --el-table-border-color: rgba(255, 255, 255, 0.05) !important;
+  --el-table-text-color: var(--text-bright) !important;
+  --el-table-header-text-color: var(--tech-primary) !important;
+  /* Striped rows specific override */
+  --el-table-row-striped-bg-color: rgba(255, 255, 255, 0.02) !important;
+  color: var(--text-bright) !important;
+}
+
+[data-theme="terran-command"] .el-table tr,
+[data-theme="terran-command"] .el-table th.el-table__cell,
+[data-theme="terran-command"] .el-table td.el-table__cell {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="terran-command"] .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  background: rgba(255, 255, 255, 0.02) !important;
+  background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+[data-theme="terran-command"] .el-table__row:hover > td {
+  background-color: rgba(0, 240, 255, 0.1) !important;
+}
+
+[data-theme="terran-command"] .el-table th {
+  color: var(--tech-primary) !important;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
+  border-bottom: 2px solid rgba(0, 240, 255, 0.2) !important;
+}
+
+[data-theme="terran-command"] .el-table td {
+  color: var(--text-bright) !important;
+}
+
+/* Dialogs */
+[data-theme="terran-command"] .el-dialog {
+  background: #1a1f26 !important;
+  border: 1px solid var(--tech-primary) !important;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8) !important;
+}
+
+[data-theme="terran-command"] .el-dialog__title {
+  color: var(--tech-primary) !important;
+  font-family: 'Orbitron', sans-serif;
+}
+
+[data-theme="terran-command"] .el-dialog__headerbtn .el-dialog__close {
+  color: var(--tech-primary) !important;
+}
+
+[data-theme="terran-command"] .el-dialog__body {
+  color: var(--text-main) !important;
+}
+
+/* Descriptions */
+[data-theme="terran-command"] .el-descriptions__label {
+  background: rgba(0, 240, 255, 0.05) !important;
+  color: var(--tech-secondary) !important;
+  font-weight: bold;
+  border-color: rgba(0, 240, 255, 0.2) !important;
+}
+
+[data-theme="terran-command"] .el-descriptions__content {
+  background: transparent !important;
+  color: var(--text-bright) !important;
+  border-color: rgba(0, 240, 255, 0.2) !important;
+}
+
+[data-theme="terran-command"] .el-descriptions__table {
+    background: transparent !important;
+}
+
+[data-theme="terran-command"] .el-descriptions__body {
+    background: transparent !important;
+    color: var(--text-bright) !important;
+}
+
+/* Inputs */
+[data-theme="terran-command"] .el-input__wrapper {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.3) inset !important;
+}
+
+[data-theme="terran-command"] .el-input__inner {
+    color: var(--text-bright) !important;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+/* Selects */
+[data-theme="terran-command"] .el-select-dropdown__item {
+    color: var(--text-main) !important;
+}
+
+[data-theme="terran-command"] .el-select-dropdown__item.hover, 
+[data-theme="terran-command"] .el-select-dropdown__item:hover {
+    background-color: rgba(0, 240, 255, 0.1) !important;
+}
+
+[data-theme="terran-command"] .el-popper.is-light {
+    background: #1a1f26 !important;
+    border: 1px solid var(--tech-primary) !important;
+}
+
+/* Pagination */
+[data-theme="terran-command"] .el-pagination {
+    --el-pagination-bg-color: transparent !important;
+    --el-pagination-button-bg-color: rgba(0, 0, 0, 0.3) !important;
+    --el-pagination-hover-color: var(--tech-primary) !important;
+}
+
+[data-theme="terran-command"] .el-pagination button:disabled {
+    background-color: transparent !important;
+}
+
+[data-theme="terran-command"] .el-pager li {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-sub) !important;
+}
+
+[data-theme="terran-command"] .el-pager li.is-active {
+    border-color: var(--tech-primary) !important;
+    color: var(--tech-primary) !important;
+    background: rgba(0, 240, 255, 0.1) !important;
+}
+
+/* Tags */
+[data-theme="terran-command"] .el-tag {
+    --el-tag-bg-color: rgba(0, 240, 255, 0.1);
+    --el-tag-border-color: rgba(0, 240, 255, 0.3);
+    --el-tag-text-color: var(--tech-primary);
+}
+
+[data-theme="terran-command"] .el-tag--danger {
+    --el-tag-bg-color: rgba(255, 46, 99, 0.1);
+    --el-tag-border-color: rgba(255, 46, 99, 0.3);
+    --el-tag-text-color: var(--status-danger);
+}
+
+[data-theme="terran-command"] .el-tag--warning {
+    --el-tag-bg-color: rgba(255, 214, 0, 0.1);
+    --el-tag-border-color: rgba(255, 214, 0, 0.3);
+    --el-tag-text-color: var(--status-warning);
+}
+
+[data-theme="terran-command"] .el-tag--success {
+    --el-tag-bg-color: rgba(0, 230, 118, 0.1);
+    --el-tag-border-color: rgba(0, 230, 118, 0.3);
+    --el-tag-text-color: var(--status-success);
+}
+
+/* Radio Buttons (Filter Groups) */
+[data-theme="terran-command"] .el-radio-button__inner {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border-color: rgba(0, 240, 255, 0.3) !important;
+    color: var(--text-sub) !important;
+    box-shadow: none !important;
+}
+
+[data-theme="terran-command"] .el-radio-button:first-child .el-radio-button__inner {
+    border-left: 1px solid rgba(0, 240, 255, 0.3) !important;
+}
+
+[data-theme="terran-command"] .el-radio-button__original-radio:checked + .el-radio-button__inner {
+    background-color: rgba(0, 240, 255, 0.1) !important;
+    border-color: var(--tech-primary) !important;
+    color: var(--text-bright) !important;
+    box-shadow: -1px 0 0 0 var(--tech-primary) !important;
+    text-shadow: 0 0 8px var(--tech-primary);
+}
+
+[data-theme="terran-command"] .el-radio-button__inner:hover {
+    color: var(--tech-primary) !important;
+}
+
+/* Select Dropdowns (Global Fix) */
+[data-theme="terran-command"] .el-select {
+    --el-select-input-color: var(--text-bright) !important;
+    --el-select-input-focus-border-color: var(--tech-primary) !important;
+    --el-select-border-color-hover: var(--tech-primary) !important;
+}
+
+[data-theme="terran-command"] .el-select__wrapper {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.3) inset !important;
+}
+
+[data-theme="terran-command"] .el-select__wrapper.is-hovering:not(.is-focused) {
+    box-shadow: 0 0 0 1px var(--tech-primary) inset !important;
+}
+
+[data-theme="terran-command"] .el-select__wrapper.is-focused {
+    box-shadow: 0 0 0 1px var(--tech-primary) inset !important;
+}
+
+[data-theme="terran-command"] .el-select-dropdown {
+    background: #1a1f26 !important;
+    border: 1px solid var(--tech-primary) !important;
+}
 
 /* 
 

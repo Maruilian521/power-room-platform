@@ -14,9 +14,12 @@
     >
       <!-- 空白格子 -->
       <div v-if="!video" class="empty-placeholder">
-        <el-icon class="placeholder-icon"><VideoCameraFilled /></el-icon>
-        <p class="placeholder-text">双击摄像头加载视频</p>
-        <p class="placeholder-hint">或拖拽摄像头到此处</p>
+        <div class="placeholder-visual">
+            <div class="crosshair"></div>
+            <el-icon class="placeholder-icon"><VideoCameraFilled /></el-icon>
+        </div>
+        <p class="placeholder-text">等待信号接入...</p>
+        <p class="placeholder-hint">双击列表中的设备加载</p>
       </div>
 
       <!-- 视频块 -->
@@ -30,6 +33,10 @@
         @close="$emit('close', index)"
         @toggle-fullscreen="handleCellDoubleClick(index)"
       />
+      
+      <!-- Cell Border Decor -->
+      <div class="cell-corner corner-tl"></div>
+      <div class="cell-corner corner-br"></div>
     </div>
   </div>
 </template>
@@ -91,55 +98,34 @@ const handleCellDoubleClick = (index: number) => {
   width: 100%;
   height: 100%;
   display: grid;
-  gap: 12px;
-  padding: 12px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  box-shadow: var(--shadow-md);
-  overflow: hidden;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(0,0,0,0.5);
 }
 
 /* 1分屏 */
-.video-wall.layout-1 {
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-}
-
+.video-wall.layout-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
 /* 4分屏 */
-.video-wall.layout-4 {
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-}
-
+.video-wall.layout-4 { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
 /* 9分屏 */
-.video-wall.layout-9 {
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-}
-
+.video-wall.layout-9 { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr); }
 /* 16分屏 */
-.video-wall.layout-16 {
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-}
+.video-wall.layout-16 { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); }
 
 /* 视频单元格 */
 .video-cell {
   position: relative;
-  background: rgba(0, 0, 0, 0.5);
-  border: 2px solid var(--glass-border);
-  border-radius: 8px;
+  background: #050505;
+  border: 1px solid rgba(0, 240, 255, 0.1);
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .video-cell:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 0 20px rgba(var(--el-color-primary-rgb), 0.3);
-  transform: scale(1.02);
+  border-color: var(--tech-primary);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+  z-index: 1;
 }
 
 .video-cell.is-fullscreen {
@@ -149,9 +135,23 @@ const handleCellDoubleClick = (index: number) => {
   width: 100vw;
   height: 100vh;
   z-index: 9999;
-  border-radius: 0;
-  transform: none;
+  border: none;
 }
+
+/* 装饰角标 */
+.cell-corner {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--tech-primary);
+  opacity: 0.3;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.corner-tl { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.corner-br { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
+.video-cell:hover .cell-corner { opacity: 1; box-shadow: 0 0 5px var(--tech-primary); }
 
 /* 空白占位符 */
 .empty-placeholder {
@@ -161,52 +161,56 @@ const handleCellDoubleClick = (index: number) => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--text-tertiary);
+  color: var(--text-sub);
   user-select: none;
-  padding: 20px;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.05) 0%, transparent 70%);
 }
 
-.placeholder-icon {
-  font-size: 48px;
+.placeholder-visual {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 16px;
-  opacity: 0.3;
+}
+
+.crosshair {
+  position: absolute;
+  inset: 0;
+  border: 1px dashed rgba(0, 240, 255, 0.2);
+  border-radius: 50%;
+}
+.crosshair::before, .crosshair::after {
+  content: '';
+  position: absolute;
+  background: rgba(0, 240, 255, 0.3);
+}
+.crosshair::before { top: 50%; left: -10px; right: -10px; height: 1px; }
+.crosshair::after { left: 50%; top: -10px; bottom: -10px; width: 1px; }
+
+.placeholder-icon {
+  font-size: 32px;
+  color: var(--tech-secondary);
+  opacity: 0.5;
 }
 
 .placeholder-text {
-  font-size: 14px;
-  font-weight: 500;
-  margin: 0 0 8px 0;
-  opacity: 0.6;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--tech-primary);
+  margin-bottom: 4px;
 }
 
 .placeholder-hint {
-  font-size: 12px;
-  margin: 0;
-  opacity: 0.4;
+  font-size: 11px;
+  color: var(--text-muted);
 }
 
 /* 响应式调整 */
-@media (max-width: 1200px) {
-  .video-wall {
-    gap: 8px;
-    padding: 8px;
-  }
-
-  .placeholder-icon {
-    font-size: 36px;
-  }
-
-  .placeholder-text {
-    font-size: 13px;
-  }
-
-  .placeholder-hint {
-    font-size: 11px;
-  }
-}
-
 @media (max-width: 768px) {
-  /* 在小屏幕上强制使用1或4分屏 */
   .video-wall.layout-9,
   .video-wall.layout-16 {
     grid-template-columns: repeat(2, 1fr);

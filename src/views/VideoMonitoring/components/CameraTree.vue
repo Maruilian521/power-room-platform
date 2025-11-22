@@ -25,9 +25,9 @@
           <template v-if="data.type === 'zone'">
             <el-icon class="node-icon zone-icon"><OfficeBuilding /></el-icon>
             <span class="node-label">{{ data.label }}</span>
-            <el-tag size="small" type="info" class="camera-count">
+            <span class="camera-count">
               {{ getCameraCount(data) }}
-            </el-tag>
+            </span>
           </template>
 
           <!-- 摄像头节点 -->
@@ -39,35 +39,27 @@
 
             <div class="node-actions">
               <!-- 状态指示器 -->
-              <el-tooltip :content="data.status === 'online' ? '在线' : '离线'" placement="top">
-                <div class="status-indicator" :class="data.status"></div>
-              </el-tooltip>
+              <div class="status-indicator" :class="data.status" :title="data.status === 'online' ? '在线' : '离线'"></div>
 
               <!-- PTZ支持标识 -->
-              <el-tooltip v-if="data.supportPTZ" content="支持云台控制" placement="top">
-                <el-icon class="ptz-icon"><Aim /></el-icon>
-              </el-tooltip>
+              <el-icon v-if="data.supportPTZ" class="ptz-icon" title="支持云台"><Aim /></el-icon>
 
-              <!-- 右键菜单触发器 -->
+              <!-- 右���菜单触发器 -->
               <el-dropdown trigger="click" @command="handleCommand($event, data)">
                 <el-icon class="more-icon"><More /></el-icon>
                 <template #dropdown>
-                  <el-dropdown-menu>
+                  <el-dropdown-menu class="sc2-dropdown-menu">
                     <el-dropdown-item command="play" :disabled="data.status === 'offline'">
-                      <el-icon><VideoPlay /></el-icon>
-                      播放
+                      <el-icon><VideoPlay /></el-icon> 播放
                     </el-dropdown-item>
                     <el-dropdown-item command="ptz" :disabled="!data.supportPTZ || data.status === 'offline'">
-                      <el-icon><Aim /></el-icon>
-                      云台控制
+                      <el-icon><Aim /></el-icon> 云台控制
                     </el-dropdown-item>
                     <el-dropdown-item command="refresh">
-                      <el-icon><Refresh /></el-icon>
-                      刷新状态
+                      <el-icon><Refresh /></el-icon> 刷新状态
                     </el-dropdown-item>
                     <el-dropdown-item command="config" divided>
-                      <el-icon><Setting /></el-icon>
-                      配置
+                      <el-icon><Setting /></el-icon> 配置
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -135,7 +127,7 @@ const getCameraCount = (zone: TreeNode) => {
   if (!zone.children) return 0
   const total = zone.children.length
   const online = zone.children.filter(c => c.status === 'online').length
-  return `${online}/${total}`
+  return `[${online}/${total}]`
 }
 
 // 节点点击
@@ -164,11 +156,9 @@ const handleCommand = (command: string, data: TreeNode) => {
       break
     case 'refresh':
       ElMessage.success(`已刷新 ${data.label} 状态`)
-      // TODO: 刷新摄像头状态
       break
     case 'config':
       ElMessage.info(`打开 ${data.label} 配置`)
-      // TODO: 打开配置对话框
       break
   }
 }
@@ -181,6 +171,7 @@ defineExpose({
 <style scoped>
 .camera-tree {
   height: 100%;
+  padding: 8px;
 }
 
 /* 树节点样式 */
@@ -190,49 +181,50 @@ defineExpose({
   align-items: center;
   gap: 8px;
   padding: 4px 8px;
-  border-radius: 6px;
-  transition: all 0.3s ease;
+  border-radius: 2px;
+  transition: all 0.2s ease;
   min-height: 32px;
   cursor: pointer;
+  border: 1px solid transparent;
 }
 
 .tree-node:hover {
-  background: rgba(var(--el-color-primary-rgb), 0.1);
+  background: rgba(0, 240, 255, 0.1);
+  border-color: rgba(0, 240, 255, 0.3);
 }
 
 .tree-node.is-selected {
-  background: rgba(var(--el-color-primary-rgb), 0.15);
-  font-weight: 600;
+  background: rgba(0, 240, 255, 0.15);
+  border-color: var(--tech-primary);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
 }
 
 /* 区域节点 */
 .tree-node.is-zone {
-  font-weight: 600;
-  font-size: 14px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 13px;
+  color: var(--tech-secondary);
+  letter-spacing: 1px;
 }
 
 .zone-icon {
-  color: var(--color-primary);
+  color: var(--tech-secondary);
   font-size: 16px;
 }
 
 /* 摄像头节点 */
 .tree-node.is-camera {
-  font-size: 13px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-main);
 }
 
 .camera-icon {
   font-size: 14px;
-  transition: all 0.3s ease;
 }
-
-.camera-icon.online {
-  color: var(--color-success);
-}
-
-.camera-icon.offline {
-  color: var(--text-tertiary);
-}
+.camera-icon.online { color: var(--status-success); text-shadow: 0 0 5px var(--status-success); }
+.camera-icon.offline { color: var(--text-muted); }
 
 .node-label {
   flex: 1;
@@ -245,7 +237,7 @@ defineExpose({
 .node-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -256,58 +248,31 @@ defineExpose({
 
 /* 状态指示器 */
 .status-indicator {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  transition: all 0.3s ease;
 }
-
-.status-indicator.online {
-  background: var(--color-success);
-  box-shadow: 0 0 8px var(--color-success);
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.status-indicator.offline {
-  background: var(--text-tertiary);
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
+.status-indicator.online { background: var(--status-success); box-shadow: 0 0 5px var(--status-success); }
+.status-indicator.offline { background: var(--text-muted); }
 
 /* PTZ图标 */
 .ptz-icon {
-  color: var(--color-warning);
+  color: var(--tech-primary);
   font-size: 14px;
 }
 
 /* 更多按钮 */
 .more-icon {
-  color: var(--text-secondary);
+  color: var(--text-sub);
   font-size: 16px;
-  padding: 2px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
 }
-
-.more-icon:hover {
-  background: rgba(var(--el-color-primary-rgb), 0.2);
-  color: var(--color-primary);
-}
+.more-icon:hover { color: var(--tech-primary); }
 
 /* 摄像头计数标签 */
 .camera-count {
-  font-size: 11px;
-  padding: 0 6px;
-  height: 18px;
-  line-height: 18px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px;
+  color: var(--text-sub);
 }
 
 /* 树组件样式覆盖 */
@@ -318,22 +283,19 @@ defineExpose({
 
 :deep(.el-tree-node__content) {
   background: transparent;
-  border-radius: 6px;
-  transition: all 0.3s ease;
-  padding: 2px 0;
+  height: 36px; /* Taller rows */
 }
 
 :deep(.el-tree-node__content:hover) {
-  background: rgba(var(--el-color-primary-rgb), 0.05);
+  background: transparent; /* Handle hover manually in .tree-node */
 }
 
 :deep(.el-tree-node.is-current > .el-tree-node__content) {
-  background: rgba(var(--el-color-primary-rgb), 0.1);
+  background: transparent;
 }
 
 :deep(.el-tree-node__expand-icon) {
-  color: var(--text-secondary);
-  font-size: 14px;
+  color: var(--tech-primary);
 }
 
 :deep(.el-tree-node__expand-icon.is-leaf) {

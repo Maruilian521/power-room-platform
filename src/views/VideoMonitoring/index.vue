@@ -1,22 +1,22 @@
 <template>
-  <div class="video-monitoring-container">
+  <div class="page-container video-page">
     <!-- 顶部工具栏 -->
-    <div class="video-toolbar">
+    <div class="video-toolbar module-card">
       <div class="toolbar-left">
-        <el-button-group>
-          <el-button :type="layout === 1 ? 'primary' : ''" @click="changeLayout(1)">
+        <el-button-group class="sc2-btn-group">
+          <el-button :type="layout === 1 ? 'primary' : 'default'" @click="changeLayout(1)">
             <el-icon><Grid /></el-icon>
             <span>单画面</span>
           </el-button>
-          <el-button :type="layout === 4 ? 'primary' : ''" @click="changeLayout(4)">
+          <el-button :type="layout === 4 ? 'primary' : 'default'" @click="changeLayout(4)">
             <el-icon><Grid /></el-icon>
             <span>四分屏</span>
           </el-button>
-          <el-button :type="layout === 9 ? 'primary' : ''" @click="changeLayout(9)">
+          <el-button :type="layout === 9 ? 'primary' : 'default'" @click="changeLayout(9)">
             <el-icon><Grid /></el-icon>
             <span>九分屏</span>
           </el-button>
-          <el-button :type="layout === 16 ? 'primary' : ''" @click="changeLayout(16)">
+          <el-button :type="layout === 16 ? 'primary' : 'default'" @click="changeLayout(16)">
             <el-icon><Grid /></el-icon>
             <span>十六分屏</span>
           </el-button>
@@ -24,42 +24,54 @@
       </div>
 
       <div class="toolbar-center">
-        <span class="monitoring-title">
-          <el-icon><VideoCamera /></el-icon>
-          视频监控中心
-        </span>
-        <el-tag :type="onlineCameras > 0 ? 'success' : 'danger'" size="large">
-          在线: {{ onlineCameras }}/{{ totalCameras }}
-        </el-tag>
+        <div class="monitoring-title">
+          <el-icon class="title-icon"><VideoCamera /></el-icon>
+          <span>视频监控中心</span>
+        </div>
+        <div class="status-tags">
+           <span class="status-text">在线: <span class="highlight">{{ onlineCameras }}</span> / {{ totalCameras }}</span>
+        </div>
       </div>
 
       <div class="toolbar-right">
-        <el-button :icon="polling ? 'VideoPause' : 'VideoPlay'" @click="togglePolling">
+        <el-button :type="polling ? 'warning' : 'primary'" @click="togglePolling">
+          <el-icon><component :is="polling ? 'VideoPause' : 'VideoPlay'" /></el-icon>
           {{ polling ? '停止轮询' : '开始轮询' }}
         </el-button>
-        <el-button icon="Download" @click="captureAll">批量截图</el-button>
-        <el-button icon="FullScreen" @click="enterFullscreen">全屏</el-button>
+        <el-button @click="captureAll">
+            <el-icon><Download /></el-icon>
+            批量截图
+        </el-button>
+        <el-button @click="enterFullscreen">
+            <el-icon><FullScreen /></el-icon>
+            全屏
+        </el-button>
       </div>
     </div>
 
     <!-- 主内容区 -->
     <div class="video-content">
       <!-- 左侧摄像头树 -->
-      <div class="camera-sidebar" :class="{ collapsed: sidebarCollapsed }">
+      <div class="camera-sidebar sc2-info-panel" :class="{ collapsed: sidebarCollapsed }">
         <div class="sidebar-header">
-          <el-input
-            v-model="searchText"
-            placeholder="搜索摄像头..."
-            :prefix-icon="Search"
-            clearable
-            @input="handleSearch"
-          />
+          <div class="header-title" v-show="!sidebarCollapsed">摄像头列表</div>
           <el-button
             text
-            :icon="sidebarCollapsed ? 'Expand' : 'Fold'"
-            @click="sidebarCollapsed = !sidebarCollapsed"
             class="collapse-btn"
-          />
+            @click="sidebarCollapsed = !sidebarCollapsed"
+          >
+            <el-icon><component :is="sidebarCollapsed ? 'Expand' : 'Fold'" /></el-icon>
+          </el-button>
+        </div>
+        
+        <div class="search-box-wrapper" v-show="!sidebarCollapsed">
+             <el-input
+                v-model="searchText"
+                placeholder="搜索摄像头..."
+                :prefix-icon="Search"
+                clearable
+                class="sc2-search"
+            />
         </div>
 
         <div v-show="!sidebarCollapsed" class="sidebar-content">
@@ -75,7 +87,7 @@
       </div>
 
       <!-- 右侧视频墙 -->
-      <div class="video-wall">
+      <div class="video-wall-container">
         <VideoWall
           :layout="layout"
           :videos="displayedVideos"
@@ -356,7 +368,6 @@ const handleShowPTZ = (video: any) => {
 // 截图
 const handleCapture = (video: any) => {
   ElMessage.success(`已截图: ${video.label}`)
-  // TODO: 实现截图逻辑
 }
 
 // 关闭视频
@@ -371,7 +382,6 @@ const captureAll = () => {
     return
   }
   ElMessage.success(`已截图所有视频 (${displayedVideos.value.length}个)`)
-  // TODO: 实现批量截图
 }
 
 // 全屏
@@ -426,12 +436,6 @@ const stopPolling = () => {
 // PTZ控制
 const handlePTZControl = (command: string, params: any) => {
   console.log('PTZ Control:', command, params)
-  // TODO: 发送PTZ控制指令到后端
-}
-
-// 搜索
-const handleSearch = () => {
-  // 搜索逻辑已在 computed 中实现
 }
 
 onMounted(() => {
@@ -455,141 +459,130 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.video-monitoring-container {
-  width: 100%;
-  height: 100vh;
+.video-page {
   display: flex;
   flex-direction: column;
-  background: var(--bg-primary);
-  overflow: hidden;
+  gap: 16px;
+  height: 100%;
 }
 
 /* 顶部工具栏 */
 .video-toolbar {
-  height: 64px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--glass-border);
-  box-shadow: var(--shadow-sm);
-  padding: 0 24px;
+  height: 60px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  flex-shrink: 0;
+  padding: 0 24px;
+  margin-bottom: 0; /* module-card has padding, remove external margin if needed or adjust */
 }
 
-.toolbar-left {
+.toolbar-left, .toolbar-right {
   flex: 1;
-}
-
-.toolbar-center {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-}
-
-.monitoring-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .toolbar-right {
-  flex: 1;
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
+  gap: 10px;
+}
+
+.toolbar-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.monitoring-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px;
+  color: var(--tech-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+.title-icon {
+  font-size: 24px;
+  filter: drop-shadow(0 0 5px var(--tech-primary));
+}
+
+.status-text {
+  font-family: 'Rajdhani', sans-serif;
+  color: var(--text-sub);
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+.status-text .highlight {
+  color: var(--status-success);
+  font-weight: bold;
+  font-size: 16px;
 }
 
 /* 主内容区 */
 .video-content {
   flex: 1;
   display: flex;
-  overflow: hidden;
-  padding: 16px;
   gap: 16px;
+  overflow: hidden;
+  min-height: 0; /* Important for nested scroll */
 }
 
-/* 左侧摄像头树 */
+/* 左侧边栏 - Terran Style */
 .camera-sidebar {
-  width: 300px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  box-shadow: var(--shadow-md);
+  width: 280px;
   display: flex;
   flex-direction: column;
   transition: width 0.3s ease;
-  overflow: hidden;
+  padding: 0; /* Reset padding for internal layout */
 }
 
 .camera-sidebar.collapsed {
-  width: 50px;
+  width: 48px;
 }
 
 .sidebar-header {
-  padding: 16px;
-  border-bottom: 1px solid var(--glass-border);
+  height: 48px;
   display: flex;
-  gap: 8px;
   align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+  background: rgba(0, 240, 255, 0.05);
 }
 
-.camera-sidebar.collapsed .sidebar-header {
-  padding: 16px 8px;
+.header-title {
+  font-family: 'Orbitron', sans-serif;
+  color: var(--tech-secondary);
+  font-weight: bold;
 }
 
-.collapse-btn {
-  flex-shrink: 0;
+.search-box-wrapper {
+  padding: 12px;
 }
 
 .sidebar-content {
   flex: 1;
   overflow: hidden;
-  padding: 12px;
 }
 
-/* 右侧视频墙 */
-.video-wall {
+/* 右侧视频墙容器 */
+.video-wall-container {
   flex: 1;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 240, 255, 0.1);
+  border-radius: 2px;
   overflow: hidden;
+  position: relative;
 }
 
-/* 响应式调整 */
-@media (max-width: 1200px) {
-  .camera-sidebar {
-    width: 250px;
-  }
-
-  .toolbar-center .monitoring-title {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 768px) {
-  .video-toolbar {
-    flex-wrap: wrap;
-    height: auto;
-    padding: 12px;
-  }
-
-  .toolbar-left,
-  .toolbar-center,
-  .toolbar-right {
-    flex: 0 0 100%;
-  }
-
-  .camera-sidebar.collapsed {
-    width: 0;
-    padding: 0;
-    border: none;
-  }
+/* SC2 Button Overrides for Toolbar */
+:deep(.el-button) {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 600;
 }
 </style>

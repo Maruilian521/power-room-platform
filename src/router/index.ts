@@ -21,17 +21,9 @@ const router = createRouter({
     {
       path: '/',
       component: Layout,
-      redirect: '/login',
+      redirect: '/dashboard/overview',
       children: [
-        // AI大脑
-        {
-          path: 'ai-brain',
-          name: 'AIBrain',
-          component: () => import('../views/AIBrain/index.vue'),
-          meta: { title: 'AI大脑', icon: 'Cpu' }
-        },
-
-        // 2. 驾驶舱
+        // 1. 驾驶舱 (Dashboard)
         {
           path: 'dashboard/overview',
           name: 'DashboardOverview',
@@ -39,305 +31,140 @@ const router = createRouter({
           meta: { title: '运行总览', icon: 'DataBoard' }
         },
         {
-          path: 'dashboard/main-device',
-          name: 'MainDeviceOverview',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '主设备运行总览', icon: 'Monitor' }
-        },
-        {
-          path: 'dashboard/security',
-          name: 'SecuritySituation',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '安全态势与AI风险', icon: 'Warning' }
+          path: 'dashboard/ai-security',
+          name: 'AISecurity',
+          component: () => import('../views/AIBrain/index.vue'), // Using existing AI Brain
+          meta: { title: 'AI安全态势', icon: 'Warning' }
         },
 
-        // 3. 配电室管理
-        // 3.1 配电室台账
+        // 2. 智能监控中心 (Monitoring)
         {
-          path: 'room/ledger/basic',
-          name: 'RoomLedgerBasic',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '配电室基础信息', icon: 'Document' }
+          path: 'monitoring/site-map',
+          name: 'SiteMap',
+          component: () => import('../views/ComingSoon.vue'), // Placeholder
+          meta: { title: '站点监控地图', icon: 'MapLocation' }
         },
         {
-          path: 'room/ledger/transformer',
-          name: 'RoomLedgerTransformer',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '主变基本资料', icon: 'Document' }
+          path: 'monitoring/site-list',
+          name: 'SiteList',
+          component: () => import('../views/SiteList.vue'),
+          meta: { title: '站点列表监控', icon: 'List' }
         },
         {
-          path: 'room/ledger/primary-equipment',
-          name: 'RoomLedgerPrimaryEquipment',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '一次设备清单', icon: 'Document' }
+          path: 'monitoring/video',
+          name: 'VideoPatrol',
+          component: () => import('../views/VideoMonitoring/index.vue'),
+          meta: { title: '视频巡视中心', icon: 'VideoCamera' }
         },
         {
-          path: 'room/ledger/secondary-equipment',
-          name: 'RoomLedgerSecondaryEquipment',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '二次设备资料', icon: 'Document' }
+          path: 'monitoring/environment',
+          name: 'EnvSecurity',
+          component: () => import('../views/Environment/index.vue'),
+          meta: { title: '环境与安防总览', icon: 'Sunny' }
         },
-        {
-          path: 'room/ledger/grounding',
-          name: 'RoomLedgerGrounding',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '接地系统资料', icon: 'Document' }
-        },
-        {
-          path: 'room/ledger/drawings',
-          name: 'RoomLedgerDrawings',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '图纸资料', icon: 'Document' }
-        },
-
-        // 3.2 配电室运行概览 (矩阵入口)
-        {
-          path: 'room/overview/topology',
-          name: 'RoomOverviewTopology',
-          component: () => import('../views/RoomMonitoring/index.vue'),
-          meta: { title: '一次接线拓扑', icon: 'Monitor' }
-        },
-        // 新增：配电室详情页 (带参数)
+        // 配电室详情 (Hidden from menu, accessible via map/list)
         {
           path: 'room/detail/:id',
           name: 'RoomDetail',
           component: () => import('../views/RoomDetail/index.vue'),
-          meta: { title: '配电室详情', icon: 'Document' }
-        },
-        {
-          path: 'room/overview/transformer-data',
-          name: 'RoomOverviewTransformerData',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '主变实时数据', icon: 'Monitor' }
-        },
-        {
-          path: 'room/overview/cabinet-diagram',
-          name: 'RoomOverviewCabinetDiagram',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '高压柜组态图', icon: 'Monitor' }
-        },
-        {
-          path: 'room/overview/environment',
-          name: 'RoomOverviewEnvironment',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '环境监测', icon: 'Monitor' }
-        },
-        {
-          path: 'room/overview/power-quality',
-          name: 'RoomOverviewPowerQuality',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '电能质量概览', icon: 'Monitor' }
-        },
-        {
-          path: 'room/overview/security',
-          name: 'RoomOverviewSecurity',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '安防信息', icon: 'Monitor' }
+          meta: { title: '配电室详情', hidden: true }
         },
 
-        // 3.3 运行管理
+        // 3. 运维作业中心 (O&M)
         {
-          path: 'room/operation/work-permit',
-          name: 'WorkPermit',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '工作票管理', icon: 'Tickets' }
-        },
-        {
-          path: 'room/operation/operation-ticket',
-          name: 'OperationTicket',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '操作票管理', icon: 'Tickets' }
-        },
-        {
-          path: 'room/operation/duty',
-          name: 'DutyManagement',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '值班管理', icon: 'Notebook' }
-        },
-        {
-          path: 'room/operation/inspection',
-          name: 'InspectionRecords',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '巡视检查记录', icon: 'Document' }
-        },
-        {
-          path: 'room/operation/defect',
-          name: 'DefectManagement',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '缺陷管理', icon: 'Tools' }
-        },
-        {
-          path: 'room/operation/fault',
-          name: 'FaultRecords',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '故障记录', icon: 'Warning' }
-        },
-        {
-          path: 'room/operation/preventive-test',
-          name: 'PreventiveTest',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '预防性试验', icon: 'Document' }
-        },
-
-        // 4. 设备管理
-        {
-          path: 'device/classification',
-          name: 'DeviceClassification',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '设备分类管理', icon: 'Menu' }
-        },
-        {
-          path: 'device/monitoring',
-          name: 'DeviceMonitoring',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '设备运行监测', icon: 'Monitor' }
-        },
-        {
-          path: 'device/lifecycle',
-          name: 'DeviceLifecycle',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '设备生命周期管理', icon: 'Timer' }
-        },
-
-        // 5. 环境与安防管理
-        {
-          path: 'environment/monitoring',
-          name: 'EnvironmentMonitoring',
-          component: () => import('../views/Environment/index.vue'),
-          meta: { title: '环境监测', icon: 'Sunny' }
-        },
-        {
-          path: 'environment/security',
-          name: 'SecurityMonitoring',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '安防监测', icon: 'Lock' }
-        },
-
-        // 6. 视频与AI管理
-        {
-          path: 'video/monitoring',
-          name: 'VideoMonitoring',
-          component: () => import('../views/VideoMonitoring/index.vue'),
-          meta: { title: '视频监控', icon: 'VideoCamera' }
-        },
-        {
-          path: 'video/ai',
-          name: 'AIRecognition',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: 'AI识别', icon: 'View' }
-        },
-
-        // 7. 实时监控中心
-        {
-          path: 'monitoring/telemetry',
-          name: 'TelemetryMonitoring',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '遥测监控', icon: 'DataLine' }
-        },
-        {
-          path: 'monitoring/trend',
-          name: 'TrendAnalysis',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '趋势分析', icon: 'TrendCharts' }
-        },
-        {
-          path: 'monitoring/power-quality',
-          name: 'PowerQualityMonitoring',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '电能质量监测', icon: 'CoffeeCup' }
-        },
-
-        // 8. 告警中心
-        {
-          path: 'alarm/list',
-          name: 'AlarmList',
+          path: 'om/alarms',
+          name: 'AlarmCenter',
           component: () => import('../views/AlarmList.vue'),
-          meta: { title: '告警分级', icon: 'Bell' }
+          meta: { title: '告警与事件中心', icon: 'Bell' }
         },
         {
-          path: 'alarm/source',
-          name: 'AlarmSource',
-          component: () => import('../views/AlarmList.vue'),
-          meta: { title: '告警来源', icon: 'Position' }
-        },
-        {
-          path: 'alarm/handle',
-          name: 'AlarmHandle',
-          component: () => import('../views/AlarmList.vue'),
-          meta: { title: '告警处理', icon: 'Tools' }
-        },
-
-        // 9. 巡检中心
-        {
-          path: 'inspection/plan',
-          name: 'InspectionPlan',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '巡检计划', icon: 'Calendar' }
-        },
-        {
-          path: 'inspection/execute',
-          name: 'InspectionExecute',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '巡检执行', icon: 'Position' }
-        },
-        {
-          path: 'inspection/report',
-          name: 'InspectionReport',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '巡检报告', icon: 'Document' }
-        },
-
-        // 10. 工单中心
-        {
-          path: 'workorder/source',
-          name: 'WorkOrderSource',
+          path: 'om/work-orders',
+          name: 'WorkOrderManagement',
           component: () => import('../views/WorkOrder.vue'),
-          meta: { title: '工单来源', icon: 'Position' }
+          meta: { title: '工单管理', icon: 'Files' }
         },
         {
-          path: 'workorder/process',
-          name: 'WorkOrderProcess',
-          component: () => import('../views/WorkOrder.vue'),
-          meta: { title: '工单处理流程', icon: 'Edit' }
+          path: 'om/inspection',
+          name: 'InspectionManagement',
+          component: () => import('../views/ComingSoon.vue'), // Placeholder for group
+          meta: { title: '巡检管理', icon: 'Position' }
+        },
+        {
+          path: 'om/tickets',
+          name: 'TicketManagement',
+          component: () => import('../views/TicketManagement.vue'),
+          meta: { title: '两票管理', icon: 'Document' }
         },
 
-        // 11. 报表中心
+        // 4. 资产台账管理 (Assets)
         {
-          path: 'report/operation',
+          path: 'assets/rooms',
+          name: 'RoomLedger',
+          component: () => import('../views/RoomLedger.vue'),
+          meta: { title: '配电室台账', icon: 'Document' }
+        },
+        {
+          path: 'assets/room-ledger/:id',
+          name: 'RoomLedgerDetail',
+          component: () => import('../views/RoomLedgerDetail.vue'),
+          meta: { title: '台账详情', hidden: true }
+        },
+        {
+          path: 'assets/devices',
+          name: 'DeviceLedger',
+          component: () => import('../views/DeviceList.vue'),
+          meta: { title: '设备台账', icon: 'Monitor' }
+        },
+        {
+          path: 'assets/spares',
+          name: 'SpareParts',
+          component: () => import('../views/SpareParts.vue'),
+          meta: { title: '备品备件管理', icon: 'Box' }
+        },
+
+        // 5. 分析与报表中心 (Analytics)
+        {
+          path: 'analytics/operation',
           name: 'OperationReport',
-          component: () => import('../views/DeviceList.vue'),
+          component: () => import('../views/OperationReport.vue'),
           meta: { title: '运维报表', icon: 'Document' }
         },
         {
-          path: 'report/device-health',
-          name: 'DeviceHealthReport',
-          component: () => import('../views/DeviceList.vue'),
-          meta: { title: '设备健康分析', icon: 'DataAnalysis' }
-        },
-        {
-          path: 'report/power-quality',
-          name: 'PowerQualityReport',
-          component: () => import('../views/DeviceList.vue'),
+          path: 'analytics/power-quality',
+          name: 'PowerQualityAnalytics',
+          component: () => import('../views/ComingSoon.vue'), // Placeholder
           meta: { title: '电能质量报表', icon: 'Histogram' }
         },
-
-        // 12. 系统管理
         {
-          path: 'system/user',
+          path: 'analytics/health',
+          name: 'DeviceHealthAnalytics',
+          component: () => import('../views/ComingSoon.vue'), // Placeholder
+          meta: { title: '设备健康报告', icon: 'DataAnalysis' }
+        },
+        {
+          path: 'analytics/load',
+          name: 'LoadAnalysis',
+          component: () => import('../views/ComingSoon.vue'), // Placeholder
+          meta: { title: '负荷/趋势分析', icon: 'TrendCharts' }
+        },
+
+        // 6. 系统与策略配置 (System)
+        {
+          path: 'system/users',
           name: 'UserManagement',
-          component: () => import('../views/DeviceList.vue'),
+          component: () => import('../views/ComingSoon.vue'), // Placeholder
           meta: { title: '用户与权限管理', icon: 'User' }
         },
         {
-          path: 'system/alarm-strategy',
-          name: 'AlarmStrategy',
-          component: () => import('../views/DeviceList.vue'),
+          path: 'system/strategies',
+          name: 'SystemStrategies',
+          component: () => import('../views/ComingSoon.vue'), // Placeholder
           meta: { title: '告警与AI策略', icon: 'Setting' }
         },
         {
           path: 'system/dictionary',
           name: 'DataDictionary',
-          component: () => import('../views/DeviceList.vue'),
+          component: () => import('../views/ComingSoon.vue'), // Placeholder
           meta: { title: '数据字典', icon: 'Collection' }
         }
       ]

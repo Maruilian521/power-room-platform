@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { Device, Alarm, WorkOrder, Statistics, RealtimeData } from '../types'
+import type { Device, Alarm, WorkOrder, Statistics, RealtimeData, Room } from '../types'
 
 export const useDeviceStore = defineStore('device', () => {
   // 状态
+  const rooms = ref<Room[]>([])
   const devices = ref<Device[]>([])
   const alarms = ref<Alarm[]>([])
   const workOrders = ref<WorkOrder[]>([])
@@ -29,6 +30,17 @@ export const useDeviceStore = defineStore('device', () => {
     temperature: []
   })
   const loading = ref(false)
+
+  // 获取配电室列表
+  const fetchRooms = async () => {
+    try {
+        const response = await fetch('/api/rooms')
+        const result = await response.json()
+        rooms.value = result.data
+    } catch (error) {
+        console.error('获取配电室列表失败:', error)
+    }
+  }
 
   // 获取设备列表
   const fetchDevices = async () => {
@@ -157,6 +169,7 @@ export const useDeviceStore = defineStore('device', () => {
     statistics,
     realtimeData,
     loading,
+    fetchRooms,
     fetchDevices,
     fetchDevice,
     fetchAlarms,

@@ -18,9 +18,14 @@ onMounted(() => {
   timer = setInterval(() => {
     updateDeviceData()
   }, 5000)
+  
+  // Set default theme if not present
+  if (!document.documentElement.hasAttribute('data-theme')) {
+      document.documentElement.setAttribute('data-theme', 'terran-command')
+  }
 })
 
-// 清理定时器
+// 清理定时��
 onUnmounted(() => {
   if (timer) {
     clearInterval(timer)

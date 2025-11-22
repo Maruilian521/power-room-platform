@@ -90,7 +90,7 @@
                 </div>
                 <div class="todo-title">{{ todo.title }}</div>
               </div>
-              <el-button type="primary" size="small" plain class="handle-btn">处理</el-button>
+              <el-button type="primary" size="small" plain class="handle-btn">���理</el-button>
             </div>
           </div>
         </div>
@@ -196,7 +196,7 @@ const knowledgeList = ref([
   { type: 'emergency', tag: '应急预案', title: '配电室水浸事故应急处置流程', date: '2023-10-11' },
   { type: 'emergency', tag: '操作规程', title: '10kV开关柜停送电操作规范', date: '2023-09-20' },
   { type: 'emergency', tag: '安全规范', title: '触电急救与心肺复苏操作指南', date: '2023-08-15' },
-  { type: 'emergency', tag: '案例分析', title: '某变电站误操作���故分析报告', date: '2023-07-10' },
+  { type: 'emergency', tag: '案例分析', title: '某变电站误操作故分析报告', date: '2023-07-10' },
 ])
 
 // 关注指标
@@ -321,212 +321,16 @@ onUnmounted(() => {
   color: var(--text-main);
 }
 
-/* 动态光效定义 */
-@keyframes scanline {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 0% 200%; }
-}
-
-@keyframes border-pulse {
-  0% { box-shadow: 0 0 5px #00F0FF, inset 0 0 5px rgba(0, 240, 255, 0.1); border-color: rgba(0, 240, 255, 0.5); }
-  50% { box-shadow: 0 0 15px #00F0FF, inset 0 0 10px rgba(0, 240, 255, 0.3); border-color: rgba(0, 240, 255, 1); }
-  100% { box-shadow: 0 0 5px #00F0FF, inset 0 0 5px rgba(0, 240, 255, 0.1); border-color: rgba(0, 240, 255, 0.5); }
-}
-
-@keyframes corner-flicker {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; filter: drop-shadow(0 0 5px #00F0FF); }
-  52% { opacity: 0.3; }
-  54% { opacity: 0.8; }
-}
-
-/* 通用卡片样式 */
-.module-card {
-  background: rgba(13, 18, 26, 0.85);
-  backdrop-filter: blur(10px);
-  border: none;
-  padding: 24px;
-  box-shadow: 
-    inset 0 0 20px rgba(0, 0, 0, 0.5),
-    0 5px 15px rgba(0, 0, 0, 0.3);
-  height: 100%; 
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s ease;
-  position: relative;
-  /* Tech Chamfered Corners */
-  clip-path: polygon(
-    20px 0, 100% 0, 
-    100% calc(100% - 20px), calc(100% - 20px) 100%, 
-    0 100%, 0 20px
-  );
-  overflow: hidden; /* 限制扫描线溢出 */
-}
-
-/* Border simulation + Scanning Light */
-.module-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  /* 动态扫描边框 */
-  background: linear-gradient(180deg, 
-    rgba(0, 240, 255, 0.1) 0%, 
-    rgba(0, 240, 255, 0.8) 50%, 
-    rgba(0, 240, 255, 0.1) 100%
-  );
-  background-size: 100% 200%;
-  animation: scanline 4s linear infinite;
-  -webkit-mask: 
-     linear-gradient(#fff 0 0) content-box, 
-     linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.6;
-}
-
-/* Corner accents - Flickering */
-.module-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border: 1px solid transparent;
-  background: 
-    linear-gradient(135deg, #00F0FF 10px, transparent 0) top left,
-    linear-gradient(-45deg, #00F0FF 10px, transparent 0) bottom right;
-  background-size: 20px 20px;
-  background-repeat: no-repeat;
-  pointer-events: none;
-  opacity: 0.5;
-  animation: corner-flicker 3s infinite alternate; /* 角标闪烁 */
-}
-
-/* 悬停态增强 */
-.module-card:hover {
-  box-shadow: 
-    inset 0 0 30px rgba(0, 240, 255, 0.15),
-    0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.module-card:hover::before {
-  opacity: 1;
-  animation-duration: 2s; /* 悬停时扫描加速 */
-}
-
-.module-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
-  position: relative;
-}
-
-/* Header accent bar - Static glow */
-.module-header::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 50px;
-  height: 3px;
-  background: #00F0FF;
-  box-shadow: 0 0 10px #00F0FF;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 16px;
-  font-weight: 700;
-  color: #FFF;
-  letter-spacing: 1px;
-  font-family: "Microsoft YaHei", sans-serif;
-  text-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
-}
-
-.header-left .el-icon {
-  color: #00F0FF;
-  font-size: 18px;
-  filter: drop-shadow(0 0 5px #00F0FF);
-}
-
-.action-btn {
-  color: #5f748a;
-  font-family: 'Rajdhani', sans-serif;
-  font-weight: 600;
-  text-transform: uppercase;
-}
-
-.action-btn:hover {
-  color: #00F0FF;
-  text-shadow: 0 0 5px #00F0FF;
-}
-
-/* 顶部统计行 */
+/* 顶部统��行 */
 .stats-row {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 16px;
 }
 
-.stat-card-item {
-  position: relative;
-  background: rgba(13, 18, 26, 0.9);
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  transition: all 0.3s ease;
-  clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px);
-  /* 静态边框 */
-  border: 1px solid rgba(0, 240, 255, 0.1); 
-}
-
-/* Stat card border simulation - Animated on hover */
-.stat-card-item::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 1px;
-  background: linear-gradient(to bottom, rgba(0, 240, 255, 0.3), transparent);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-.stat-card-item:hover {
-  transform: translateY(-2px);
-  background: rgba(20, 30, 40, 1);
-  /* 呼吸边框动画 */
-  animation: border-pulse 2s infinite;
-  z-index: 1;
-}
-
-.stat-card-item:hover::before {
-  background: #00F0FF;
-  box-shadow: 0 0 10px #00F0FF;
-  opacity: 1;
-}
-
-/* 装饰角标 (Removed old style, using ::after in module-card logic if needed, but keeping simple for stats) */
-.card-corner { display: none; } 
-
+/* Local stat icon styling (layout specific) */
 .stat-icon-wrapper {
-  width: 48px;
-  height: 48px;
-  border-radius: 2px; /* Square */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 240, 255, 0.05);
-  border: 1px solid rgba(0, 240, 255, 0.2);
-  box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1);
+  /* Base layout only, colors are global */
 }
 
 .stat-icon-wrapper.primary { color: var(--tech-primary); background: rgba(0,243,255,0.1); }
@@ -535,35 +339,11 @@ onUnmounted(() => {
 .stat-icon-wrapper.success { color: var(--status-success); background: rgba(0,230,118,0.1); }
 .stat-icon-wrapper.info { color: var(--status-info); background: rgba(0,176,255,0.1); }
 
-.stat-content {
-  flex: 1;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: var(--text-sub);
-  margin-bottom: 4px;
-}
-
-.stat-value {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text-bright);
-  font-family: 'DIN Alternate', sans-serif;
-}
-
-.stat-unit {
-  font-size: 12px;
-  color: var(--text-sub);
-  margin-left: 4px;
-}
-
 /* 布局结构 */
 .main-content {
   display: grid;
   grid-template-columns: 320px 1fr 320px;
   gap: 20px;
-  /* flex: 1; 已移除，允许自然撑开 */
   min-height: 600px;
 }
 
@@ -769,22 +549,6 @@ onUnmounted(() => {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-}
-
-.metric-card {
-  background: var(--bg-panel-transparent);
-  backdrop-filter: var(--backdrop-blur);
-  border: 1px solid var(--border-light);
-  border-radius: var(--card-radius);
-  padding: 20px;
-  box-shadow: var(--shadow-card);
-  transition: all 0.3s ease;
-}
-
-.metric-card:hover {
-  border-color: var(--tech-primary);
-  box-shadow: var(--glow-box);
-  transform: translateY(-2px);
 }
 
 .metric-header-row {

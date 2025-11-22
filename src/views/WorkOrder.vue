@@ -1,86 +1,94 @@
 <template>
   <div class="page-container">
     <div class="work-order">
-      <!-- 统计卡片 -->
+      <!-- 统计看板 (Clickable) -->
       <div class="grid grid-cols-4" style="margin-bottom: 20px;">
-        <div class="stat-card">
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <div>
-              <div style="color: var(--text-secondary); font-size: 14px; margin-bottom: 8px;">总工单</div>
-              <div style="font-size: 28px; font-weight: 700; color: var(--color-primary);">
-                {{ totalCount }}
-              </div>
-            </div>
-            <el-icon size="48" color="rgba(24, 144, 255, 0.3)"><Document /></el-icon>
+        <div 
+          class="stat-card-item" 
+          :class="{ active: filterStatus === '' }" 
+          @click="filterStatus = ''"
+        >
+          <div class="icon-wrapper">
+            <el-icon><Document /></el-icon>
+          </div>
+          <div class="info">
+            <div class="label">总工单</div>
+            <div class="value">{{ totalCount }}</div>
           </div>
         </div>
 
-        <div class="stat-card warning">
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <div>
-              <div style="color: var(--text-secondary); font-size: 14px; margin-bottom: 8px;">待处理</div>
-              <div style="font-size: 28px; font-weight: 700; color: var(--color-warning);">
-                {{ pendingCount }}
-              </div>
-            </div>
-            <el-icon size="48" color="rgba(255, 181, 71, 0.3)"><Clock /></el-icon>
+        <div 
+          class="stat-card-item warning"
+          :class="{ active: filterStatus === 'pending' }"
+          @click="filterStatus = 'pending'"
+        >
+          <div class="icon-wrapper">
+            <el-icon><Clock /></el-icon>
+          </div>
+          <div class="info">
+            <div class="label">待处理</div>
+            <div class="value">{{ pendingCount }}</div>
           </div>
         </div>
 
-        <div class="stat-card info">
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <div>
-              <div style="color: var(--text-secondary); font-size: 14px; margin-bottom: 8px;">进行中</div>
-              <div style="font-size: 28px; font-weight: 700; color: var(--color-info);">
-                {{ inProgressCount }}
-              </div>
-            </div>
-            <el-icon size="48" color="rgba(33, 150, 243, 0.3)"><Loading /></el-icon>
+        <div 
+          class="stat-card-item info"
+          :class="{ active: filterStatus === 'in-progress' }"
+          @click="filterStatus = 'in-progress'"
+        >
+          <div class="icon-wrapper">
+            <el-icon><Loading /></el-icon>
+          </div>
+          <div class="info">
+            <div class="label">进行中</div>
+            <div class="value">{{ inProgressCount }}</div>
           </div>
         </div>
 
-        <div class="stat-card success">
-          <div style="display: flex; align-items: center; justify-content: space-between;">
-            <div>
-              <div style="color: var(--text-secondary); font-size: 14px; margin-bottom: 8px;">已完成</div>
-              <div style="font-size: 28px; font-weight: 700; color: var(--color-success);">
-                {{ completedCount }}
-              </div>
-            </div>
-            <el-icon size="48" color="rgba(70, 211, 154, 0.3)"><Select /></el-icon>
+        <div 
+          class="stat-card-item success"
+          :class="{ active: filterStatus === 'completed' }"
+          @click="filterStatus = 'completed'"
+        >
+          <div class="icon-wrapper">
+            <el-icon><Select /></el-icon>
+          </div>
+          <div class="info">
+            <div class="label">已完成</div>
+            <div class="value">{{ completedCount }}</div>
           </div>
         </div>
       </div>
 
-      <div class="card">
-        <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-          <h2 style="margin: 0; font-size: 20px; color: var(--text-primary);">工单列表</h2>
-          <div style="display: flex; gap: 12px;">
+      <!-- 主体内容区 -->
+      <div class="module-card">
+        <div class="module-header">
+           <span class="title">工单管理中心</span>
+        </div>
+        
+        <div class="toolbar">
+          <div class="left-tools">
+             <!-- Quick filters if needed -->
+          </div>
+          <div class="right-tools">
             <el-input
               v-model="searchText"
-              placeholder="搜索工单标题或设备"
-              style="width: 300px;"
+              placeholder="搜索工单/设备/站点"
+              style="width: 250px;"
               clearable
             >
               <template #prefix>
                 <el-icon><Search /></el-icon>
               </template>
             </el-input>
-            <el-select v-model="filterType" placeholder="筛选类型" clearable style="width: 120px;">
-              <el-option label="全部" value="" />
+            
+            <el-select v-model="filterType" placeholder="类型" clearable style="width: 120px;">
               <el-option label="维修" value="repair" />
               <el-option label="保养" value="maintenance" />
               <el-option label="巡检" value="inspection" />
               <el-option label="紧急" value="emergency" />
             </el-select>
-            <el-select v-model="filterStatus" placeholder="筛选状态" clearable style="width: 120px;">
-              <el-option label="全部" value="" />
-              <el-option label="待处理" value="pending" />
-              <el-option label="已分配" value="assigned" />
-              <el-option label="进行中" value="in-progress" />
-              <el-option label="已完成" value="completed" />
-              <el-option label="已取消" value="cancelled" />
-            </el-select>
+
             <el-button type="primary" @click="createWorkOrder">
               <el-icon><Plus /></el-icon>
               新建工单
@@ -93,53 +101,82 @@
           stripe
           v-loading="loading"
           style="width: 100%"
+          class="sc2-table"
         >
-          <el-table-column prop="id" label="工单ID" width="120" />
-          <el-table-column prop="title" label="工单标题" min-width="200" show-overflow-tooltip />
-          <el-table-column prop="type" label="工单类型" width="100">
+          <!-- 1. 状态/优先级 -->
+          <el-table-column label="状态" width="80" align="center">
             <template #default="{ row }">
-              <el-tag :type="getTypeTag(row.type)">
+               <div class="status-indicator">
+                  <el-icon v-if="row.priority === 'urgent'" class="priority-icon urgent" title="紧急"><WarningFilled /></el-icon>
+                  <el-icon v-else-if="row.priority === 'high'" class="priority-icon high" title="高"><Top /></el-icon>
+                  <div v-else class="status-dot" :class="row.status"></div>
+               </div>
+            </template>
+          </el-table-column>
+
+          <!-- 2. 工单标题 & ID -->
+          <el-table-column label="工单信息" min-width="250">
+            <template #default="{ row }">
+              <div class="title-cell">
+                <span class="wo-title" :class="{ 'text-danger': isOverdue(row) }">{{ row.title }}</span>
+                <span class="wo-id">{{ row.id }}</span>
+              </div>
+            </template>
+          </el-table-column>
+
+          <!-- 3. 所属站点 (Core) -->
+          <el-table-column prop="roomName" label="所属站点" width="180">
+             <template #default="{ row }">
+                <span class="site-text">{{ row.roomName }}</span>
+             </template>
+          </el-table-column>
+
+          <!-- 4. 关联对象 -->
+          <el-table-column prop="deviceName" label="关联对象" width="150" show-overflow-tooltip />
+
+          <!-- 5. 工单类型 -->
+          <el-table-column prop="type" label="类型" width="100">
+            <template #default="{ row }">
+              <el-tag :type="getTypeTag(row.type)" effect="dark">
                 {{ getTypeName(row.type) }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="deviceName" label="设备名称" width="150" />
-          <el-table-column prop="priority" label="优先级" width="100">
+
+          <!-- 6. 处理人 -->
+          <el-table-column prop="assignee" label="负责人" width="100">
+             <template #default="{ row }">
+                <div class="user-cell">
+                   <el-avatar :size="24" icon="UserFilled" class="small-avatar" />
+                   <span>{{ row.assignee }}</span>
+                </div>
+             </template>
+          </el-table-column>
+
+          <!-- 7. 时效 -->
+          <el-table-column label="时效" width="160">
             <template #default="{ row }">
-              <el-tag
-                :type="row.priority === 'urgent' ? 'danger' : row.priority === 'high' ? 'warning' : row.priority === 'medium' ? 'info' : ''"
-                effect="dark"
-              >
-                {{ getPriorityName(row.priority) }}
-              </el-tag>
+              <div class="time-cell">
+                <div class="create-time">{{ formatTimeShort(row.createTime) }}</div>
+                <div v-if="row.status !== 'completed'" class="deadline-tag" :class="getDeadlineClass(row)">
+                   {{ getDeadlineText(row) }}
+                </div>
+              </div>
             </template>
           </el-table-column>
-          <el-table-column prop="status" label="状态" width="100">
+
+          <!-- 8. 操作 -->
+          <el-table-column label="操作" fixed="right" width="150">
             <template #default="{ row }">
-              <el-tag :type="getStatusTag(row.status)" size="small">
-                {{ getStatusName(row.status) }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column prop="assignee" label="负责人" width="100" />
-          <el-table-column prop="createTime" label="创建时间" width="180">
-            <template #default="{ row }">
-              {{ formatTime(row.createTime) }}
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" fixed="right" width="200">
-            <template #default="{ row }">
-              <el-button size="small" type="primary" link @click="viewWorkOrder(row)">
-                详情
-              </el-button>
-              <el-button
+              <el-button size="small" link type="primary" @click="viewWorkOrder(row)">详情</el-button>
+              <el-button 
                 v-if="row.status !== 'completed' && row.status !== 'cancelled'"
-                size="small"
-                type="success"
-                link
-                @click="updateStatus(row)"
+                size="small" 
+                link 
+                type="warning" 
+                @click="handleWorkOrder(row)"
               >
-                更新状态
+                处理
               </el-button>
             </template>
           </el-table-column>
@@ -156,84 +193,79 @@
         </div>
       </div>
 
-      <!-- 工单详情对话框 -->
+      <!-- 工单详情/处理对话框 -->
       <el-dialog
         v-model="detailVisible"
-        title="工单详情"
+        :title="isHandling ? '工单处理' : '工单详情'"
         width="700px"
+        class="sc2-dialog"
       >
-        <div v-if="selectedWorkOrder">
-          <el-descriptions :column="2" border>
-            <el-descriptions-item label="工单ID">{{ selectedWorkOrder.id }}</el-descriptions-item>
-            <el-descriptions-item label="工单类型">
-              <el-tag :type="getTypeTag(selectedWorkOrder.type)">
-                {{ getTypeName(selectedWorkOrder.type) }}
-              </el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item label="工单标题" :span="2">{{ selectedWorkOrder.title }}</el-descriptions-item>
-            <el-descriptions-item label="设备ID">{{ selectedWorkOrder.deviceId }}</el-descriptions-item>
-            <el-descriptions-item label="设备名称">{{ selectedWorkOrder.deviceName }}</el-descriptions-item>
-            <el-descriptions-item label="优先级">
-              <el-tag
-                :type="selectedWorkOrder.priority === 'urgent' ? 'danger' : selectedWorkOrder.priority === 'high' ? 'warning' : selectedWorkOrder.priority === 'medium' ? 'info' : ''"
-                effect="dark"
-              >
-                {{ getPriorityName(selectedWorkOrder.priority) }}
-              </el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item label="状态">
-              <el-tag :type="getStatusTag(selectedWorkOrder.status)">
-                {{ getStatusName(selectedWorkOrder.status) }}
-              </el-tag>
-            </el-descriptions-item>
-            <el-descriptions-item label="负责人">{{ selectedWorkOrder.assignee }}</el-descriptions-item>
-            <el-descriptions-item label="创建时间">{{ formatTime(selectedWorkOrder.createTime) }}</el-descriptions-item>
-            <el-descriptions-item label="更新时间">{{ formatTime(selectedWorkOrder.updateTime) }}</el-descriptions-item>
-            <el-descriptions-item v-if="selectedWorkOrder.completeTime" label="完成时间">
-              {{ formatTime(selectedWorkOrder.completeTime) }}
-            </el-descriptions-item>
-            <el-descriptions-item label="工单描述" :span="2">
-              {{ selectedWorkOrder.description }}
-            </el-descriptions-item>
-          </el-descriptions>
+        <div v-if="selectedWorkOrder" class="sc2-info-panel detail-container">
+          <!-- Header -->
+          <div class="detail-header" :class="selectedWorkOrder.priority">
+             <div class="header-main">
+                <span class="wo-id-badge">{{ selectedWorkOrder.id }}</span>
+                <span class="title">{{ selectedWorkOrder.title }}</span>
+             </div>
+             <el-tag :type="getStatusTag(selectedWorkOrder.status)">{{ getStatusName(selectedWorkOrder.status) }}</el-tag>
+          </div>
+
+          <div class="detail-body">
+             <!-- Info Grid -->
+             <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">所属站点:</span>
+                    <span class="val highlight">{{ selectedWorkOrder.roomName }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">关联设备:</span>
+                    <span class="val">{{ selectedWorkOrder.deviceName }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">工单类型:</span>
+                    <span class="val">{{ getTypeName(selectedWorkOrder.type) }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">负责人:</span>
+                    <span class="val">{{ selectedWorkOrder.assignee }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">创建时间:</span>
+                    <span class="val">{{ formatTime(selectedWorkOrder.createTime) }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">截止时间:</span>
+                    <span class="val text-danger">{{ formatTime(selectedWorkOrder.deadline || '') }}</span>
+                </div>
+             </div>
+
+             <div class="message-box">
+                <div class="label">工单描述</div>
+                <div class="content">{{ selectedWorkOrder.description }}</div>
+             </div>
+
+             <!-- Processing Form -->
+             <div v-if="isHandling" class="process-section">
+                <el-divider content-position="left">处理反馈</el-divider>
+                <el-form label-width="80px">
+                    <el-form-item label="流转动作">
+                        <el-radio-group v-model="handleAction">
+                            <el-radio label="in-progress">开始处理</el-radio>
+                            <el-radio label="completed">完成工单</el-radio>
+                            <el-radio label="transfer">转派</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="处理说明">
+                        <el-input type="textarea" v-model="handleNote" rows="3" placeholder="请���入处理情况..." />
+                    </el-form-item>
+                </el-form>
+             </div>
+          </div>
         </div>
         <template #footer>
           <el-button @click="detailVisible = false">关闭</el-button>
-          <el-button
-            v-if="selectedWorkOrder && selectedWorkOrder.status !== 'completed' && selectedWorkOrder.status !== 'cancelled'"
-            type="primary"
-            @click="updateStatus(selectedWorkOrder)"
-          >
-            更新状态
-          </el-button>
-        </template>
-      </el-dialog>
-
-      <!-- 更新状态对话框 -->
-      <el-dialog
-        v-model="statusVisible"
-        title="更新工单状态"
-        width="400px"
-      >
-        <el-form label-width="80px">
-          <el-form-item label="当前状态">
-            <el-tag :type="getStatusTag(selectedWorkOrder?.status || '')">
-              {{ getStatusName(selectedWorkOrder?.status || '') }}
-            </el-tag>
-          </el-form-item>
-          <el-form-item label="新状态">
-            <el-select v-model="newStatus" placeholder="请选择新状态" style="width: 100%;">
-              <el-option label="待处理" value="pending" />
-              <el-option label="已分配" value="assigned" />
-              <el-option label="进行中" value="in-progress" />
-              <el-option label="已完成" value="completed" />
-              <el-option label="已取消" value="cancelled" />
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <template #footer>
-          <el-button @click="statusVisible = false">取消</el-button>
-          <el-button type="primary" @click="confirmUpdateStatus">确定</el-button>
+          <el-button v-if="isHandling" type="primary" @click="confirmHandle">提交处理</el-button>
+          <el-button v-else-if="selectedWorkOrder?.status !== 'completed'" type="warning" @click="switchToHandle">去处理</el-button>
         </template>
       </el-dialog>
     </div>
@@ -244,7 +276,10 @@
 import { ref, computed, onMounted, toRefs } from 'vue'
 import { useDeviceStore } from '../stores/device'
 import { ElMessage } from 'element-plus'
-import { Search, Document, Clock, Loading, Select, Plus } from '@element-plus/icons-vue'
+import { 
+    Search, Document, Clock, Loading, Select, Plus, 
+    WarningFilled, Top
+} from '@element-plus/icons-vue'
 import type { WorkOrder } from '../types'
 
 const deviceStore = useDeviceStore()
@@ -252,22 +287,27 @@ const { workOrders, loading } = toRefs(deviceStore)
 
 const searchText = ref('')
 const filterType = ref('')
-const filterStatus = ref('')
+const filterStatus = ref('') // Can be set by clicking KPI cards
 const currentPage = ref(1)
 const pageSize = ref(20)
+
+// Dialog State
 const detailVisible = ref(false)
-const statusVisible = ref(false)
 const selectedWorkOrder = ref<WorkOrder | null>(null)
-const newStatus = ref('')
+const isHandling = ref(false)
+const handleAction = ref('in-progress')
+const handleNote = ref('')
 
 const filteredWorkOrders = computed(() => {
   let result = workOrders.value
 
-  // 搜索过滤
+  // 搜索过滤 (Title, Device, Site)
   if (searchText.value) {
+    const lowerSearch = searchText.value.toLowerCase()
     result = result.filter(wo =>
-      wo.title.toLowerCase().includes(searchText.value.toLowerCase()) ||
-      wo.deviceName.toLowerCase().includes(searchText.value.toLowerCase())
+      wo.title.toLowerCase().includes(lowerSearch) ||
+      wo.deviceName.toLowerCase().includes(lowerSearch) ||
+      (wo.roomName && wo.roomName.toLowerCase().includes(lowerSearch))
     )
   }
 
@@ -295,85 +335,83 @@ const pendingCount = computed(() => workOrders.value.filter(wo => wo.status === 
 const inProgressCount = computed(() => workOrders.value.filter(wo => wo.status === 'in-progress').length)
 const completedCount = computed(() => workOrders.value.filter(wo => wo.status === 'completed').length)
 
+// Helpers
 const getTypeName = (type: string) => {
-  const typeMap: Record<string, string> = {
-    repair: '维修',
-    maintenance: '保养',
-    inspection: '巡检',
-    emergency: '紧急'
-  }
-  return typeMap[type] || type
+  const map: Record<string, string> = { repair: '维修', maintenance: '保养', inspection: '巡检', emergency: '紧急' }
+  return map[type] || type
 }
 
 const getTypeTag = (type: string) => {
-  const tagMap: Record<string, string> = {
-    repair: 'warning',
-    maintenance: 'info',
-    inspection: 'success',
-    emergency: 'danger'
-  }
-  return tagMap[type] || ''
-}
-
-const getPriorityName = (priority: string) => {
-  const priorityMap: Record<string, string> = {
-    low: '低',
-    medium: '中',
-    high: '高',
-    urgent: '紧急'
-  }
-  return priorityMap[priority] || priority
+  const map: Record<string, string> = { repair: 'warning', maintenance: 'info', inspection: 'success', emergency: 'danger' }
+  return map[type] || ''
 }
 
 const getStatusName = (status: string) => {
-  const statusMap: Record<string, string> = {
-    pending: '待处理',
-    assigned: '已分配',
-    'in-progress': '进行中',
-    completed: '已完成',
-    cancelled: '已取消'
-  }
-  return statusMap[status] || status
+  const map: Record<string, string> = { pending: '待处理', assigned: '已分配', 'in-progress': '进行中', completed: '已完成', cancelled: '已取消' }
+  return map[status] || status
 }
 
 const getStatusTag = (status: string) => {
-  const tagMap: Record<string, string> = {
-    pending: 'info',
-    assigned: 'warning',
-    'in-progress': 'primary',
-    completed: 'success',
-    cancelled: 'danger'
-  }
-  return tagMap[status] || ''
+  const map: Record<string, string> = { pending: 'danger', assigned: 'warning', 'in-progress': 'primary', completed: 'success', cancelled: 'info' }
+  return map[status] || ''
 }
 
-const formatTime = (time: string) => {
-  return new Date(time).toLocaleString('zh-CN')
+const formatTime = (time: string) => new Date(time).toLocaleString('zh-CN')
+const formatTimeShort = (time: string) => {
+    const d = new Date(time)
+    return `${d.getMonth()+1}-${d.getDate()} ${d.getHours()}:${d.getMinutes().toString().padStart(2,'0')}`
 }
 
-const viewWorkOrder = (workOrder: WorkOrder) => {
-  selectedWorkOrder.value = workOrder
+// Deadline Logic
+const isOverdue = (row: WorkOrder) => {
+    if (!row.deadline || row.status === 'completed') return false
+    return new Date() > new Date(row.deadline)
+}
+
+const getDeadlineClass = (row: WorkOrder) => {
+    if (isOverdue(row)) return 'overdue'
+    return 'normal'
+}
+
+const getDeadlineText = (row: WorkOrder) => {
+    if (!row.deadline) return ''
+    if (isOverdue(row)) return '已超时'
+    // Calc remaining hours
+    const diff = new Date(row.deadline).getTime() - new Date().getTime()
+    const hours = Math.floor(diff / (1000 * 60 * 60))
+    if (hours < 24) return `剩余 ${hours}h`
+    return `剩余 ${Math.floor(hours/24)}天`
+}
+
+// Actions
+const viewWorkOrder = (row: WorkOrder) => {
+  selectedWorkOrder.value = row
+  isHandling.value = false
   detailVisible.value = true
+}
+
+const handleWorkOrder = (row: WorkOrder) => {
+  selectedWorkOrder.value = row
+  isHandling.value = true
+  handleAction.value = row.status === 'pending' ? 'assigned' : 'in-progress' // Default next step
+  handleNote.value = ''
+  detailVisible.value = true
+}
+
+const switchToHandle = () => {
+    isHandling.value = true
 }
 
 const createWorkOrder = () => {
   ElMessage.info('新建工单功能开发中...')
 }
 
-const updateStatus = (workOrder: WorkOrder) => {
-  selectedWorkOrder.value = workOrder
-  newStatus.value = workOrder.status
-  statusVisible.value = true
+const confirmHandle = async () => {
+  if (!selectedWorkOrder.value) return
+  
+  await deviceStore.updateWorkOrderStatus(selectedWorkOrder.value.id, handleAction.value as WorkOrder['status'])
+  ElMessage.success('处理成功')
   detailVisible.value = false
-}
-
-const confirmUpdateStatus = async () => {
-  if (!selectedWorkOrder.value || !newStatus.value) return
-
-  await deviceStore.updateWorkOrderStatus(selectedWorkOrder.value.id, newStatus.value as WorkOrder['status'])
-  ElMessage.success('工单状态更新成功')
-  statusVisible.value = false
-  selectedWorkOrder.value = null
 }
 
 onMounted(() => {
@@ -385,4 +423,107 @@ onMounted(() => {
 .work-order {
   animation: fadeIn 0.5s ease-out;
 }
+
+/* KPI Cards - Interactive */
+.stat-card-item {
+    cursor: pointer;
+    /* Inherits global .stat-card-item styles */
+    border: 1px solid rgba(0, 240, 255, 0.1);
+}
+.stat-card-item.active {
+    background: rgba(0, 240, 255, 0.15);
+    border-color: var(--tech-primary);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+}
+.stat-card-item.warning.active { border-color: var(--status-warning); background: rgba(255, 214, 0, 0.15); }
+.stat-card-item.success.active { border-color: var(--status-success); background: rgba(0, 230, 118, 0.15); }
+
+/* Toolbar */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.right-tools {
+    display: flex;
+    gap: 12px;
+}
+
+/* Table Styles */
+.status-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.priority-icon { font-size: 18px; }
+.priority-icon.urgent { color: var(--status-danger); animation: pulse 1s infinite; }
+.priority-icon.high { color: var(--status-warning); }
+
+.status-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--text-sub);
+}
+.status-dot.pending { background: var(--status-danger); }
+.status-dot.assigned { background: var(--status-warning); }
+.status-dot.in-progress { background: var(--tech-primary); box-shadow: 0 0 5px var(--tech-primary); }
+.status-dot.completed { background: var(--status-success); }
+
+.title-cell {
+    display: flex;
+    flex-direction: column;
+}
+.wo-title {
+    font-weight: 600;
+    color: var(--text-bright);
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+.wo-id {
+    font-size: 11px;
+    color: var(--text-sub);
+    font-family: 'Rajdhani';
+}
+.text-danger { color: var(--status-danger) !important; }
+
+.site-text {
+    font-weight: 600;
+    color: var(--tech-secondary);
+}
+
+.user-cell {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.small-avatar { background: var(--tech-primary); }
+
+.time-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.create-time { font-size: 12px; color: var(--text-sub); }
+.deadline-tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 0 4px;
+    border-radius: 2px;
+    width: fit-content;
+}
+.deadline-tag.overdue { color: #fff; background: var(--status-danger); }
+.deadline-tag.normal { color: var(--status-warning); background: rgba(255, 214, 0, 0.1); }
+
+/* Dialog */
+.wo-id-badge {
+    background: rgba(0,0,0,0.3);
+    padding: 2px 6px;
+    border: 1px solid var(--tech-primary);
+    color: var(--tech-primary);
+    font-family: 'Rajdhani';
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 12px;
+}
+
+@keyframes pulse { 50% { opacity: 0.5; } }
 </style>
