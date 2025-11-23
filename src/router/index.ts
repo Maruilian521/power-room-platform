@@ -18,6 +18,7 @@ const router = createRouter({
       component: () => import('../views/BigScreen/index.vue'),
       meta: { title: '监控大屏' }
     },
+    // 主应用
     {
       path: '/',
       component: Layout,

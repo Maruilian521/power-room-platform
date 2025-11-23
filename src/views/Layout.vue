@@ -2,6 +2,11 @@
   <div class="layout-container">
     <!-- SC2 Style Top Navigation (Level 1) -->
     <div class="sc2-nav-level-1">
+      <!-- Product Logo -->
+      <div class="product-logo">
+        <img src="/ProductLogo.png" alt="Product Logo" />
+      </div>
+
       <!-- Primary Menu Items -->
       <div class="nav-items">
         <div 
@@ -218,11 +223,35 @@ onUnmounted(() => {
   padding: 0; /* Ensure full width */
 }
 
+/* Product Logo */
+.product-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+}
+
+.product-logo img {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 4px;
+  filter: drop-shadow(0 0 8px rgba(0, 243, 255, 0.3));
+  transition: filter 0.3s;
+}
+
+.product-logo img:hover {
+  filter: drop-shadow(0 0 12px rgba(0, 243, 255, 0.6));
+}
+
 .nav-items {
   flex: 1;
   display: flex;
   height: 100%;
-  justify-content: center; /* Center the menu items like in reference */
+  justify-content: flex-start; /* Align menu items to the left */
 }
 
 .nav-item {
@@ -342,7 +371,7 @@ onUnmounted(() => {
   background: linear-gradient(to bottom, #0a111a, #000000);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   border-top: 1px solid #1a2a3a; /* Top reflection */
   position: relative;
   z-index: 99;
@@ -352,6 +381,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   height: 100%;
+  padding-left: 60px; /* Align with main menu (logo width) */
 }
 
 .sub-nav-item {
@@ -434,9 +464,51 @@ onUnmounted(() => {
   gap: 10px;
 }
 
-.user-name { 
-  font-family: "Orbitron", sans-serif; 
+/* SC2风格头像样式 */
+.user-avatar {
+  background: linear-gradient(135deg, #0a1929 0%, #1a2f42 100%) !important;
+  border: 2px solid var(--tech-primary) !important;
+  box-shadow:
+    0 0 10px rgba(0, 243, 255, 0.5),
+    inset 0 0 10px rgba(0, 243, 255, 0.2) !important;
+  position: relative;
+  overflow: visible !important;
+}
+
+.user-avatar::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, var(--tech-primary), transparent, var(--tech-primary));
+  border-radius: 50%;
+  animation: rotate-border 3s linear infinite;
+  z-index: -1;
+  opacity: 0.5;
+}
+
+@keyframes rotate-border {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.user-avatar .el-icon {
+  color: var(--tech-primary) !important;
+  font-size: 16px !important;
+  filter: drop-shadow(0 0 3px var(--tech-primary));
+}
+
+.user-name {
+  font-family: "Orbitron", sans-serif;
   font-size: 14px;
+  color: #e2e8f0;
+  text-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
 }
 
 .status-item.clock {
@@ -462,5 +534,160 @@ onUnmounted(() => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+</style>
+
+<style>
+/* SC2风格确认框样式 (全局样式，不使用scoped) */
+.sc2-confirm-box {
+  background: linear-gradient(to bottom, #0a111a, #000000) !important;
+  border: 2px solid var(--tech-primary) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 0 30px rgba(0, 243, 255, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.8) !important;
+}
+
+.sc2-confirm-box .el-message-box__header {
+  background: rgba(0, 243, 255, 0.1);
+  border-bottom: 1px solid var(--tech-primary);
+  padding: 15px 20px;
+}
+
+.sc2-confirm-box .el-message-box__title {
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: var(--tech-primary) !important;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px var(--tech-primary);
+}
+
+.sc2-confirm-box .el-message-box__content {
+  padding: 30px 20px !important;
+  color: #e2e8f0 !important;
+}
+
+.sc2-confirm-box .el-message-box__message {
+  font-family: 'Microsoft YaHei', sans-serif !important;
+  font-size: 16px !important;
+  color: #e2e8f0 !important;
+  line-height: 1.6;
+}
+
+.sc2-confirm-box .el-message-box__btns {
+  padding: 10px 20px 20px !important;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+/* 确认按钮 - 危险样式 */
+.sc2-confirm-box .el-button--primary {
+  background: linear-gradient(180deg, #8B0000, #4B0000) !important;
+  border: 1px solid #FF2E63 !important;
+  color: #fff !important;
+  font-family: 'Orbitron', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px;
+  padding: 12px 30px !important;
+  border-radius: 0 !important;
+  text-transform: uppercase;
+  font-size: 14px !important;
+  box-shadow: 0 0 10px rgba(255, 46, 99, 0.3) !important;
+  transition: all 0.3s !important;
+}
+
+.sc2-confirm-box .el-button--primary:hover {
+  background: linear-gradient(180deg, #FF2E63, #8B0000) !important;
+  border-color: #FF4571 !important;
+  box-shadow: 0 0 20px rgba(255, 46, 99, 0.6) !important;
+  transform: translateY(-1px);
+}
+
+/* 取消按钮 */
+.sc2-confirm-box .el-button--default {
+  background: linear-gradient(180deg, #1E2E42, #0B1420) !important;
+  border: 1px solid #3E5878 !important;
+  color: #7B98BC !important;
+  font-family: 'Orbitron', sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px;
+  padding: 12px 30px !important;
+  border-radius: 0 !important;
+  text-transform: uppercase;
+  font-size: 14px !important;
+  transition: all 0.3s !important;
+}
+
+.sc2-confirm-box .el-button--default:hover {
+  border-color: var(--tech-primary) !important;
+  color: #fff !important;
+  background: linear-gradient(180deg, #2E3E52, #1B2430) !important;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.2) !important;
+}
+
+/* 移除默认图标样式 */
+.sc2-confirm-box .el-message-box__status {
+  display: none !important;
+}
+
+/* SC2风格 Message 提示框样式 */
+.el-message {
+  background: linear-gradient(to bottom, #0a111a, #000000) !important;
+  border: 1px solid var(--tech-primary) !important;
+  border-radius: 0 !important;
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.6) !important;
+  padding: 15px 20px !important;
+  min-width: 300px;
+}
+
+.el-message__content {
+  font-family: 'Microsoft YaHei', sans-serif !important;
+  font-size: 14px !important;
+  color: #e2e8f0 !important;
+  font-weight: 500;
+}
+
+/* Success 样式 */
+.el-message--success {
+  border-color: #00E676 !important;
+  box-shadow: 0 0 20px rgba(0, 230, 118, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.6) !important;
+}
+
+.el-message--success .el-message__icon {
+  color: #00E676 !important;
+  font-size: 18px !important;
+}
+
+/* Info 样式 */
+.el-message--info {
+  border-color: var(--tech-primary) !important;
+}
+
+.el-message--info .el-message__icon {
+  color: var(--tech-primary) !important;
+  font-size: 18px !important;
+}
+
+/* Warning 样式 */
+.el-message--warning {
+  border-color: #FFD600 !important;
+  box-shadow: 0 0 20px rgba(255, 214, 0, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.6) !important;
+}
+
+.el-message--warning .el-message__icon {
+  color: #FFD600 !important;
+  font-size: 18px !important;
+}
+
+/* Error 样式 */
+.el-message--error {
+  border-color: #FF2E63 !important;
+  box-shadow: 0 0 20px rgba(255, 46, 99, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.6) !important;
+}
+
+.el-message--error .el-message__icon {
+  color: #FF2E63 !important;
+  font-size: 18px !important;
 }
 </style>
