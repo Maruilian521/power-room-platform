@@ -1,8 +1,8 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import Layout from '../views/Layout.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     // 登录页
     {
@@ -21,26 +21,20 @@ const router = createRouter({
     {
       path: '/',
       component: Layout,
-      redirect: '/dashboard/overview',
+      redirect: '/dashboard/integrated-ops',
       children: [
         // 1. 驾驶舱 (Dashboard)
         {
-          path: 'dashboard/overview',
-          name: 'DashboardOverview',
-          component: () => import('../views/Dashboard.vue'),
-          meta: { title: '运行总览', icon: 'DataBoard' }
-        },
-        {
-          path: 'dashboard/orbital-command',
-          name: 'OrbitalCommand',
-          component: () => import('../views/Dashboard/OrbitalCommand.vue'),
-          meta: { title: '轨道指挥中心', icon: 'Aim' }
+          path: 'dashboard/integrated-ops',
+          name: 'IntegratedOpsCenter',
+          component: () => import('../views/Dashboard/IntegratedOpsCenter.vue'),
+          meta: { title: '智慧运维中心', icon: 'Monitor' }
         },
         {
           path: 'dashboard/command-center',
           name: 'CommandCenter',
           component: () => import('../views/Dashboard/CommandCenter.vue'),
-          meta: { title: '战术指挥中心', icon: 'Aim' }
+          meta: { title: '无人配电指挥中心', icon: 'Aim' }
         },
         {
           path: 'dashboard/ai-security',
@@ -188,6 +182,17 @@ const router = createRouter({
       ]
     }
   ]
+})
+
+// 路由守卫
+router.beforeEach((to, _from, next) => {
+  const token = localStorage.getItem('token')
+  // 如果去往非登录页，且没有token，则跳转登录
+  if (to.path !== '/login' && !token) {
+    next('/login')
+  } else {
+    next()
+  }
 })
 
 export default router

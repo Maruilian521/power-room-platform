@@ -21,9 +21,8 @@ export const navigationData: NavItem[] = [
     subLabel: 'DASHBOARD',
     icon: DataBoard,
     children: [
-      { id: 'overview', label: '运行总览', subLabel: 'OVERVIEW', path: '/dashboard/overview', icon: DataBoard },
-      { id: 'orbital-command', label: '轨道指挥中心', subLabel: 'ORBITAL', path: '/dashboard/orbital-command', icon: Aim },
-      { id: 'command-center', label: '战术指挥中心', subLabel: 'COMMAND', path: '/dashboard/command-center', icon: Aim },
+      { id: 'integrated-ops', label: '智慧运维中心', subLabel: 'OPS CENTER', path: '/dashboard/integrated-ops', icon: Monitor },
+      { id: 'command-center', label: '无人配电指挥中心', subLabel: 'COMMAND CENTER', path: '/dashboard/command-center', icon: Aim },
       { id: 'security-situation', label: 'AI安全态势', subLabel: 'AI SECURITY', path: '/dashboard/ai-security', icon: Warning }
     ]
   },
@@ -33,10 +32,10 @@ export const navigationData: NavItem[] = [
     subLabel: 'MONITORING',
     icon: Monitor,
     children: [
-      { id: 'site-map', label: '站点监控地图', subLabel: 'GIS MAP', path: '/monitoring/site-map', icon: MapLocation },
       { id: 'site-list', label: '站点列表监控', subLabel: 'SITE LIST', path: '/monitoring/site-list', icon: List },
       { id: 'video-patrol', label: '视频巡视中心', subLabel: 'VIDEO', path: '/monitoring/video', icon: VideoCamera },
-      { id: 'env-security', label: '环境与安防', subLabel: 'ENV & SEC', path: '/monitoring/environment', icon: Sunny }
+      { id: 'env-security', label: '环境与安防', subLabel: 'ENV & SEC', path: '/monitoring/environment', icon: Sunny },
+      { id: 'site-map', label: '站点监控地图', subLabel: 'GIS MAP', path: '/monitoring/site-map', icon: MapLocation }
     ]
   },
   {

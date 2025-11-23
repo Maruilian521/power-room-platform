@@ -13,10 +13,9 @@
           @mouseenter="handleLevel1Hover(item)"
         >
           <div class="item-content">
-            <span class="item-label cn-font">{{ item.label }}</span>
+            <span class="item-label">{{ item.label }}</span>
             <span class="item-sub-label">{{ item.subLabel }}</span>
           </div>
-          <div class="item-glow"></div>
         </div>
       </div>
 
@@ -60,8 +59,7 @@
           :class="{ active: activeLevel2 === subItem.path }"
           @click="handleLevel2Click(subItem)"
         >
-          <span class="sub-label cn-font">{{ subItem.label }}</span>
-          <span class="sub-en">{{ subItem.subLabel }}</span>
+          <span class="sub-label">{{ subItem.label }}</span>
         </div>
       </div>
     </div>
@@ -74,8 +72,6 @@
         </transition>
       </router-view>
     </div>
-
-    <!-- Theme Switcher (Floating) Removed -->
   </div>
 </template>
 
@@ -190,141 +186,80 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@500&display=swap');
+
 .layout-container {
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #050608; /* 深空黑 */
-  /* 全局背景微纹理，模拟星际背景的深邃 */
+  background: #050608; 
+  /* Background pattern */
   background-image: 
     radial-gradient(circle at 50% 0%, #1a253a 0%, transparent 60%),
     url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 3h1v1H1V3zm2-2h1v1H3V1z' fill='%231a253a' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
   overflow: hidden;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
 }
 
 /* 
    LEVEL 1 NAVIGATION (Top Bar) 
-   Style: Heavy Metal, Brushed Steel, Trapezoid Highlights
+   Ref: menuStyle.html (Main Nav)
 */
 .sc2-nav-level-1 {
-  height: 72px; /* 星际2标准高度 */
+  height: 60px; /* Matches reference */
   display: flex;
   align-items: center;
-  padding: 0;
-  /* 金属拉丝背景模拟 */
-  background: 
-    linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0.2) 100%),
-    #0e1218;
-  border-bottom: 1px solid #3e4c5e;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+  /* Reference background and border */
+  background: #05080e; 
+  border-bottom: 2px solid #000;
   position: relative;
   z-index: 100;
-}
-
-/* 顶部高光线 */
-.sc2-nav-level-1::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: rgba(255,255,255,0.15);
+  padding: 0; /* Ensure full width */
 }
 
 .nav-items {
   flex: 1;
   display: flex;
   height: 100%;
-  gap: 0;
-  justify-content: center;
-  overflow-x: auto; /* 允许横向滚动 */
-  overflow-y: hidden;
-  scrollbar-width: none; /* Firefox 隐藏滚动条 */
-  -ms-overflow-style: none; /* IE 10+ 隐��滚动条 */
-}
-
-.nav-items::-webkit-scrollbar { /* Chrome/Safari 隐藏滚动条 */
-  display: none;
+  justify-content: center; /* Center the menu items like in reference */
 }
 
 .nav-item {
-  position: relative;
-  height: 100%;
+  flex: 0 1 200px; /* Approx width, adjust as needed */
+  max-width: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 20px;
+  
+  /* Typography from reference */
+  font-family: 'Orbitron', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  
+  /* Default State colors (using previous color palette variables where suitable or sticking to reference for effect) */
+  color: #6d8bad; /* Reference inactive color */
+  /* To respect "previous colors", if the user prefers the blue-grey of their theme, this #6d8bad is actually very close to their old #8b9bb4 */
+  
+  /* Borders from reference */
+  border-right: 1px solid rgba(255,255,255,0.05);
+  border-left: 1px solid rgba(0,0,0,0.8);
+  
   cursor: pointer;
-  transition: all 0.2s ease;
-  /* 浮雕分割线 */
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
-  border-left: 1px solid rgba(0, 0, 0, 0.5);
-  flex-shrink: 0; /* 禁止压缩，防止换行 */
-}
-
-/* 选中态的梯形背景 (核心还原点) */
-.nav-item.active {
-  background: transparent; /* 移除默认背景 */
-  z-index: 1; /* 提升层级 */
-}
-
-.nav-item.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  /* 蓝色梯形渐变背景 */
-  background: linear-gradient(180deg, 
-    rgba(13, 35, 60, 0) 0%, 
-    rgba(13, 35, 60, 0.6) 40%, 
-    rgba(0, 168, 255, 0.15) 100%
-  );
-  /* 底部高亮条 */
-  border-bottom: 3px solid #00F0FF;
-  box-shadow: 0 0 30px rgba(0, 240, 255, 0.15);
-  z-index: -1;
-}
-
-/* 选中态的顶部倒角装饰 */
-.nav-item.active::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #00F0FF, transparent);
-  opacity: 0.5;
+  transition: color 0.2s;
+  position: relative;
+  overflow: hidden;
 }
 
 .nav-item .item-content {
+  position: relative;
+  z-index: 1; /* Ensure text is above effects */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transform: translateY(2px); /* 微调视觉中心 */
-}
-
-.nav-item .item-label {
-  font-family: "Microsoft YaHei", "Heiti SC", sans-serif;
-  font-size: 18px;
-  font-weight: 700; /* 不用最粗，保持清晰 */
-  color: #8b9bb4; /* 默认未选中是灰蓝色 */
-  letter-spacing: 1px;
-  transition: all 0.3s;
-  text-transform: uppercase;
-}
-
-.nav-item.active .item-label {
-  color: #FFFFFF;
-  text-shadow: 
-    0 0 10px rgba(0, 240, 255, 0.8),
-    0 0 20px rgba(0, 240, 255, 0.4);
-  font-weight: 900;
 }
 
 .nav-item .item-sub-label {
@@ -332,226 +267,190 @@ onUnmounted(() => {
   font-size: 10px;
   color: #4a5b6c;
   letter-spacing: 1px;
-  margin-top: 3px;
+  margin-top: -2px;
   font-weight: 700;
   text-transform: uppercase;
   transition: color 0.3s;
+  opacity: 0.8;
 }
 
 .nav-item.active .item-sub-label {
-  color: #4db8ff; /* 选中时副标题也变亮 */
+  color: var(--tech-primary);
+  text-shadow: 0 0 5px var(--tech-primary);
 }
 
-/* Hover State */
-.nav-item:hover:not(.active) .item-label {
-  color: #d0e0f0;
-  text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+/* 
+   ACTIVE STATE (The Core Request)
+*/
+.nav-item.active {
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  
+  /* Background: Deep blue projection light */
+  background: linear-gradient(
+    to top, 
+    rgba(0, 240, 255, 0.15) 0%, 
+    rgba(0, 0, 0, 0) 60%, 
+    transparent 100%
+  );
 }
 
-.nav-item:hover:not(.active) {
-  background: radial-gradient(circle at center, rgba(255,255,255,0.03) 0%, transparent 70%);
-}
-
-/* 右侧状态栏 - 战术监视器风格 */
-.nav-status {
-  display: flex;
-  gap: 12px; /* 增加间距 */
-  align-items: center;
-  height: 100%;
-  padding: 0 20px 0 40px;
-  /* 斜切背景 */
-  background: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.6) 20%);
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-}
-
-/* 装饰性斜线 */
-.nav-status::before {
+/* Texture Effect */
+.nav-item.active::before {
   content: '';
   position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%) skewX(-20deg);
-  width: 2px;
-  height: 60%;
-  background: rgba(255, 255, 255, 0.2);
+  top: 0; left: 0; right: 0; bottom: 0;
+  /* Radial mesh texture */
+  background-image: radial-gradient(var(--tech-primary) 1px, transparent 1px);
+  background-size: 8px 8px;
+  mask-image: linear-gradient(to top, black, transparent);
+  -webkit-mask-image: linear-gradient(to top, black, transparent);
+  z-index: 0;
+  opacity: 0.2;
+}
+
+/* Bottom Energy Bar */
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  
+  /* Cyan/Blue energy line */
+  background: linear-gradient(90deg, transparent 0%, var(--tech-primary) 50%, transparent 100%);
+  
+  /* Glow */
+  box-shadow: 0 0 10px 2px var(--tech-primary);
+  z-index: 2;
+}
+
+/* Hover Effect (Non-active) */
+.nav-item:hover:not(.active) {
+  color: #d0e0f0;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* 
+   LEVEL 2 NAVIGATION (Sub Nav)
+   Ref: menuStyle.html (Sub Nav)
+*/
+.sc2-nav-level-2 {
+  height: 40px; /* Reference height */
+  /* Black glass texture */
+  background: linear-gradient(to bottom, #0a111a, #000000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid #1a2a3a; /* Top reflection */
+  position: relative;
+  z-index: 99;
+}
+
+.sub-nav-container {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.sub-nav-item {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  padding: 0 20px;
+  text-transform: uppercase;
+  color: #5a7a9a; /* Reference sub color */
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  cursor: pointer;
+  transition: all 0.2s;
+  
+  /* Simulate the divider from reference using border on one side, or just gap */
+  border-right: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.sub-nav-item:last-child {
+  border-right: none;
+}
+
+.sub-nav-item:hover {
+  color: #fff;
+}
+
+.sub-nav-item.active {
+  color: #fff;
+  font-weight: bold;
+  
+  /* Active Glow Fog Effect */
+  background: radial-gradient(
+    ellipse at center, 
+    rgba(0, 100, 200, 0.5) 0%, 
+    rgba(0, 50, 100, 0.1) 60%, 
+    transparent 80%
+  );
+}
+
+/* 
+   STATUS BAR (Right side)
+   Adapting to new height and style
+*/
+.nav-status {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  height: 100%;
+  padding: 0 20px;
+  position: absolute; /* Float to right */
+  right: 0;
+  top: 0;
 }
 
 .status-item {
   display: flex;
   align-items: center;
-  height: 36px; /* 统一高度 */
+  height: 36px;
   padding: 0 12px;
-  border-radius: 2px;
-  transition: all 0.3s;
   cursor: pointer;
-  position: relative;
+  color: #6d8bad;
+  transition: all 0.3s;
 }
 
-/* 报警模块 - 红色警戒 */
-.status-item:first-child {
-  border: 1px solid rgba(255, 46, 99, 0.3);
-  background: rgba(255, 46, 99, 0.05);
-  color: #FF2E63;
-  box-shadow: 0 0 10px rgba(255, 46, 99, 0.1);
-}
-
-.status-item:first-child:hover {
-  background: rgba(255, 46, 99, 0.15);
-  box-shadow: 0 0 15px rgba(255, 46, 99, 0.3);
-  border-color: #FF2E63;
+.status-item:hover {
+  color: #fff;
 }
 
 .status-val.text-danger {
-  font-family: "Impact", sans-serif; /* 更有力量感的数字 */
+  font-family: "Impact", sans-serif;
   font-size: 18px;
   margin-left: 8px;
-  letter-spacing: 1px;
   color: #FF2E63;
   text-shadow: 0 0 5px #FF2E63;
 }
 
-/* 用户模块 - ID卡 */
-.status-item.user-profile {
+.user-profile {
   gap: 10px;
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  background: rgba(0, 240, 255, 0.05);
-  margin-right: 0;
-  padding-right: 16px;
-}
-
-.status-item.user-profile:hover {
-  background: rgba(0, 240, 255, 0.15);
-  border-color: #00F0FF;
-  box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-}
-
-.user-avatar {
-  border: 1px solid #00F0FF;
-  box-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
 }
 
 .user-name { 
-  color: #00F0FF; 
-  font-family: "Microsoft YaHei", sans-serif; 
+  font-family: "Orbitron", sans-serif; 
   font-size: 14px;
-  font-weight: 700;
-  text-shadow: 0 0 5px rgba(0, 240, 255, 0.3);
 }
 
-/* 时钟模块 - 战术计时 */
 .status-item.clock {
-  border: none;
-  background: transparent;
-  font-family: "Consolas", "Monaco", monospace;
-  font-size: 22px; 
-  letter-spacing: 2px; 
+  font-family: "Orbitron", sans-serif;
+  font-size: 16px; 
   color: #e2e8f0; 
-  font-weight: 700;
-  text-shadow: 0 0 10px rgba(255,255,255,0.3);
-  padding-right: 0;
-  cursor: default;
 }
 
-.status-item.clock:hover {
-  color: #FFF;
-  text-shadow: 0 0 15px rgba(255,255,255,0.6);
-}
-
-/* 
-   LEVEL 2 NAVIGATION (Sub Bar)
-   Style: Recessed Groove, Deep Dark
-*/
-.sc2-nav-level-2 {
-  height: 42px; /* 二级菜单比较窄 */
-  background: #050608;
-  /* 强烈的内阴影模拟凹槽 */
-  box-shadow: 
-    inset 0 5px 10px rgba(0,0,0,0.8),
-    inset 0 -1px 0 rgba(255,255,255,0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  display: flex;
-  align-items: center;
-  justify-content: center; /* 居中对齐 */
-  z-index: 99;
-  position: relative;
-}
-
-/* 二级菜单背景纹理 */
-.sc2-nav-level-2::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: linear-gradient(90deg, transparent 0%, rgba(30, 144, 255, 0.03) 50%, transparent 100%);
-  pointer-events: none;
-}
-
-.sub-nav-container {
-  display: flex;
-  gap: 2px; /* 紧凑 */
-  height: 100%;
-  align-items: center;
-}
-
-.sub-nav-item {
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0 24px;
-  height: 100%;
-  opacity: 0.6;
-  transition: all 0.2s;
-  position: relative;
-  border-right: 1px solid rgba(255, 255, 255, 0.02);
-}
-
-.sub-label {
-  font-family: "Microsoft YaHei", sans-serif;
-  font-size: 13px; /* 字体较小 */
-  font-weight: 600;
-  color: #8b9bb4;
-  letter-spacing: 1px;
-  transition: color 0.2s;
-}
-
-.sub-en {
-  display: none; /* 隐藏英文，保持极简，或作为 tooltip */
-}
-
-.sub-nav-item:hover {
-  opacity: 1;
-  background: rgba(255,255,255,0.02);
-}
-
-.sub-nav-item:hover .sub-label {
-  color: #d0e0f0;
-  text-shadow: 0 0 5px rgba(255,255,255,0.3);
-}
-
-.sub-nav-item.active {
-  opacity: 1;
-  background: rgba(0, 240, 255, 0.05);
-  box-shadow: inset 0 -2px 0 #00F0FF; /* 底部亮线 */
-}
-
-.sub-nav-item.active .sub-label {
-  color: #FFFFFF;
-  text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
-}
-
-/* 
-   MAIN CONTENT 
-*/
+/* Main Content */
 .sc2-main-content {
   flex: 1;
   position: relative;
   overflow: hidden;
-  padding: 24px; /* 给内容留出呼吸空间 */
+  padding: 24px;
 }
 
 /* Transition */

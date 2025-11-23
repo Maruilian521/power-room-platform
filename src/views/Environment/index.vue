@@ -44,7 +44,7 @@
             </div>
           </div>
 
-          <!-- 核心环境指��� -->
+          <!-- 核心环境指 -->
           <div class="unit-body">
             <div class="metric-row">
               <div class="metric">
@@ -163,7 +163,7 @@ const getRoomStatusClass = (room: any) => {
 const getStatusLabel = (room: any) => {
   if (room.smokeAlarm) return '烟感告警'
   if (room.waterAlarm) return '水浸告警'
-  if (parseFloat(room.temp) > 35) return '高温预��'
+  if (parseFloat(room.temp) > 35) return '高温预警'
   if (room.doorOpen) return '门禁开启'
   return '正常运行'
 }

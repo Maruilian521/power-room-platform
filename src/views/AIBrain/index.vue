@@ -90,7 +90,7 @@
                 </div>
                 <div class="todo-title">{{ todo.title }}</div>
               </div>
-              <el-button type="primary" size="small" plain class="handle-btn">���理</el-button>
+              <el-button type="primary" size="small" plain class="handle-btn">处理</el-button>
             </div>
           </div>
         </div>
@@ -321,7 +321,7 @@ onUnmounted(() => {
   color: var(--text-main);
 }
 
-/* 顶部统��行 */
+/* 顶部统行 */
 .stats-row {
   display: grid;
   grid-template-columns: repeat(6, 1fr);

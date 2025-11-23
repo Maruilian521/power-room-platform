@@ -25,7 +25,7 @@ onMounted(() => {
   }
 })
 
-// 清理定时��
+// 清理定时
 onUnmounted(() => {
   if (timer) {
     clearInterval(timer)

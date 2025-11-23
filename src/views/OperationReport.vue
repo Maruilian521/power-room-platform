@@ -302,7 +302,7 @@ const generateTables = () => {
   ticketData.value = Array.from({length: 8}, (_, i) => ({
     id: `T-20231122-${100+i}`,
     type: Math.random() > 0.5 ? '工作票' : '操作票',
-    content: Math.random() > 0.5 ? '1#变压器检修' : '10kV 母线倒闸��作',
+    content: Math.random() > 0.5 ? '1#变压器检修' : '10kV 母线倒闸操作',
     site: '总部大楼 #1',
     date: '2023-11-' + (22 - i),
     status: 'Qualified'

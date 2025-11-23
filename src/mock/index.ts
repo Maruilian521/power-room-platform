@@ -1,5 +1,5 @@
 import Mock from 'mockjs'
-import type { Device, Alarm, WorkOrder, Statistics, Room, AlarmCategory } from '../types'
+import type { Device, Alarm, WorkOrder, Statistics, Room, AlarmCategory, RealtimeData } from '../types'
 
 // 配置Mock
 Mock.setup({
@@ -220,12 +220,47 @@ let alarms = generateAlarms()
 let workOrders = generateWorkOrders()
 let statistics = generateStatistics(devices, alarms, workOrders)
 
+// 实时数据生成
+const generateRealtimeData = (): RealtimeData => {
+  const voltage = [
+    Mock.Random.float(380, 420, 1, 1),
+    Mock.Random.float(380, 420, 1, 1),
+    Mock.Random.float(380, 420, 1, 1)
+  ]
+  const current = [
+    Mock.Random.float(80, 200, 1, 1),
+    Mock.Random.float(80, 200, 1, 1),
+    Mock.Random.float(80, 200, 1, 1)
+  ]
+  const power = voltage.map((v, idx) => Number(((v * (current[idx] || 0)) / 1000).toFixed(2)))
+  const temperature = [
+    Mock.Random.float(25, 55, 1, 1),
+    Mock.Random.float(25, 55, 1, 1),
+    Mock.Random.float(25, 55, 1, 1)
+  ]
+
+  return {
+    timestamp: new Date().toISOString(),
+    voltage,
+    current,
+    power,
+    temperature
+  }
+}
+
+let realtime = generateRealtimeData()
+
 // Mock API
 Mock.mock('/api/rooms', 'get', { code: 200, data: rooms, message: 'success' })
 Mock.mock('/api/devices', 'get', { code: 200, data: devices, message: 'success' })
 Mock.mock('/api/alarms', 'get', { code: 200, data: alarms, message: 'success' })
 Mock.mock('/api/workorders', 'get', { code: 200, data: workOrders, message: 'success' })
 Mock.mock('/api/statistics', 'get', { code: 200, data: statistics, message: 'success' })
+Mock.mock('/api/realtime', 'get', () => {
+  // 每次请求生成一份最新数据，保持页面活跃感
+  realtime = generateRealtimeData()
+  return { code: 200, data: realtime, message: 'success' }
+})
 
 // 生成两票数据
 const generateTickets = () => {

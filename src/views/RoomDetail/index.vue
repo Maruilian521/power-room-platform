@@ -102,7 +102,7 @@ const tabs = [
   { id: 'cabinet', label: '高压柜组态', icon: Monitor, component: ConstructionPlaceholder('HV CABINET CONFIG') },
   { id: 'env', label: '环境监测', icon: Sunny, component: EnvRadar },
   { id: 'power', label: '电能质量', icon: Histogram, component: ConstructionPlaceholder('POWER QUALITY') },
-  { id: 'alarm', label: '告警/事���', icon: Bell, component: AlarmList }, 
+  { id: 'alarm', label: '告警/事件', icon: Bell, component: AlarmList }, 
   { id: 'workorder', label: '工单/巡检', icon: Files, component: WorkOrder },
 ]
 

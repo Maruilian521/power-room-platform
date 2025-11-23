@@ -156,7 +156,7 @@
           <h3 class="text-lg font-bold mb-2">1. 概述 (Overview)</h3>
           <p class="mb-4 leading-relaxed">
             本文档详细描述了 {{ currentDoc?.title }} 的操作规范与故障处理流程。
-            所有的操作���须严格遵守《电力安全工作规程》。
+            所有的操作须严格遵守《电力安全工作规程》。
           </p>
           <h3 class="text-lg font-bold mb-2">2. 核心步骤 (Procedures)</h3>
           <ul class="list-disc pl-5 space-y-2">

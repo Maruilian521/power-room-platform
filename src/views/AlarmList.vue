@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div class="alarm-center">
-      <!-- 顶部统计概览 -->
+      <!-- 顶部统计总览 -->
       <div class="dashboard-header">
         <div class="stat-card-item critical">
           <div class="icon-wrapper">
@@ -17,7 +17,7 @@
             <el-icon><WarningFilled /></el-icon>
           </div>
           <div class="info">
-            <div class="label">一般预警</div>
+            <div class="label">一般告警</div>
             <div class="value">{{ warningCount }}</div>
           </div>
         </div>
@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <!-- 主体内容区 -->
+      <!-- 主体内容 -->
       <div class="main-content module-card">
         <div class="module-header">
             <span class="title">告警监控台</span>
@@ -66,7 +66,7 @@
                 :value="room.id"
               />
             </el-select>
-            <el-select v-model="filterLevel" placeholder="告警级别" clearable style="width: 120px">
+            <el-select v-model="filterLevel" placeholder="告警等级" clearable style="width: 120px">
               <el-option label="严重" value="critical" />
               <el-option label="警告" value="warning" />
               <el-option label="信息" value="info" />
@@ -107,7 +107,7 @@
           
           <el-table-column prop="time" label="发生时间" width="180" sortable />
           
-          <el-table-column label="告警级别" width="100">
+          <el-table-column label="告警等级" width="100">
             <template #default="{ row }">
               <el-tag :type="getLevelTag(row.level)" effect="dark">
                 {{ getLevelText(row.level) }}
@@ -115,11 +115,11 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="���警类型" width="150">
+          <el-table-column label="告警类型" width="150">
              <template #default="{ row }">
                 <div class="type-cell">
                     <el-icon v-if="row.category === 'ai'" class="ai-icon"><View /></el-icon>
-                    <span>{{ row.type }}</span>
+                    <span>{{ getTypeText(row.type) }}</span>
                 </div>
              </template>
           </el-table-column>
@@ -173,7 +173,7 @@
            <div class="detail-header" :class="currentAlarm.level">
               <div class="header-main">
                  <span class="level-badge">{{ getLevelText(currentAlarm.level) }}</span>
-                 <span class="title">{{ currentAlarm.type }} - {{ currentAlarm.roomName }}</span>
+                 <span class="title">{{ getTypeText(currentAlarm.type) }} - {{ currentAlarm.roomName }}</span>
               </div>
               <div class="time">{{ currentAlarm.time }}</div>
            </div>
@@ -311,13 +311,30 @@ const getStatusTag = (status: string) => {
 }
 
 const getStatusText = (status: string) => {
-    const map: Record<string, string> = { pending: '待处理', processing: '处理中', resolved: '已解决' }
+    const map: Record<string, string> = { pending: '待处理', processing: '处理中', resolved: '已解除' }
     return map[status] || status
 }
 
 const getCategoryText = (cat: string) => {
     const map: Record<string, string> = { power: '电力', environment: '环境', ai: 'AI识别', security: '安防', device: '设备' }
     return map[cat] || cat
+}
+
+const typeLabelMap: Record<string, string> = {
+    voltage_high: '电压过高',
+    voltage_low: '电压过低',
+    switch_fail: '开关故障',
+    temp_high: '温度过高',
+    smoke: '烟感报警',
+    pd_warning: '局放预警',
+    ai_helmet: '未戴安全帽',
+    ai_fire: '火焰识别',
+    ai_uniform: '工服巡检异常',
+    ai_intrusion: '区域入侵'
+}
+
+const getTypeText = (type: string) => {
+    return typeLabelMap[type] || type
 }
 
 const getRoomLocation = (roomId: string) => {

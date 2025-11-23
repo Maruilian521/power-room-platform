@@ -256,7 +256,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="处理说明">
-                        <el-input type="textarea" v-model="handleNote" rows="3" placeholder="请���入处理情况..." />
+                        <el-input type="textarea" v-model="handleNote" rows="3" placeholder="请录入处理情况..." />
                     </el-form-item>
                 </el-form>
              </div>

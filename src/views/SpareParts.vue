@@ -249,7 +249,7 @@ const confirmOutbound = () => {
     ElMessage.success('出库成功，已关联工单')
     outboundVisible.value = false
 }
-const viewHistory = (row: any) => ElMessage.info(`查看 ${row.name} ���水记录`)
+const viewHistory = (row: any) => ElMessage.info(`查看 ${row.name} 流水记录`)
 const handleAdjust = () => ElMessage.info('盘点功能开发中')
 const handleScrap = () => ElMessage.warning('报废需审批')
 

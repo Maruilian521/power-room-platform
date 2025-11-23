@@ -74,7 +74,7 @@
             </div>
             <div class="temp-humi-panel">
               <div class="th-row">
-                <span class="th-label">平���温度</span>
+                <span class="th-label">平均温度</span>
                 <span class="th-val">24.5°C</span>
                 <div class="th-bar"><div class="fill" style="width: 45%"></div></div>
               </div>
@@ -184,7 +184,7 @@ const securityLogs = ref([
   height: 100%;
 }
 
-/* 通���卡片样式 (继承自全局或重写) */
+/* 通用卡片样式 (继承自全局或重写) */
 .module-card {
   background: rgba(13, 18, 26, 0.85);
   backdrop-filter: blur(10px);

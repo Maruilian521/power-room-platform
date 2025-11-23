@@ -311,12 +311,16 @@ const handleLogin = () => {
       // 设置主题为 Terran 以匹配之前的要求
       document.documentElement.setAttribute('data-theme', 'terran-command')
       localStorage.setItem('app-theme', 'terran-command')
+      localStorage.setItem('token', 'mock-token') // Set mock token
+      localStorage.setItem('user', JSON.stringify({ name: '指挥官', role: 'admin' }))
       router.push('/dashboard/overview')
     }, 800)
   } else {
     // 也可以直接进入，方便测试
     document.documentElement.setAttribute('data-theme', 'terran-command')
     localStorage.setItem('app-theme', 'terran-command')
+    localStorage.setItem('token', 'mock-token') // Set mock token
+    localStorage.setItem('user', JSON.stringify({ name: '指挥官', role: 'admin' }))
     router.push('/dashboard/overview')
   }
 }

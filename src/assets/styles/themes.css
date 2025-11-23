@@ -173,7 +173,7 @@
 
 
 
-  /* 边框与线�� */
+  /* 边框与线 */
 
   --border-light: rgba(0, 240, 255, 0.3);
 
@@ -1109,6 +1109,30 @@
     font-family: 'Rajdhani', sans-serif;
 }
 
+[data-theme="terran-command"] .sc2-dialog .el-textarea__inner {
+    background-color: rgba(0, 0, 0, 0.35) !important;
+    color: var(--text-bright) !important;
+    box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.35) inset !important;
+    font-family: 'Rajdhani', sans-serif;
+    border-radius: 2px;
+}
+
+[data-theme="terran-command"] .sc2-dialog .el-textarea__inner::placeholder {
+    color: var(--text-sub) !important;
+    letter-spacing: 0.5px;
+}
+
+[data-theme="terran-command"] .sc2-dialog .el-divider {
+    border-color: rgba(0, 240, 255, 0.25) !important;
+}
+
+[data-theme="terran-command"] .sc2-dialog .el-divider__text {
+    color: var(--tech-primary) !important;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 1px;
+    text-shadow: 0 0 6px rgba(0, 240, 255, 0.4);
+}
+
 /* Selects */
 [data-theme="terran-command"] .el-select-dropdown__item {
     color: var(--text-main) !important;
@@ -1504,7 +1528,7 @@
 
 
 /* ============================================
-   �� IotMatrix 实验室版 (Light Lab)
+    IotMatrix 实验室版 (Light Lab)
    风格: 陶瓷质感、磨砂玻璃、弥散光影、极简
    ============================================ */
 [data-theme="light-blue"] {

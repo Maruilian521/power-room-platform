@@ -94,7 +94,7 @@
         <el-table-column prop="location" label="详细地址" min-width="200" show-overflow-tooltip>
             <template #default="{ row }">
                 <span class="address-text">{{ row.location }}</span>
-                <el-icon class="copy-icon" title="复制地��"><CopyDocument /></el-icon>
+                <el-icon class="copy-icon" title="复制地址"><CopyDocument /></el-icon>
             </template>
         </el-table-column>
         <el-table-column prop="manager" label="负责人" width="100" />

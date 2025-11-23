@@ -44,7 +44,7 @@
               <!-- PTZ支持标识 -->
               <el-icon v-if="data.supportPTZ" class="ptz-icon" title="支持云台"><Aim /></el-icon>
 
-              <!-- 右���菜单触发器 -->
+              <!-- 右菜单触发器 -->
               <el-dropdown trigger="click" @command="handleCommand($event, data)">
                 <el-icon class="more-icon"><More /></el-icon>
                 <template #dropdown>
