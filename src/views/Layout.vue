@@ -168,7 +168,7 @@ const handleUserCommand = (command: string) => {
       // cancel
     })
   } else if (command === 'profile') {
-    ElMessage.info('指挥官档案访问受限 [权限不足]')
+    router.push('/user/profile')
   } else if (command === 'settings') {
     router.push('/system/users')
   }
@@ -212,7 +212,7 @@ onUnmounted(() => {
    Ref: menuStyle.html (Main Nav)
 */
 .sc2-nav-level-1 {
-  height: 60px; /* Matches reference */
+  height: 78px;
   display: flex;
   align-items: center;
   /* Reference background and border */
@@ -228,8 +228,8 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 60px;
-  height: 60px;
+  width: 78px;
+  height: 78px;
   background: rgba(0, 0, 0, 0.3);
   flex-shrink: 0;
 }
@@ -260,22 +260,21 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  /* Typography from reference */
-  font-family: 'Orbitron', sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  
+
+  /* Typography - 使用苹方/思源字体 */
+  font-family: 'PingFang SC', 'Source Han Sans CN', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 2px;
+
   /* Default State colors (using previous color palette variables where suitable or sticking to reference for effect) */
   color: #6d8bad; /* Reference inactive color */
   /* To respect "previous colors", if the user prefers the blue-grey of their theme, this #6d8bad is actually very close to their old #8b9bb4 */
-  
+
   /* Borders from reference */
   border-right: 1px solid rgba(255,255,255,0.05);
   border-left: 1px solid rgba(0,0,0,0.8);
-  
+
   cursor: pointer;
   transition: color 0.2s;
   position: relative;
@@ -292,12 +291,12 @@ onUnmounted(() => {
 }
 
 .nav-item .item-sub-label {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: 10px;
+  font-family: 'PingFang SC', 'Source Han Sans CN', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  font-size: 14px;
   color: #4a5b6c;
   letter-spacing: 1px;
-  margin-top: -2px;
-  font-weight: 700;
+  margin-top: 2px;
+  font-weight: 500;
   text-transform: uppercase;
   transition: color 0.3s;
   opacity: 0.8;
@@ -366,7 +365,7 @@ onUnmounted(() => {
    Ref: menuStyle.html (Sub Nav)
 */
 .sc2-nav-level-2 {
-  height: 40px; /* Reference height */
+  height: 56px;
   /* Black glass texture */
   background: linear-gradient(to bottom, #0a111a, #000000);
   display: flex;
@@ -381,15 +380,15 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   height: 100%;
-  padding-left: 60px; /* Align with main menu (logo width) */
+  padding-left: 78px; /* Align with main menu (logo width) */
 }
 
 .sub-nav-item {
-  font-family: 'Orbitron', sans-serif;
-  font-size: 14px;
+  font-family: 'PingFang SC', 'Source Han Sans CN', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
   letter-spacing: 1px;
   padding: 0 20px;
-  text-transform: uppercase;
   color: #5a7a9a; /* Reference sub color */
   position: relative;
   display: flex;
@@ -452,9 +451,13 @@ onUnmounted(() => {
   color: #fff;
 }
 
+.status-item .el-icon {
+  font-size: 22px;
+}
+
 .status-val.text-danger {
   font-family: "Impact", sans-serif;
-  font-size: 18px;
+  font-size: 20px;
   margin-left: 8px;
   color: #FF2E63;
   text-shadow: 0 0 5px #FF2E63;
@@ -506,15 +509,15 @@ onUnmounted(() => {
 
 .user-name {
   font-family: "Orbitron", sans-serif;
-  font-size: 14px;
+  font-size: 18px;
   color: #e2e8f0;
   text-shadow: 0 0 5px rgba(0, 243, 255, 0.3);
 }
 
 .status-item.clock {
   font-family: "Orbitron", sans-serif;
-  font-size: 16px; 
-  color: #e2e8f0; 
+  font-size: 20px;
+  color: #e2e8f0;
 }
 
 /* Main Content */

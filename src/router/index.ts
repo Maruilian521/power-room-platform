@@ -165,7 +165,7 @@ const router = createRouter({
         {
           path: 'system/users',
           name: 'UserManagement',
-          component: () => import('../views/ComingSoon.vue'), // Placeholder
+          component: () => import('../views/UserManagement.vue'),
           meta: { title: '用户与权限管理', icon: 'User' }
         },
         {
@@ -179,6 +179,13 @@ const router = createRouter({
           name: 'DataDictionary',
           component: () => import('../views/ComingSoon.vue'), // Placeholder
           meta: { title: '数据字典', icon: 'Collection' }
+        },
+        // 个人档案 (Hidden from menu, accessible via user dropdown)
+        {
+          path: 'user/profile',
+          name: 'UserProfile',
+          component: () => import('../views/UserProfile.vue'),
+          meta: { title: '个人档案', hidden: true }
         }
       ]
     }
