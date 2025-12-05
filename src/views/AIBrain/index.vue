@@ -353,6 +353,17 @@ onUnmounted(() => {
   gap: 20px;
 }
 
+.middle-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-module {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 /* 常用功能 */
 .function-grid {
   display: grid;

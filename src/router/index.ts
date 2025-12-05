@@ -48,7 +48,7 @@ const router = createRouter({
         {
           path: 'monitoring/site-map',
           name: 'SiteMap',
-          component: () => import('../views/ComingSoon.vue'), // Placeholder
+          component: () => import('../views/SiteMap.vue'),
           meta: { title: '站点监控地图', icon: 'MapLocation' }
         },
         {
@@ -93,7 +93,7 @@ const router = createRouter({
         {
           path: 'om/inspection',
           name: 'InspectionManagement',
-          component: () => import('../views/ComingSoon.vue'), // Placeholder for group
+          component: () => import('../views/InspectionManagement.vue'),
           meta: { title: '巡检管理', icon: 'Position' }
         },
         {
@@ -145,20 +145,32 @@ const router = createRouter({
         {
           path: 'analytics/power-quality',
           name: 'PowerQualityAnalytics',
-          component: () => import('../views/ComingSoon.vue'), // Placeholder
+          component: () => import('../views/PowerQuality.vue'),
           meta: { title: '电能质量报表', icon: 'Histogram' }
         },
         {
           path: 'analytics/health',
           name: 'DeviceHealthAnalytics',
-          component: () => import('../views/ComingSoon.vue'), // Placeholder
+          component: () => import('../views/DeviceHealth.vue'),
           meta: { title: '设备健康报告', icon: 'DataAnalysis' }
         },
         {
           path: 'analytics/load',
           name: 'LoadAnalysis',
-          component: () => import('../views/ComingSoon.vue'), // Placeholder
+          component: () => import('../views/LoadAnalysis.vue'),
           meta: { title: '负荷/趋势分析', icon: 'TrendCharts' }
+        },
+        {
+          path: 'analytics/duty-record',
+          name: 'DutyRecord',
+          component: () => import('../views/DutyRecord.vue'),
+          meta: { title: '配电室值班记录表', icon: 'Document' }
+        },
+        {
+          path: 'analytics/energy-report',
+          name: 'EnergyReport',
+          component: () => import('../views/EnergyReport.vue'),
+          meta: { title: '电能报表', icon: 'Histogram' }
         },
 
         // 6. 系统与策略配置 (System)
@@ -171,13 +183,13 @@ const router = createRouter({
         {
           path: 'system/strategies',
           name: 'SystemStrategies',
-          component: () => import('../views/ComingSoon.vue'), // Placeholder
+          component: () => import('../views/StrategyConfig.vue'),
           meta: { title: '告警与AI策略', icon: 'Setting' }
         },
         {
           path: 'system/dictionary',
           name: 'DataDictionary',
-          component: () => import('../views/ComingSoon.vue'), // Placeholder
+          component: () => import('../views/DataDictionary.vue'),
           meta: { title: '数据字典', icon: 'Collection' }
         },
         // 个人档案 (Hidden from menu, accessible via user dropdown)

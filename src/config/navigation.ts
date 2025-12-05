@@ -71,7 +71,9 @@ export const navigationData: NavItem[] = [
       { id: 'ops-report', label: '运维报表', subLabel: 'OPS REPORT', path: '/analytics/operation', icon: Document },
       { id: 'power-quality', label: '电能质量', subLabel: 'QUALITY', path: '/analytics/power-quality', icon: Histogram },
       { id: 'device-health', label: '设备健康', subLabel: 'HEALTH', path: '/analytics/health', icon: DataAnalysis },
-      { id: 'load-analysis', label: '负荷分析', subLabel: 'LOAD', path: '/analytics/load', icon: TrendCharts }
+      { id: 'load-analysis', label: '负荷分析', subLabel: 'LOAD', path: '/analytics/load', icon: TrendCharts },
+      { id: 'duty-record', label: '配电室值班记录表', subLabel: 'DUTY RECORD', path: '/analytics/duty-record', icon: Document },
+      { id: 'energy-report', label: '电能报表', subLabel: 'ENERGY REPORT', path: '/analytics/energy-report', icon: Histogram }
     ]
   },
   {

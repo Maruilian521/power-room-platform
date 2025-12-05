@@ -7,6 +7,25 @@
         <span class="bar-title">运维态势分析报告 (O&M TACTICAL REPORT)</span>
       </div>
       <div class="bar-right">
+        <!-- 视图切换 -->
+        <div class="view-switch">
+          <button
+            :class="['switch-btn', { active: viewMode === 'report' }]"
+            @click="viewMode = 'report'"
+            title="报表视图"
+          >
+            <el-icon><Document /></el-icon>
+            <span>报表</span>
+          </button>
+          <button
+            :class="['switch-btn', { active: viewMode === 'list' }]"
+            @click="viewMode = 'list'"
+            title="列表视图"
+          >
+            <el-icon><List /></el-icon>
+            <span>列表</span>
+          </button>
+        </div>
         <el-radio-group v-model="timeRange" class="sc2-radio-group mr-4" size="small">
           <el-radio-button label="week">本周</el-radio-button>
           <el-radio-button label="month">本月</el-radio-button>
@@ -22,6 +41,8 @@
       </div>
     </div>
 
+    <!-- ==================== 报表视图 ==================== -->
+    <template v-if="viewMode === 'report'">
     <!-- KPI Dashboard (Global) -->
     <div class="grid grid-cols-4 gap-4 mb-4">
       <div class="stat-card-item">
@@ -216,17 +237,184 @@
 
       </el-tabs>
     </div>
+    </template>
+
+    <!-- ==================== 列表视图 ==================== -->
+    <template v-else>
+      <div class="list-view-container">
+        <!-- 列表工具栏 -->
+        <div class="list-toolbar">
+          <div class="toolbar-left">
+            <el-input
+              v-model="listSearchKeyword"
+              placeholder="搜索站点、任务..."
+              style="width: 200px"
+              clearable
+            >
+              <template #prefix>
+                <el-icon><Search /></el-icon>
+              </template>
+            </el-input>
+            <el-select v-model="listTypeFilter" placeholder="类型筛选" style="width: 120px" clearable>
+              <el-option label="全部" value="" />
+              <el-option label="工单" value="workorder" />
+              <el-option label="巡检" value="inspection" />
+              <el-option label="缺陷" value="defect" />
+              <el-option label="两票" value="ticket" />
+            </el-select>
+          </div>
+          <div class="toolbar-right">
+            <span class="record-count">共 {{ listData.length }} 条记录</span>
+          </div>
+        </div>
+
+        <!-- 列表卡片 -->
+        <div class="list-cards">
+          <div
+            v-for="item in listData"
+            :key="item.id"
+            :class="['list-card', item.type]"
+          >
+            <div class="card-header">
+              <div class="card-type-info">
+                <span :class="['type-tag', item.type]">{{ item.typeLabel }}</span>
+                <span class="card-id">{{ item.id }}</span>
+              </div>
+              <div :class="['card-status', item.statusType]">{{ item.status }}</div>
+            </div>
+            <div class="card-body">
+              <div class="card-title">{{ item.title }}</div>
+              <div class="card-meta">
+                <div class="meta-item">
+                  <el-icon><Location /></el-icon>
+                  <span>{{ item.site }}</span>
+                </div>
+                <div class="meta-item">
+                  <el-icon><Calendar /></el-icon>
+                  <span>{{ item.date }}</span>
+                </div>
+                <div class="meta-item" v-if="item.person">
+                  <el-icon><User /></el-icon>
+                  <span>{{ item.person }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <div class="card-stats">
+                <span v-if="item.score" class="stat-item">
+                  <span class="stat-label">评分</span>
+                  <span class="stat-value primary">{{ item.score }}</span>
+                </span>
+                <span v-if="item.issues !== undefined" class="stat-item">
+                  <span class="stat-label">隐患</span>
+                  <span :class="['stat-value', item.issues > 0 ? 'warning' : 'success']">{{ item.issues }}</span>
+                </span>
+                <span v-if="item.duration" class="stat-item">
+                  <span class="stat-label">耗时</span>
+                  <span class="stat-value">{{ item.duration }}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 空状态 -->
+        <div v-if="listData.length === 0" class="empty-state">
+          <el-icon><Document /></el-icon>
+          <span>暂无符合条件的记录</span>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import * as echarts from 'echarts'
-import { DataAnalysis, Files, Position, Warning, Document } from '@element-plus/icons-vue'
+import { DataAnalysis, Files, Position, Warning, Document, List, Search, Location, Calendar, User } from '@element-plus/icons-vue'
 
+const viewMode = ref<'report' | 'list'>('report')
 const timeRange = ref('month')
 const selectedSites = ref([])
 const activeTab = ref('overview')
+const listSearchKeyword = ref('')
+const listTypeFilter = ref('')
+
+// 列表数据
+const listData = computed(() => {
+  const items: any[] = []
+
+  // 工单数据
+  rankingData.value.forEach((item, index) => {
+    items.push({
+      id: `wo-${index}`,
+      type: 'workorder',
+      typeLabel: '工单',
+      title: `${item.name} 运维工单`,
+      site: item.name,
+      date: new Date().toISOString().split('T')[0],
+      person: item.manager,
+      status: '已完成',
+      statusType: 'success',
+      score: item.score,
+      issues: item.defectCount
+    })
+  })
+
+  // 巡检数据
+  inspectionData.value.forEach((item, index) => {
+    items.push({
+      id: `insp-${index}`,
+      type: 'inspection',
+      typeLabel: '巡检',
+      title: item.task,
+      site: item.site,
+      date: item.date,
+      person: item.person,
+      status: item.status === 'Done' ? '已完成' : '进行中',
+      statusType: item.status === 'Done' ? 'success' : 'warning',
+      issues: item.issues
+    })
+  })
+
+  // 缺陷数据
+  defectRankingData.value.forEach((item, index) => {
+    items.push({
+      id: `def-${index}`,
+      type: 'defect',
+      typeLabel: '缺陷',
+      title: `${item.name} 缺陷记录`,
+      site: item.name,
+      date: new Date().toISOString().split('T')[0],
+      status: item.p1 > 0 ? '紧急' : (item.p2 > 0 ? '重要' : '一般'),
+      statusType: item.p1 > 0 ? 'danger' : (item.p2 > 0 ? 'warning' : 'info'),
+      issues: item.total
+    })
+  })
+
+  // 两票数据
+  ticketData.value.forEach((item, index) => {
+    items.push({
+      id: `ticket-${index}`,
+      type: 'ticket',
+      typeLabel: item.type,
+      title: item.content,
+      site: item.site,
+      date: item.date,
+      status: item.status === 'Qualified' ? '合格' : '不合格',
+      statusType: item.status === 'Qualified' ? 'success' : 'danger'
+    })
+  })
+
+  // 筛选
+  return items.filter(item => {
+    const matchKeyword = !listSearchKeyword.value ||
+      item.title.includes(listSearchKeyword.value) ||
+      item.site.includes(listSearchKeyword.value)
+    const matchType = !listTypeFilter.value || item.type === listTypeFilter.value
+    return matchKeyword && matchType
+  })
+})
 
 // KPI Data
 const kpi = ref({
@@ -619,5 +807,273 @@ onUnmounted(() => {
   border: 1px solid rgba(255,255,255,0.05);
   border-radius: 4px;
   padding: 16px;
+}
+
+/* 视图切换按钮 */
+.view-switch {
+  display: flex;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  padding: 2px;
+  margin-right: 16px;
+}
+
+.switch-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: transparent;
+  border: none;
+  color: var(--text-sub);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.switch-btn:hover {
+  color: var(--tech-primary);
+}
+
+.switch-btn.active {
+  background: rgba(0, 240, 255, 0.15);
+  color: var(--tech-primary);
+}
+
+.switch-btn .el-icon {
+  font-size: 16px;
+}
+
+/* ==================== 列表视图样式 ==================== */
+.list-view-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  flex: 1;
+}
+
+.list-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: rgba(0, 240, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+}
+
+.toolbar-left {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.toolbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.record-count {
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+.list-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.list-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  transition: all 0.3s;
+}
+
+.list-card:hover {
+  border-color: var(--tech-primary);
+  box-shadow: 0 4px 20px rgba(0, 240, 255, 0.1);
+}
+
+.list-card.workorder {
+  border-left: 3px solid var(--tech-primary);
+}
+
+.list-card.inspection {
+  border-left: 3px solid var(--status-success);
+}
+
+.list-card.defect {
+  border-left: 3px solid var(--status-warning);
+}
+
+.list-card.ticket {
+  border-left: 3px solid #7c4dff;
+}
+
+.list-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+  background: rgba(0, 240, 255, 0.03);
+}
+
+.card-type-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.type-tag {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 2px;
+}
+
+.type-tag.workorder {
+  background: rgba(0, 240, 255, 0.15);
+  color: var(--tech-primary);
+}
+
+.type-tag.inspection {
+  background: rgba(0, 230, 118, 0.15);
+  color: var(--status-success);
+}
+
+.type-tag.defect {
+  background: rgba(255, 214, 0, 0.15);
+  color: var(--status-warning);
+}
+
+.type-tag.ticket {
+  background: rgba(124, 77, 255, 0.15);
+  color: #7c4dff;
+}
+
+.card-id {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: 'Consolas', monospace;
+}
+
+.card-status {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 2px;
+}
+
+.card-status.success {
+  background: rgba(0, 230, 118, 0.15);
+  color: var(--status-success);
+}
+
+.card-status.warning {
+  background: rgba(255, 214, 0, 0.15);
+  color: var(--status-warning);
+}
+
+.card-status.danger {
+  background: rgba(255, 46, 99, 0.15);
+  color: var(--status-danger);
+}
+
+.card-status.info {
+  background: rgba(96, 165, 250, 0.15);
+  color: #60a5fa;
+}
+
+.list-card .card-body {
+  padding: 16px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 12px;
+}
+
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+.meta-item .el-icon {
+  color: var(--tech-primary);
+  font-size: 14px;
+}
+
+.list-card .card-footer {
+  display: flex;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(0, 240, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.card-stats {
+  display: flex;
+  gap: 20px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.stat-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-bright);
+  font-family: 'DIN Alternate', monospace;
+}
+
+.stat-value.primary {
+  color: var(--tech-primary);
+}
+
+.stat-value.success {
+  color: var(--status-success);
+}
+
+.stat-value.warning {
+  color: var(--status-warning);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px;
+  color: var(--text-muted);
+}
+
+.empty-state .el-icon {
+  font-size: 48px;
 }
 </style>

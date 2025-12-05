@@ -446,7 +446,7 @@ onUnmounted(() => {
 .sc2-panel::after { content: ''; position: absolute; bottom: 0; right: 0; width: 8px; height: 8px; border-bottom: 2px solid var(--tech-primary); border-right: 2px solid var(--tech-primary); }
 .panel-header {
   background: linear-gradient(90deg, rgba(0, 240, 255, 0.15), transparent);
-  padding: 10px 16px; font-size: 14px; font-weight: bold; color: var(--tech-primary);
+  padding: 10px 16px; font-size: 16px; font-weight: bold; color: var(--tech-primary);
   display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(0, 240, 255, 0.1);
   text-transform: uppercase; letter-spacing: 1px; font-family: 'Orbitron';
 }

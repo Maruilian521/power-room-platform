@@ -290,6 +290,7 @@ h1 { margin: 0; font-family: 'Orbitron', sans-serif; font-size: 2.5rem; letter-s
 .panel-header {
   background: rgba(0, 243, 255, 0.1);
   padding: 8px 12px;
+  font-size: 16px;
   font-weight: bold;
   border-bottom: 1px solid rgba(0, 243, 255, 0.2);
   display: flex; align-items: center; gap: 8px;

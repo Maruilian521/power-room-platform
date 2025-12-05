@@ -7,6 +7,32 @@
           <span>GIS站点分布态势</span>
         </div>
         <div class="header-right">
+          <el-autocomplete
+            v-model="searchKeyword"
+            :fetch-suggestions="querySearch"
+            placeholder="搜索站点名称"
+            @select="handleSearchSelect"
+            :trigger-on-focus="false"
+            clearable
+            size="small"
+            class="site-search-input"
+          >
+            <template #prefix>
+              <el-icon><Search /></el-icon>
+            </template>
+            <template #default="{ item }">
+              <div class="search-item">
+                <span class="search-item-name">{{ item.name }}</span>
+                <el-tag
+                  size="small"
+                  :type="getStatusTagType(item.status)"
+                  effect="plain"
+                >
+                  {{ getStatusText(item.status) }}
+                </el-tag>
+              </div>
+            </template>
+          </el-autocomplete>
           <el-tag size="small" effect="dark" type="success">{{ onlineSites }}/{{ totalSites }} 在线</el-tag>
         </div>
       </div>
@@ -45,15 +71,26 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { MapLocation, Warning } from '@element-plus/icons-vue'
+import { MapLocation, Warning, Search } from '@element-plus/icons-vue'
 import { ElMessage } from 'element-plus'
 import * as echarts from 'echarts'
 import type { ECharts } from 'echarts'
 import { getAllSites, type SiteStatus } from '../../../api/integrated-ops'
 
+interface SearchSuggestion {
+  value: string
+  name: string
+  status: string
+  id: string
+  lat: number
+  lng: number
+}
+
 const sites = ref<SiteStatus[]>([])
 const mapChartRef = ref<HTMLElement>()
 let mapChart: ECharts | null = null
+const searchKeyword = ref('')
+const selectedSiteId = ref<string | null>(null)
 
 // 计算在线站点数
 const onlineSites = computed(() => {
@@ -86,6 +123,9 @@ const initMapChart = () => {
   const warningSites = sites.value.filter(s => s.status === 'warning')
   const criticalSites = sites.value.filter(s => s.status === 'critical')
   const offlineSites = sites.value.filter(s => s.status === 'offline')
+
+  // 获取选中的站点用于高亮
+  const selectedSite = selectedSiteId.value ? sites.value.find(s => s.id === selectedSiteId.value) : null
 
   const option = {
     backgroundColor: 'transparent',
@@ -134,10 +174,20 @@ const initMapChart = () => {
       {
         name: '离线',
         type: 'scatter',
-        symbolSize: 8,
+        symbolSize: (data: any) => {
+          return selectedSite && data.id === selectedSite.id ? 16 : 8
+        },
         itemStyle: {
-          color: '#64748B',
-          opacity: 0.6
+          color: (params: any) => {
+            return selectedSite && params.data.id === selectedSite.id ? '#00F3FF' : '#64748B'
+          },
+          opacity: (params: any) => {
+            return selectedSite && params.data.id === selectedSite.id ? 1 : 0.6
+          },
+          shadowBlur: (params: any) => {
+            return selectedSite && params.data.id === selectedSite.id ? 20 : 0
+          },
+          shadowColor: 'rgba(0, 243, 255, 0.8)'
         },
         data: offlineSites.map(s => ({
           value: [s.lng, s.lat],
@@ -148,11 +198,21 @@ const initMapChart = () => {
       {
         name: '正常',
         type: 'scatter',
-        symbolSize: 10,
+        symbolSize: (data: any) => {
+          return selectedSite && data.id === selectedSite.id ? 18 : 10
+        },
         itemStyle: {
-          color: '#00E676',
-          shadowBlur: 10,
-          shadowColor: 'rgba(0, 230, 118, 0.5)'
+          color: (params: any) => {
+            return selectedSite && params.data.id === selectedSite.id ? '#00F3FF' : '#00E676'
+          },
+          shadowBlur: (params: any) => {
+            return selectedSite && params.data.id === selectedSite.id ? 25 : 10
+          },
+          shadowColor: (params: any) => {
+            return selectedSite && params.data.id === selectedSite.id
+              ? 'rgba(0, 243, 255, 0.9)'
+              : 'rgba(0, 230, 118, 0.5)'
+          }
         },
         data: normalSites.map(s => ({
           value: [s.lng, s.lat],
@@ -163,11 +223,21 @@ const initMapChart = () => {
       {
         name: '告警',
         type: 'scatter',
-        symbolSize: 12,
+        symbolSize: (data: any) => {
+          return selectedSite && data.id === selectedSite.id ? 20 : 12
+        },
         itemStyle: {
-          color: '#FFD600',
-          shadowBlur: 15,
-          shadowColor: 'rgba(255, 214, 0, 0.6)'
+          color: (params: any) => {
+            return selectedSite && params.data.id === selectedSite.id ? '#00F3FF' : '#FFD600'
+          },
+          shadowBlur: (params: any) => {
+            return selectedSite && params.data.id === selectedSite.id ? 30 : 15
+          },
+          shadowColor: (params: any) => {
+            return selectedSite && params.data.id === selectedSite.id
+              ? 'rgba(0, 243, 255, 0.9)'
+              : 'rgba(255, 214, 0, 0.6)'
+          }
         },
         data: warningSites.map(s => ({
           value: [s.lng, s.lat],
@@ -178,22 +248,53 @@ const initMapChart = () => {
       {
         name: '严重',
         type: 'effectScatter',
-        symbolSize: 14,
+        symbolSize: (data: any) => {
+          return selectedSite && data.id === selectedSite.id ? 22 : 14
+        },
         rippleEffect: {
           brushType: 'stroke',
-          scale: 3,
+          scale: (params: any) => {
+            return selectedSite && params.id === selectedSite.id ? 4 : 3
+          },
           period: 2
         },
         itemStyle: {
-          color: '#FF2E63',
-          shadowBlur: 20,
-          shadowColor: 'rgba(255, 46, 99, 0.8)'
+          color: (params: any) => {
+            return selectedSite && params.data.id === selectedSite.id ? '#00F3FF' : '#FF2E63'
+          },
+          shadowBlur: (params: any) => {
+            return selectedSite && params.data.id === selectedSite.id ? 35 : 20
+          },
+          shadowColor: (params: any) => {
+            return selectedSite && params.data.id === selectedSite.id
+              ? 'rgba(0, 243, 255, 1)'
+              : 'rgba(255, 46, 99, 0.8)'
+          }
         },
         data: criticalSites.map(s => ({
           value: [s.lng, s.lat],
           ...s
         }))
-      }
+      },
+      // 高亮选中站点的标注圆环（如果有选中的站点）
+      ...(selectedSite ? [{
+        name: '选中标记',
+        type: 'scatter',
+        symbolSize: 28,
+        symbol: 'circle',
+        itemStyle: {
+          color: 'transparent',
+          borderColor: '#00F3FF',
+          borderWidth: 2,
+          shadowBlur: 15,
+          shadowColor: 'rgba(0, 243, 255, 0.6)'
+        },
+        data: [{
+          value: [selectedSite.lng, selectedSite.lat],
+          ...selectedSite
+        }],
+        z: 999
+      }] : [])
     ]
   }
 
@@ -203,6 +304,89 @@ const initMapChart = () => {
 const handleSiteClick = (site: SiteStatus) => {
   ElMessage.info(`查看站点详情: ${site.name}`)
   // 这里可以跳转到站点详情页或弹窗显示详情
+}
+
+// 搜索建议查询
+const querySearch = (queryString: string, cb: (suggestions: SearchSuggestion[]) => void) => {
+  const results = queryString
+    ? sites.value
+        .filter(site => site.name.toLowerCase().includes(queryString.toLowerCase()))
+        .map(site => ({
+          value: site.name,
+          name: site.name,
+          status: site.status,
+          id: site.id,
+          lat: site.lat,
+          lng: site.lng
+        }))
+    : []
+  cb(results)
+}
+
+// 选择搜索结果
+const handleSearchSelect = (item: SearchSuggestion) => {
+  selectedSiteId.value = item.id
+  // 高亮选中的站点并居中显示
+  highlightSite(item.id)
+  ElMessage.success(`已定位到站点: ${item.name}`)
+}
+
+// 高亮站点
+const highlightSite = (siteId: string) => {
+  if (!mapChart) return
+
+  const site = sites.value.find(s => s.id === siteId)
+  if (!site) return
+
+  // 重新渲染图表，为选中的站点添加高亮效果
+  initMapChart()
+
+  // 显示该站点的tooltip
+  const siteIndex = sites.value.findIndex(s => s.id === siteId)
+  if (siteIndex !== -1) {
+    // 计算该站点在对应series中的索引
+    const statusMap: { [key: string]: number } = {
+      'offline': 0,
+      'normal': 1,
+      'warning': 2,
+      'critical': 3
+    }
+    const seriesIndex = statusMap[site.status] || 0
+
+    // 计算在该series中的数据索引
+    const sitesInSeries = sites.value.filter(s => s.status === site.status)
+    const dataIndex = sitesInSeries.findIndex(s => s.id === siteId)
+
+    if (dataIndex !== -1) {
+      mapChart.dispatchAction({
+        type: 'showTip',
+        seriesIndex: seriesIndex,
+        dataIndex: dataIndex
+      })
+    }
+  }
+}
+
+// 获取状态标签类型
+const getStatusTagType = (status: string) => {
+  const typeMap: { [key: string]: 'success' | 'warning' | 'danger' | 'info' } = {
+    'normal': 'success',
+    'warning': 'warning',
+    'critical': 'danger',
+    'offline': 'info'
+  }
+  return typeMap[status] || 'info'
+}
+
+// 获取状态文本
+const getStatusText = (status: string) => {
+  const textMap: { [key: string]: string } = {
+    'normal': '正常',
+    'warning': '告警',
+    'critical': '严重',
+    'offline': '离线'
+  }
+  return textMap[status] || '未知'
 }
 
 const fetchData = async () => {
@@ -267,7 +451,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-bright);
 }
@@ -281,6 +465,51 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.site-search-input {
+  width: 220px;
+}
+
+.site-search-input :deep(.el-input__wrapper) {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-light);
+  box-shadow: none;
+}
+
+.site-search-input :deep(.el-input__wrapper:hover) {
+  border-color: var(--tech-primary);
+}
+
+.site-search-input :deep(.el-input__wrapper.is-focus) {
+  border-color: var(--tech-primary);
+  box-shadow: 0 0 0 1px var(--tech-primary-dim);
+}
+
+.site-search-input :deep(.el-input__inner) {
+  color: var(--text-bright);
+}
+
+.site-search-input :deep(.el-input__inner::placeholder) {
+  color: var(--text-dim);
+}
+
+.site-search-input :deep(.el-icon) {
+  color: var(--tech-primary);
+}
+
+.search-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 4px 0;
+}
+
+.search-item-name {
+  font-size: 13px;
+  color: var(--text-bright);
+  flex: 1;
 }
 
 /* 地图容器包装 */

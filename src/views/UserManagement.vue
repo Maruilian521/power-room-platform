@@ -157,9 +157,9 @@
                 </template>
               </el-table-column>
               <el-table-column label="操作" width="140" fixed="right">
-                <template #default>
-                  <el-button link type="primary" size="small">编辑</el-button>
-                  <el-button link type="warning" size="small">权限</el-button>
+                <template #default="{ row }">
+                  <el-button link type="primary" size="small" @click="openEditUserDialog(row)">编辑</el-button>
+                  <el-button link type="warning" size="small" @click="openPermissionDialog(row)">权限</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -317,13 +317,263 @@
         </div>
       </div>
     </div>
+
+    <!-- ==================== 用户编辑弹窗 ==================== -->
+    <el-dialog
+      v-model="editUserDialogVisible"
+      :title="isEditMode ? '编辑用户' : '新增用户'"
+      width="600px"
+      :close-on-click-modal="false"
+      class="user-edit-dialog"
+    >
+      <div class="dialog-form">
+        <div class="form-row">
+          <div class="form-item">
+            <label class="form-label required">姓名</label>
+            <el-input v-model="editUserForm.name" placeholder="请输入姓名" />
+          </div>
+          <div class="form-item">
+            <label class="form-label required">账户名</label>
+            <el-input v-model="editUserForm.account" placeholder="请输入账户名" :disabled="isEditMode" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-item">
+            <label class="form-label required">联系电话</label>
+            <el-input v-model="editUserForm.phone" placeholder="请输入联系电话" />
+          </div>
+          <div class="form-item">
+            <label class="form-label">邮箱</label>
+            <el-input v-model="editUserForm.email" placeholder="请输入邮箱" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-item full-width">
+            <label class="form-label required">所属部门</label>
+            <div class="department-select">
+              <el-select
+                v-model="editUserForm.departments"
+                multiple
+                placeholder="请选择部门（可多选）"
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="dept in departmentOptions"
+                  :key="dept.id"
+                  :label="dept.name"
+                  :value="dept.id"
+                />
+              </el-select>
+            </div>
+            <div class="selected-departments" v-if="editUserForm.departments.length > 0">
+              <span
+                v-for="deptId in editUserForm.departments"
+                :key="deptId"
+                class="dept-tag"
+              >
+                {{ getDepartmentName(deptId) }}
+                <el-icon class="remove-dept" @click="removeDepartment(deptId)"><Close /></el-icon>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-item">
+            <label class="form-label">职位</label>
+            <el-input v-model="editUserForm.position" placeholder="请输入职位" />
+          </div>
+          <div class="form-item">
+            <label class="form-label">证书</label>
+            <el-select v-model="editUserForm.certificate" placeholder="选择证书" clearable>
+              <el-option label="高级电工证" value="高级电工证" />
+              <el-option label="中级电工证" value="中级电工证" />
+              <el-option label="初级电工证" value="初级电工证" />
+            </el-select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-item">
+            <label class="form-label required">角色</label>
+            <el-select v-model="editUserForm.roleId" placeholder="选择角色">
+              <el-option
+                v-for="role in roles"
+                :key="role.id"
+                :label="role.name"
+                :value="role.id"
+              />
+            </el-select>
+          </div>
+          <div class="form-item">
+            <label class="form-label">状态</label>
+            <el-select v-model="editUserForm.status" placeholder="选择状态">
+              <el-option label="在职" value="active" />
+              <el-option label="停用" value="disabled" />
+              <el-option label="离职" value="resigned" />
+            </el-select>
+          </div>
+        </div>
+      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <button class="action-btn btn-secondary" @click="editUserDialogVisible = false">取消</button>
+          <button class="action-btn btn-primary" @click="saveUser">
+            <el-icon><Check /></el-icon>
+            确认保存
+          </button>
+        </div>
+      </template>
+    </el-dialog>
+
+    <!-- ==================== 权限分配弹窗 ==================== -->
+    <el-dialog
+      v-model="permissionDialogVisible"
+      title="用户权限分配"
+      width="800px"
+      :close-on-click-modal="false"
+      class="permission-dialog"
+    >
+      <div class="permission-dialog-content">
+        <!-- 用户信息头 -->
+        <div class="user-info-header">
+          <div class="user-avatar">
+            <el-icon><User /></el-icon>
+          </div>
+          <div class="user-details">
+            <div class="user-name">{{ currentPermissionUser?.name }}</div>
+            <div class="user-meta">
+              <span>账号: {{ currentPermissionUser?.account }}</span>
+              <span>部门: {{ currentPermissionUser?.department }}</span>
+              <span>职位: {{ currentPermissionUser?.position }}</span>
+            </div>
+          </div>
+          <div class="current-role">
+            <span class="role-label">当前角色</span>
+            <span class="role-value">{{ currentPermissionUser?.roleName }}</span>
+          </div>
+        </div>
+
+        <!-- 权限配置区 -->
+        <div class="permission-config-area">
+          <!-- 快速角色选择 -->
+          <div class="quick-role-section">
+            <div class="section-header">
+              <el-icon><UserFilled /></el-icon>
+              <span>快速分配角色</span>
+            </div>
+            <div class="role-cards">
+              <div
+                v-for="role in roles"
+                :key="role.id"
+                :class="['role-card', { active: userPermissionForm.roleId === role.id }]"
+                @click="selectQuickRole(role)"
+              >
+                <div class="role-name">{{ role.name }}</div>
+                <div class="role-count">{{ role.userCount }} 人使用</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 详细权限配置 -->
+          <div class="detail-permission-section">
+            <div class="section-header">
+              <el-icon><Key /></el-icon>
+              <span>详细权限配置</span>
+              <el-switch
+                v-model="showDetailPermission"
+                active-text="展开"
+                inactive-text="收起"
+                :active-color="'#00f3ff'"
+                :inactive-color="'#3E5878'"
+              />
+            </div>
+
+            <div class="detail-permissions" v-if="showDetailPermission">
+              <!-- 菜单权限 -->
+              <div class="permission-group">
+                <div class="group-title">
+                  <el-icon><Menu /></el-icon>
+                  菜单权限
+                </div>
+                <div class="permission-checkboxes">
+                  <template v-for="menu in userMenuPermissions" :key="menu.id">
+                    <label class="permission-checkbox parent">
+                      <input type="checkbox" v-model="menu.checked" @change="toggleParentMenu(menu)" />
+                      <span>{{ menu.name }}</span>
+                    </label>
+                    <label
+                      v-for="child in menu.children"
+                      :key="child.id"
+                      class="permission-checkbox child"
+                    >
+                      <input type="checkbox" v-model="child.checked" />
+                      <span>{{ child.name }}</span>
+                    </label>
+                  </template>
+                </div>
+              </div>
+
+              <!-- 查看权限 -->
+              <div class="permission-group">
+                <div class="group-title">
+                  <el-icon><View /></el-icon>
+                  配电室查看权限
+                </div>
+                <div class="permission-checkboxes inline">
+                  <label
+                    v-for="view in userViewPermissions"
+                    :key="view.id"
+                    class="permission-checkbox"
+                  >
+                    <input type="checkbox" v-model="view.checked" />
+                    <span>{{ view.name }}</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 操作权限 -->
+              <div class="permission-group">
+                <div class="group-title">
+                  <el-icon><Operation /></el-icon>
+                  操作权限
+                </div>
+                <div class="permission-checkboxes inline">
+                  <label
+                    v-for="op in userOperationPermissions"
+                    :key="op.id"
+                    class="permission-checkbox"
+                  >
+                    <input type="checkbox" v-model="op.checked" />
+                    <span>{{ op.name }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <template #footer>
+        <div class="dialog-footer">
+          <button class="action-btn btn-secondary" @click="permissionDialogVisible = false">取消</button>
+          <button class="action-btn btn-warning" @click="resetPermissions">
+            <el-icon><Refresh /></el-icon>
+            重置权限
+          </button>
+          <button class="action-btn btn-primary" @click="savePermissions">
+            <el-icon><Check /></el-icon>
+            保存权限
+          </button>
+        </div>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { ElMessage } from 'element-plus'
 import {
-  Search, Key, Check, DeleteFilled, CaretRight, CaretBottom, Plus, Setting, User
+  Search, Key, Check, DeleteFilled, CaretRight, CaretBottom, Plus, Setting, User,
+  Close, Refresh, UserFilled, Menu, View, Operation
 } from '@element-plus/icons-vue'
 
 const activeMainTab = ref('users')
@@ -343,12 +593,284 @@ interface User {
   phone: string
   email?: string
   department: string
+  departments?: number[] // 多部门支持
   position: string
   certificate?: string
   status: string
   roleId: number // 关联角色ID
   roleName: string // 角色名称
   selected?: boolean // 是否选中
+}
+
+// 部门选项
+interface Department {
+  id: number
+  name: string
+  parentId?: number
+}
+
+const departmentOptions = ref<Department[]>([
+  { id: 1, name: '运维部' },
+  { id: 2, name: '人事部' },
+  { id: 3, name: '财务部' },
+  { id: 4, name: '行政部' },
+  { id: 5, name: '运行/维修班组', parentId: 1 },
+  { id: 6, name: '物资中心', parentId: 1 },
+  { id: 7, name: '质检中心' },
+  { id: 8, name: '销售管理部' }
+])
+
+// ========== 用户编辑弹窗 ==========
+const editUserDialogVisible = ref(false)
+const isEditMode = ref(false)
+const editUserForm = ref({
+  id: 0,
+  name: '',
+  account: '',
+  phone: '',
+  email: '',
+  departments: [] as number[],
+  position: '',
+  certificate: '',
+  roleId: 0,
+  status: 'active'
+})
+
+const openEditUserDialog = (user?: User) => {
+  if (user) {
+    isEditMode.value = true
+    editUserForm.value = {
+      id: user.id,
+      name: user.name,
+      account: user.account,
+      phone: user.phone,
+      email: user.email || '',
+      departments: user.departments || [departmentOptions.value.find(d => d.name === user.department)?.id || 1],
+      position: user.position,
+      certificate: user.certificate || '',
+      roleId: user.roleId,
+      status: user.status
+    }
+  } else {
+    isEditMode.value = false
+    editUserForm.value = {
+      id: 0,
+      name: '',
+      account: '',
+      phone: '',
+      email: '',
+      departments: [],
+      position: '',
+      certificate: '',
+      roleId: 0,
+      status: 'active'
+    }
+  }
+  editUserDialogVisible.value = true
+}
+
+const getDepartmentName = (deptId: number) => {
+  return departmentOptions.value.find(d => d.id === deptId)?.name || ''
+}
+
+const removeDepartment = (deptId: number) => {
+  editUserForm.value.departments = editUserForm.value.departments.filter(id => id !== deptId)
+}
+
+const saveUser = () => {
+  if (!editUserForm.value.name) {
+    ElMessage.warning('请输入姓名')
+    return
+  }
+  if (!editUserForm.value.account) {
+    ElMessage.warning('请输入账户名')
+    return
+  }
+  if (!editUserForm.value.phone) {
+    ElMessage.warning('请输入联系电话')
+    return
+  }
+  if (editUserForm.value.departments.length === 0) {
+    ElMessage.warning('请选择至少一个部门')
+    return
+  }
+  if (!editUserForm.value.roleId) {
+    ElMessage.warning('请选择角色')
+    return
+  }
+
+  if (isEditMode.value) {
+    // 更新用户
+    const index = users.value.findIndex(u => u.id === editUserForm.value.id)
+    if (index > -1) {
+      const role = roles.value.find(r => r.id === editUserForm.value.roleId)
+      users.value[index] = {
+        ...users.value[index],
+        name: editUserForm.value.name,
+        phone: editUserForm.value.phone,
+        email: editUserForm.value.email || undefined,
+        department: getDepartmentName(editUserForm.value.departments[0]),
+        departments: editUserForm.value.departments,
+        position: editUserForm.value.position,
+        certificate: editUserForm.value.certificate || undefined,
+        roleId: editUserForm.value.roleId,
+        roleName: role?.name || '',
+        status: editUserForm.value.status
+      }
+    }
+    ElMessage.success('用户信息已更新')
+  } else {
+    // 新增用户
+    const role = roles.value.find(r => r.id === editUserForm.value.roleId)
+    users.value.push({
+      id: users.value.length + 1,
+      name: editUserForm.value.name,
+      account: editUserForm.value.account,
+      phone: editUserForm.value.phone,
+      email: editUserForm.value.email || undefined,
+      department: getDepartmentName(editUserForm.value.departments[0]),
+      departments: editUserForm.value.departments,
+      position: editUserForm.value.position,
+      certificate: editUserForm.value.certificate || undefined,
+      roleId: editUserForm.value.roleId,
+      roleName: role?.name || '',
+      status: editUserForm.value.status
+    })
+    ElMessage.success('用户已创建')
+  }
+  editUserDialogVisible.value = false
+}
+
+// ========== 权限分配弹窗 ==========
+const permissionDialogVisible = ref(false)
+const currentPermissionUser = ref<User | null>(null)
+const showDetailPermission = ref(false)
+const userPermissionForm = ref({
+  roleId: 0
+})
+
+// 用户菜单权限（独立副本）
+const userMenuPermissions = ref([
+  {
+    id: 1, name: '驾驶舱', checked: false,
+    children: [
+      { id: 101, name: '电器图', checked: false },
+      { id: 102, name: '智慧运维中心', checked: false },
+      { id: 103, name: '无人配电指挥中心', checked: false },
+      { id: 104, name: 'AI安全态势', checked: false }
+    ]
+  },
+  {
+    id: 2, name: '智能监控中心', checked: false,
+    children: [
+      { id: 201, name: '站点列表监控', checked: false },
+      { id: 202, name: '视频巡视中心', checked: false },
+      { id: 203, name: '环境与安防', checked: false },
+      { id: 204, name: '站点监控地图', checked: false }
+    ]
+  },
+  {
+    id: 3, name: '运维作业中心', checked: false,
+    children: [
+      { id: 301, name: '告警与事件', checked: false },
+      { id: 302, name: '工单管理', checked: false },
+      { id: 303, name: '巡检管理', checked: false },
+      { id: 304, name: '两票管理', checked: false },
+      { id: 305, name: '知识库', checked: false }
+    ]
+  },
+  {
+    id: 4, name: '资产台账管理', checked: false,
+    children: [
+      { id: 401, name: '配电室台账', checked: false },
+      { id: 402, name: '设备台账', checked: false },
+      { id: 403, name: '商品备件', checked: false }
+    ]
+  },
+  {
+    id: 5, name: '分析与报表', checked: false,
+    children: [
+      { id: 501, name: '运维报表', checked: false },
+      { id: 502, name: '电能质量', checked: false },
+      { id: 503, name: '设备健康', checked: false },
+      { id: 504, name: '负荷分析', checked: false }
+    ]
+  },
+  {
+    id: 6, name: '系统配置', checked: false,
+    children: [
+      { id: 601, name: '邮件提醒', checked: false },
+      { id: 602, name: '系统提醒', checked: false }
+    ]
+  }
+])
+
+const userViewPermissions = ref([
+  { id: 1, name: '圆心配电室', checked: false },
+  { id: 2, name: '通州配电室', checked: false },
+  { id: 3, name: '北理工配电室', checked: false },
+  { id: 4, name: '圆心配电室3', checked: false },
+  { id: 5, name: '圆心配电室4', checked: false },
+  { id: 6, name: '顺义配电室', checked: false }
+])
+
+const userOperationPermissions = ref([
+  { id: 1, name: '处置报警', checked: false },
+  { id: 2, name: '导出报表', checked: false },
+  { id: 3, name: '新增', checked: false },
+  { id: 4, name: '删除', checked: false },
+  { id: 5, name: '修改', checked: false },
+  { id: 6, name: '查询', checked: false }
+])
+
+const openPermissionDialog = (user: User) => {
+  currentPermissionUser.value = user
+  userPermissionForm.value.roleId = user.roleId
+  showDetailPermission.value = false
+  permissionDialogVisible.value = true
+}
+
+const selectQuickRole = (role: Role) => {
+  userPermissionForm.value.roleId = role.id
+  ElMessage.info(`已选择角色: ${role.name}`)
+}
+
+const toggleParentMenu = (menu: any) => {
+  menu.children?.forEach((child: any) => {
+    child.checked = menu.checked
+  })
+}
+
+const resetPermissions = () => {
+  userMenuPermissions.value.forEach(menu => {
+    menu.checked = false
+    menu.children?.forEach(child => {
+      child.checked = false
+    })
+  })
+  userViewPermissions.value.forEach(v => v.checked = false)
+  userOperationPermissions.value.forEach(o => o.checked = false)
+  ElMessage.info('权限已重置')
+}
+
+const savePermissions = () => {
+  if (!currentPermissionUser.value) return
+
+  const role = roles.value.find(r => r.id === userPermissionForm.value.roleId)
+  if (role) {
+    currentPermissionUser.value.roleId = role.id
+    currentPermissionUser.value.roleName = role.name
+
+    // 更新用户列表中的数据
+    const index = users.value.findIndex(u => u.id === currentPermissionUser.value?.id)
+    if (index > -1) {
+      users.value[index].roleId = role.id
+      users.value[index].roleName = role.name
+    }
+  }
+
+  ElMessage.success('权限已保存')
+  permissionDialogVisible.value = false
 }
 
 // 选中的用户
@@ -1925,5 +2447,412 @@ const getPermissionClass = (permission: string) => {
 
 .user-management-page .el-table__fixed-right .el-table__cell {
   background: rgba(10, 17, 26, 0.95) !important;
+}
+
+/* ==================== 用户编辑弹窗样式 ==================== */
+.user-management-page .el-dialog {
+  background: rgba(10, 17, 26, 0.98) !important;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.2), inset 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.user-management-page .el-dialog__header {
+  background: rgba(0, 240, 255, 0.05);
+  border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+  padding: 16px 20px;
+}
+
+.user-management-page .el-dialog__title {
+  color: #00f3ff !important;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+.user-management-page .el-dialog__body {
+  padding: 24px;
+  background: transparent;
+}
+
+.user-management-page .el-dialog__footer {
+  border-top: 1px solid rgba(0, 240, 255, 0.1);
+  padding: 16px 20px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+}
+
+.form-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-item.full-width {
+  flex: none;
+  width: 100%;
+}
+
+.form-label {
+  font-size: 13px;
+  color: #6d8bad;
+  font-weight: 600;
+}
+
+.form-label.required::before {
+  content: '*';
+  color: #ff2a4d;
+  margin-right: 4px;
+}
+
+.user-management-page .el-input__wrapper,
+.user-management-page .el-select__wrapper {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border: 1px solid rgba(0, 240, 255, 0.2) !important;
+  box-shadow: none !important;
+}
+
+.user-management-page .el-input__wrapper:focus-within,
+.user-management-page .el-select__wrapper:focus-within {
+  border-color: #00f3ff !important;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.2) !important;
+}
+
+.user-management-page .el-input__inner {
+  color: #e2e8f0 !important;
+}
+
+.user-management-page .el-select .el-select__selected-item {
+  color: #e2e8f0 !important;
+}
+
+.department-select {
+  width: 100%;
+}
+
+.selected-departments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.dept-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: #00f3ff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.remove-dept {
+  cursor: pointer;
+  font-size: 12px;
+  opacity: 0.7;
+  transition: all 0.2s;
+}
+
+.remove-dept:hover {
+  opacity: 1;
+  color: #ff2a4d;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-secondary {
+  border-color: #3E5878;
+  color: #6d8bad;
+}
+
+.btn-secondary:hover {
+  border-color: #00f3ff;
+  color: #00f3ff;
+}
+
+/* ==================== 权限分配弹窗样式 ==================== */
+.permission-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.user-info-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: rgba(0, 240, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.15);
+}
+
+.user-avatar {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 240, 255, 0.1);
+  border: 2px solid #00f3ff;
+  font-size: 28px;
+  color: #00f3ff;
+}
+
+.user-details {
+  flex: 1;
+}
+
+.user-details .user-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 6px;
+}
+
+.user-meta {
+  display: flex;
+  gap: 20px;
+  font-size: 12px;
+  color: #6d8bad;
+}
+
+.current-role {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.role-label {
+  font-size: 11px;
+  color: #6d8bad;
+}
+
+.role-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #00f3ff;
+  padding: 4px 12px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+}
+
+.permission-config-area {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.quick-role-section,
+.detail-permission-section {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 240, 255, 0.1);
+  padding: 16px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #00f3ff;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+}
+
+.section-header .el-switch {
+  margin-left: auto;
+}
+
+.role-cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.role-card {
+  padding: 14px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.role-card:hover {
+  border-color: #00f3ff;
+  background: rgba(0, 240, 255, 0.05);
+}
+
+.role-card.active {
+  border-color: #00f3ff;
+  background: rgba(0, 240, 255, 0.15);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+}
+
+.role-card .role-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 6px;
+}
+
+.role-card.active .role-name {
+  color: #00f3ff;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+}
+
+.role-card .role-count {
+  font-size: 11px;
+  color: #6d8bad;
+}
+
+.detail-permissions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.permission-group {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 240, 255, 0.1);
+  padding: 14px;
+}
+
+.group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #00f3ff;
+  margin-bottom: 12px;
+}
+
+.permission-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.permission-checkboxes.inline {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.permission-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 6px 10px;
+  transition: all 0.2s;
+}
+
+.permission-checkbox.parent {
+  background: rgba(0, 240, 255, 0.05);
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.permission-checkbox.child {
+  margin-left: 24px;
+  color: #6d8bad;
+}
+
+.permission-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #00f3ff;
+}
+
+.permission-checkbox span {
+  font-size: 13px;
+  user-select: none;
+}
+
+.permission-checkbox:hover {
+  background: rgba(0, 240, 255, 0.08);
+}
+
+.permission-checkbox:hover span {
+  color: #00f3ff;
+}
+
+.permission-checkbox input[type="checkbox"]:checked + span {
+  color: #00f3ff;
+  text-shadow: 0 0 6px rgba(0, 240, 255, 0.4);
+}
+
+/* 多选标签样式覆盖 */
+.user-management-page .el-select__tags {
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.user-management-page .el-tag {
+  background: rgba(0, 240, 255, 0.1) !important;
+  border-color: rgba(0, 240, 255, 0.3) !important;
+  color: #00f3ff !important;
+}
+
+.user-management-page .el-tag .el-tag__close {
+  color: #00f3ff !important;
+}
+
+.user-management-page .el-tag .el-tag__close:hover {
+  background: rgba(0, 240, 255, 0.3) !important;
+}
+
+/* 下拉菜单样式 */
+.user-management-page .el-select-dropdown {
+  background: rgba(10, 17, 26, 0.98) !important;
+  border: 1px solid rgba(0, 240, 255, 0.2) !important;
+}
+
+.user-management-page .el-select-dropdown__item {
+  color: #6d8bad !important;
+}
+
+.user-management-page .el-select-dropdown__item:hover {
+  background: rgba(0, 240, 255, 0.1) !important;
+  color: #00f3ff !important;
+}
+
+.user-management-page .el-select-dropdown__item.is-selected {
+  color: #00f3ff !important;
+  font-weight: 600;
+}
+
+/* Switch 开关样式 */
+.user-management-page .el-switch__label {
+  color: #6d8bad !important;
+}
+
+.user-management-page .el-switch__label.is-active {
+  color: #00f3ff !important;
 }
 </style>
