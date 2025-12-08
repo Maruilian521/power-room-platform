@@ -105,7 +105,7 @@
           <div class="panel-header">
             <span class="panel-title">
               <el-icon><Clock /></el-icon>
-              变压器运行记录（2小时/次）
+              配电室值班记录表（2小时/次）
             </span>
             <div class="panel-legend">
               <span class="legend-item normal"><span class="dot"></span>正常</span>
@@ -117,24 +117,57 @@
             <table class="record-table">
               <thead>
                 <tr class="header-row-1">
-                  <th rowspan="2" class="time-col">时间</th>
-                  <th colspan="2" class="group-header hv">高压侧 (10kV)</th>
-                  <th colspan="2" class="group-header lv">低压侧 (0.4kV)</th>
-                  <th rowspan="2" class="single-header">变压器<br/>温度(℃)</th>
-                  <th rowspan="2" class="single-header">功率<br/>因数</th>
-                  <th rowspan="2" class="single-header">有功功率<br/>(kW)</th>
-                  <th rowspan="2" class="single-header">无功功率<br/>(kVar)</th>
-                  <th colspan="2" class="group-header env">环境参数</th>
-                  <th rowspan="2" class="single-header">设备<br/>状态</th>
-                  <th rowspan="2" class="remark-col">备注</th>
+                  <th rowspan="3" class="time-col">时间</th>
+                  <th colspan="17" class="group-header transformer1">1#变压器</th>
+                  <th colspan="17" class="group-header transformer2">2#变压器</th>
+                  <th rowspan="3" class="single-header env-col">环境<br/>温度(℃)</th>
+                  <th rowspan="3" class="single-header env-col">环境<br/>湿度(%)</th>
+                  <th rowspan="3" class="single-header">安全<br/>用具</th>
+                  <th rowspan="3" class="single-header">消防<br/>器材</th>
+                  <th rowspan="3" class="single-header">值班人</th>
+                  <th rowspan="3" class="remark-col">备注</th>
                 </tr>
                 <tr class="header-row-2">
-                  <th class="sub-header">电压(V)</th>
-                  <th class="sub-header">电流(A)</th>
-                  <th class="sub-header">电压(V)</th>
-                  <th class="sub-header">电流(A)</th>
-                  <th class="sub-header">温度(℃)</th>
-                  <th class="sub-header">湿度(%)</th>
+                  <th colspan="6" class="group-header hv">高压侧</th>
+                  <th rowspan="2" class="single-header power-col">有功<br/>(kW)</th>
+                  <th rowspan="2" class="single-header power-col">无功<br/>(kVar)</th>
+                  <th colspan="6" class="group-header lv">低压侧</th>
+                  <th rowspan="2" class="single-header temp-col">温度<br/>(℃)</th>
+                  <th rowspan="2" class="single-header power-col">有功<br/>(kW)</th>
+                  <th rowspan="2" class="single-header power-col">无功<br/>(kVar)</th>
+                  <th colspan="6" class="group-header hv">高压侧</th>
+                  <th rowspan="2" class="single-header power-col">有功<br/>(kW)</th>
+                  <th rowspan="2" class="single-header power-col">无功<br/>(kVar)</th>
+                  <th colspan="6" class="group-header lv">低压侧</th>
+                  <th rowspan="2" class="single-header temp-col">温度<br/>(℃)</th>
+                  <th rowspan="2" class="single-header power-col">有功<br/>(kW)</th>
+                  <th rowspan="2" class="single-header power-col">无功<br/>(kVar)</th>
+                </tr>
+                <tr class="header-row-3">
+                  <th class="sub-header">A相压</th>
+                  <th class="sub-header">B相压</th>
+                  <th class="sub-header">C相压</th>
+                  <th class="sub-header">A相流</th>
+                  <th class="sub-header">B相流</th>
+                  <th class="sub-header">C相流</th>
+                  <th class="sub-header">A相压</th>
+                  <th class="sub-header">B相压</th>
+                  <th class="sub-header">C相压</th>
+                  <th class="sub-header">A相流</th>
+                  <th class="sub-header">B相流</th>
+                  <th class="sub-header">C相流</th>
+                  <th class="sub-header">A相压</th>
+                  <th class="sub-header">B相压</th>
+                  <th class="sub-header">C相压</th>
+                  <th class="sub-header">A相流</th>
+                  <th class="sub-header">B相流</th>
+                  <th class="sub-header">C相流</th>
+                  <th class="sub-header">A相压</th>
+                  <th class="sub-header">B相压</th>
+                  <th class="sub-header">C相压</th>
+                  <th class="sub-header">A相流</th>
+                  <th class="sub-header">B相流</th>
+                  <th class="sub-header">C相流</th>
                 </tr>
               </thead>
               <tbody>
@@ -144,23 +177,68 @@
                   :class="{ 'current-row': isCurrentTime(record.time) }"
                 >
                   <td class="time-cell">{{ record.time }}</td>
-                  <td :class="getCellClass(record.hvVoltage, 'hvVoltage')">{{ record.hvVoltage || '-' }}</td>
-                  <td :class="getCellClass(record.hvCurrent, 'hvCurrent')">{{ record.hvCurrent || '-' }}</td>
-                  <td :class="getCellClass(record.lvVoltage, 'lvVoltage')">{{ record.lvVoltage || '-' }}</td>
-                  <td :class="getCellClass(record.lvCurrent, 'lvCurrent')">{{ record.lvCurrent || '-' }}</td>
-                  <td :class="getCellClass(record.transformerTemp, 'temp')">{{ record.transformerTemp || '-' }}</td>
-                  <td :class="getCellClass(record.powerFactor, 'pf')">{{ record.powerFactor || '-' }}</td>
-                  <td>{{ record.activePower || '-' }}</td>
-                  <td>{{ record.reactivePower || '-' }}</td>
+                  <!-- 1#变压器 高压侧 -->
+                  <td>{{ record.t1HvVoltageA || '-' }}</td>
+                  <td>{{ record.t1HvVoltageB || '-' }}</td>
+                  <td>{{ record.t1HvVoltageC || '-' }}</td>
+                  <td>{{ record.t1HvCurrentA || '-' }}</td>
+                  <td>{{ record.t1HvCurrentB || '-' }}</td>
+                  <td>{{ record.t1HvCurrentC || '-' }}</td>
+                  <td class="power-cell">{{ record.t1HvActivePower || '-' }}</td>
+                  <td class="power-cell">{{ record.t1HvReactivePower || '-' }}</td>
+                  <!-- 1#变压器 低压侧 -->
+                  <td>{{ record.t1LvVoltageA || '-' }}</td>
+                  <td>{{ record.t1LvVoltageB || '-' }}</td>
+                  <td>{{ record.t1LvVoltageC || '-' }}</td>
+                  <td>{{ record.t1LvCurrentA || '-' }}</td>
+                  <td>{{ record.t1LvCurrentB || '-' }}</td>
+                  <td>{{ record.t1LvCurrentC || '-' }}</td>
+                  <td :class="getCellClass(record.t1Temp, 'temp')">{{ record.t1Temp || '-' }}</td>
+                  <td class="power-cell">{{ record.t1LvActivePower || '-' }}</td>
+                  <td class="power-cell">{{ record.t1LvReactivePower || '-' }}</td>
+                  <!-- 2#变压器 高压侧 -->
+                  <td>{{ record.t2HvVoltageA || '-' }}</td>
+                  <td>{{ record.t2HvVoltageB || '-' }}</td>
+                  <td>{{ record.t2HvVoltageC || '-' }}</td>
+                  <td>{{ record.t2HvCurrentA || '-' }}</td>
+                  <td>{{ record.t2HvCurrentB || '-' }}</td>
+                  <td>{{ record.t2HvCurrentC || '-' }}</td>
+                  <td class="power-cell">{{ record.t2HvActivePower || '-' }}</td>
+                  <td class="power-cell">{{ record.t2HvReactivePower || '-' }}</td>
+                  <!-- 2#变压器 低压侧 -->
+                  <td>{{ record.t2LvVoltageA || '-' }}</td>
+                  <td>{{ record.t2LvVoltageB || '-' }}</td>
+                  <td>{{ record.t2LvVoltageC || '-' }}</td>
+                  <td>{{ record.t2LvCurrentA || '-' }}</td>
+                  <td>{{ record.t2LvCurrentB || '-' }}</td>
+                  <td>{{ record.t2LvCurrentC || '-' }}</td>
+                  <td :class="getCellClass(record.t2Temp, 'temp')">{{ record.t2Temp || '-' }}</td>
+                  <td class="power-cell">{{ record.t2LvActivePower || '-' }}</td>
+                  <td class="power-cell">{{ record.t2LvReactivePower || '-' }}</td>
+                  <!-- 环境与状态 -->
                   <td :class="getCellClass(record.envTemp, 'envTemp')">{{ record.envTemp || '-' }}</td>
                   <td :class="getCellClass(record.envHumidity, 'humidity')">{{ record.envHumidity || '-' }}</td>
                   <td class="status-cell">
-                    <span v-if="record.deviceStatus === 'normal'" class="status-icon normal">✓</span>
-                    <span v-else-if="record.deviceStatus === 'warning'" class="status-icon warning">!</span>
-                    <span v-else-if="record.deviceStatus === 'error'" class="status-icon error">✕</span>
+                    <span v-if="record.safetyEquipment === 'normal'" class="status-icon normal">✓</span>
+                    <span v-else-if="record.safetyEquipment === 'warning'" class="status-icon warning">!</span>
+                    <span v-else-if="record.safetyEquipment === 'error'" class="status-icon error">✕</span>
                     <span v-else class="status-icon pending">-</span>
                   </td>
-                  <td class="remark-cell">{{ record.remark || '' }}</td>
+                  <td class="status-cell">
+                    <span v-if="record.fireEquipment === 'normal'" class="status-icon normal">✓</span>
+                    <span v-else-if="record.fireEquipment === 'warning'" class="status-icon warning">!</span>
+                    <span v-else-if="record.fireEquipment === 'error'" class="status-icon error">✕</span>
+                    <span v-else class="status-icon pending">-</span>
+                  </td>
+                  <td class="operator-cell">{{ record.operator || '-' }}</td>
+                  <td class="remark-cell">
+                    <input
+                      type="text"
+                      v-model="record.remark"
+                      class="remark-input"
+                      placeholder="点击输入备注"
+                    />
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -360,71 +438,101 @@
               <div
                 v-for="record in listFilteredRecords"
                 :key="record.time"
-                :class="['list-card', record.deviceStatus, { current: isCurrentTime(record.time) }]"
+                :class="['list-card', getOverallStatus(record), { current: isCurrentTime(record.time) }]"
               >
                 <div class="card-header">
                   <div class="card-time">
                     <el-icon><Clock /></el-icon>
                     <span>{{ record.time }}</span>
                   </div>
-                  <div :class="['card-status', record.deviceStatus]">
-                    <span v-if="record.deviceStatus === 'normal'">正常</span>
-                    <span v-else-if="record.deviceStatus === 'warning'">告警</span>
-                    <span v-else-if="record.deviceStatus === 'error'">异常</span>
+                  <div :class="['card-status', getOverallStatus(record)]">
+                    <span v-if="getOverallStatus(record) === 'normal'">正常</span>
+                    <span v-else-if="getOverallStatus(record) === 'warning'">告警</span>
+                    <span v-else-if="getOverallStatus(record) === 'error'">异常</span>
                     <span v-else>待采集</span>
                   </div>
                 </div>
-                <div class="card-body">
-                  <div class="card-section">
-                    <div class="section-title hv">高压侧 (10kV)</div>
-                    <div class="section-metrics">
-                      <div class="metric">
-                        <span class="metric-label">电压</span>
-                        <span class="metric-value">{{ record.hvVoltage || '-' }} V</span>
+                <div class="card-body card-body-dual">
+                  <!-- 1#变压器 -->
+                  <div class="transformer-group">
+                    <div class="transformer-title">1#变压器</div>
+                    <div class="card-section">
+                      <div class="section-title hv">高压侧</div>
+                      <div class="section-metrics">
+                        <div class="metric">
+                          <span class="metric-label">A/B/C相电压</span>
+                          <span class="metric-value">{{ record.t1HvVoltageA }}/{{ record.t1HvVoltageB }}/{{ record.t1HvVoltageC }} kV</span>
+                        </div>
+                        <div class="metric">
+                          <span class="metric-label">A/B/C相电流</span>
+                          <span class="metric-value">{{ record.t1HvCurrentA }}/{{ record.t1HvCurrentB }}/{{ record.t1HvCurrentC }} A</span>
+                        </div>
+                        <div class="metric">
+                          <span class="metric-label">有功/无功</span>
+                          <span class="metric-value highlight">{{ record.t1HvActivePower }}kW / {{ record.t1HvReactivePower }}kVar</span>
+                        </div>
                       </div>
-                      <div class="metric">
-                        <span class="metric-label">电流</span>
-                        <span class="metric-value">{{ record.hvCurrent || '-' }} A</span>
+                    </div>
+                    <div class="card-section">
+                      <div class="section-title lv">低压侧</div>
+                      <div class="section-metrics">
+                        <div class="metric">
+                          <span class="metric-label">A/B/C相电压</span>
+                          <span class="metric-value">{{ record.t1LvVoltageA }}/{{ record.t1LvVoltageB }}/{{ record.t1LvVoltageC }} V</span>
+                        </div>
+                        <div class="metric">
+                          <span class="metric-label">A/B/C相电流</span>
+                          <span class="metric-value highlight">{{ record.t1LvCurrentA }}/{{ record.t1LvCurrentB }}/{{ record.t1LvCurrentC }} A</span>
+                        </div>
+                        <div class="metric">
+                          <span class="metric-label">温度/有功/无功</span>
+                          <span class="metric-value highlight">{{ record.t1Temp }}℃ / {{ record.t1LvActivePower }}kW / {{ record.t1LvReactivePower }}kVar</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div class="card-section">
-                    <div class="section-title lv">低压侧 (0.4kV)</div>
-                    <div class="section-metrics">
-                      <div class="metric">
-                        <span class="metric-label">电压</span>
-                        <span class="metric-value">{{ record.lvVoltage || '-' }} V</span>
+                  <!-- 2#变压器 -->
+                  <div class="transformer-group">
+                    <div class="transformer-title">2#变压器</div>
+                    <div class="card-section">
+                      <div class="section-title hv">高压侧</div>
+                      <div class="section-metrics">
+                        <div class="metric">
+                          <span class="metric-label">A/B/C相电压</span>
+                          <span class="metric-value">{{ record.t2HvVoltageA }}/{{ record.t2HvVoltageB }}/{{ record.t2HvVoltageC }} kV</span>
+                        </div>
+                        <div class="metric">
+                          <span class="metric-label">A/B/C相电流</span>
+                          <span class="metric-value">{{ record.t2HvCurrentA }}/{{ record.t2HvCurrentB }}/{{ record.t2HvCurrentC }} A</span>
+                        </div>
+                        <div class="metric">
+                          <span class="metric-label">有功/无功</span>
+                          <span class="metric-value highlight">{{ record.t2HvActivePower }}kW / {{ record.t2HvReactivePower }}kVar</span>
+                        </div>
                       </div>
-                      <div class="metric">
-                        <span class="metric-label">电流</span>
-                        <span class="metric-value">{{ record.lvCurrent || '-' }} A</span>
+                    </div>
+                    <div class="card-section">
+                      <div class="section-title lv">低压侧</div>
+                      <div class="section-metrics">
+                        <div class="metric">
+                          <span class="metric-label">A/B/C相电压</span>
+                          <span class="metric-value">{{ record.t2LvVoltageA }}/{{ record.t2LvVoltageB }}/{{ record.t2LvVoltageC }} V</span>
+                        </div>
+                        <div class="metric">
+                          <span class="metric-label">A/B/C相电流</span>
+                          <span class="metric-value highlight">{{ record.t2LvCurrentA }}/{{ record.t2LvCurrentB }}/{{ record.t2LvCurrentC }} A</span>
+                        </div>
+                        <div class="metric">
+                          <span class="metric-label">温度/有功/无功</span>
+                          <span class="metric-value highlight">{{ record.t2Temp }}℃ / {{ record.t2LvActivePower }}kW / {{ record.t2LvReactivePower }}kVar</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div class="card-section">
-                    <div class="section-title power">功率参数</div>
+                  <!-- 环境参数 -->
+                  <div class="card-section env-section">
+                    <div class="section-title env">环境 / 值班</div>
                     <div class="section-metrics">
-                      <div class="metric">
-                        <span class="metric-label">有功功率</span>
-                        <span class="metric-value highlight">{{ record.activePower || '-' }} kW</span>
-                      </div>
-                      <div class="metric">
-                        <span class="metric-label">无功功率</span>
-                        <span class="metric-value">{{ record.reactivePower || '-' }} kVar</span>
-                      </div>
-                      <div class="metric">
-                        <span class="metric-label">功率因数</span>
-                        <span :class="['metric-value', record.powerFactor < 0.9 ? 'warning' : '']">{{ record.powerFactor || '-' }}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="card-section">
-                    <div class="section-title env">环境参数</div>
-                    <div class="section-metrics">
-                      <div class="metric">
-                        <span class="metric-label">变压器温度</span>
-                        <span :class="['metric-value', record.transformerTemp > 75 ? 'warning' : '']">{{ record.transformerTemp || '-' }} ℃</span>
-                      </div>
                       <div class="metric">
                         <span class="metric-label">环境温度</span>
                         <span class="metric-value">{{ record.envTemp || '-' }} ℃</span>
@@ -432,6 +540,10 @@
                       <div class="metric">
                         <span class="metric-label">环境湿度</span>
                         <span class="metric-value">{{ record.envHumidity || '-' }} %</span>
+                      </div>
+                      <div class="metric">
+                        <span class="metric-label">值班人</span>
+                        <span class="metric-value">{{ record.operator || '-' }}</span>
                       </div>
                     </div>
                   </div>
@@ -542,81 +654,150 @@ const currentRoom = computed(() => rooms.find(r => r.id === selectedRoom.value))
 // ========== 记录数据类型 ==========
 interface DutyRecord {
   time: string
-  hvVoltage: number
-  hvCurrent: number
-  lvVoltage: number
-  lvCurrent: number
-  transformerTemp: number
-  powerFactor: number
-  activePower: number
-  reactivePower: number
+  // 1#变压器 高压侧
+  t1HvVoltageA: number
+  t1HvVoltageB: number
+  t1HvVoltageC: number
+  t1HvCurrentA: number
+  t1HvCurrentB: number
+  t1HvCurrentC: number
+  t1HvActivePower: number
+  t1HvReactivePower: number
+  // 1#变压器 低压侧
+  t1LvVoltageA: number
+  t1LvVoltageB: number
+  t1LvVoltageC: number
+  t1LvCurrentA: number
+  t1LvCurrentB: number
+  t1LvCurrentC: number
+  t1Temp: number
+  t1LvActivePower: number
+  t1LvReactivePower: number
+  // 2#变压器 高压侧
+  t2HvVoltageA: number
+  t2HvVoltageB: number
+  t2HvVoltageC: number
+  t2HvCurrentA: number
+  t2HvCurrentB: number
+  t2HvCurrentC: number
+  t2HvActivePower: number
+  t2HvReactivePower: number
+  // 2#变压器 低压侧
+  t2LvVoltageA: number
+  t2LvVoltageB: number
+  t2LvVoltageC: number
+  t2LvCurrentA: number
+  t2LvCurrentB: number
+  t2LvCurrentC: number
+  t2Temp: number
+  t2LvActivePower: number
+  t2LvReactivePower: number
+  // 环境与状态
   envTemp: number
   envHumidity: number
-  deviceStatus: string
+  safetyEquipment: string  // 安全用具
+  fireEquipment: string    // 消防器材
+  operator: string
   remark: string
 }
 
 // ========== 记录数据（2小时一次，共12条） ==========
 const dutyRecords = ref<DutyRecord[]>([
   {
-    time: '00:00', hvVoltage: 10350, hvCurrent: 28.5, lvVoltage: 392, lvCurrent: 485,
-    transformerTemp: 42, powerFactor: 0.928, activePower: 325, reactivePower: 128,
-    envTemp: 22, envHumidity: 48, deviceStatus: 'normal', remark: ''
+    time: '00:00',
+    t1HvVoltageA: 10.35, t1HvVoltageB: 10.36, t1HvVoltageC: 10.34, t1HvCurrentA: 28.5, t1HvCurrentB: 27.8, t1HvCurrentC: 29.2, t1HvActivePower: 480, t1HvReactivePower: 185,
+    t1LvVoltageA: 392, t1LvVoltageB: 394, t1LvVoltageC: 391, t1LvCurrentA: 162, t1LvCurrentB: 158, t1LvCurrentC: 165, t1Temp: 42, t1LvActivePower: 185, t1LvReactivePower: 72,
+    t2HvVoltageA: 10.38, t2HvVoltageB: 10.39, t2HvVoltageC: 10.37, t2HvCurrentA: 25.2, t2HvCurrentB: 24.8, t2HvCurrentC: 25.6, t2HvActivePower: 430, t2HvReactivePower: 162,
+    t2LvVoltageA: 395, t2LvVoltageB: 396, t2LvVoltageC: 394, t2LvCurrentA: 145, t2LvCurrentB: 142, t2LvCurrentC: 148, t2Temp: 40, t2LvActivePower: 165, t2LvReactivePower: 58,
+    envTemp: 22, envHumidity: 48, safetyEquipment: 'normal', fireEquipment: 'normal', operator: '李工', remark: ''
   },
   {
-    time: '02:00', hvVoltage: 10380, hvCurrent: 26.8, lvVoltage: 394, lvCurrent: 458,
-    transformerTemp: 40, powerFactor: 0.932, activePower: 308, reactivePower: 115,
-    envTemp: 21, envHumidity: 49, deviceStatus: 'normal', remark: ''
+    time: '02:00',
+    t1HvVoltageA: 10.38, t1HvVoltageB: 10.39, t1HvVoltageC: 10.37, t1HvCurrentA: 26.8, t1HvCurrentB: 26.2, t1HvCurrentC: 27.4, t1HvActivePower: 455, t1HvReactivePower: 170,
+    t1LvVoltageA: 394, t1LvVoltageB: 396, t1LvVoltageC: 393, t1LvCurrentA: 153, t1LvCurrentB: 150, t1LvCurrentC: 155, t1Temp: 40, t1LvActivePower: 175, t1LvReactivePower: 65,
+    t2HvVoltageA: 10.40, t2HvVoltageB: 10.41, t2HvVoltageC: 10.39, t2HvCurrentA: 24.5, t2HvCurrentB: 24.0, t2HvCurrentC: 25.0, t2HvActivePower: 415, t2HvReactivePower: 155,
+    t2LvVoltageA: 396, t2LvVoltageB: 398, t2LvVoltageC: 395, t2LvCurrentA: 140, t2LvCurrentB: 138, t2LvCurrentC: 142, t2Temp: 38, t2LvActivePower: 158, t2LvReactivePower: 52,
+    envTemp: 21, envHumidity: 49, safetyEquipment: 'normal', fireEquipment: 'normal', operator: '李工', remark: ''
   },
   {
-    time: '04:00', hvVoltage: 10420, hvCurrent: 24.2, lvVoltage: 396, lvCurrent: 412,
-    transformerTemp: 38, powerFactor: 0.935, activePower: 285, reactivePower: 98,
-    envTemp: 20, envHumidity: 50, deviceStatus: 'normal', remark: ''
+    time: '04:00',
+    t1HvVoltageA: 10.42, t1HvVoltageB: 10.43, t1HvVoltageC: 10.41, t1HvCurrentA: 24.2, t1HvCurrentB: 23.6, t1HvCurrentC: 24.8, t1HvActivePower: 410, t1HvReactivePower: 158,
+    t1LvVoltageA: 396, t1LvVoltageB: 398, t1LvVoltageC: 395, t1LvCurrentA: 138, t1LvCurrentB: 135, t1LvCurrentC: 139, t1Temp: 38, t1LvActivePower: 158, t1LvReactivePower: 55,
+    t2HvVoltageA: 10.44, t2HvVoltageB: 10.45, t2HvVoltageC: 10.43, t2HvCurrentA: 22.8, t2HvCurrentB: 22.3, t2HvCurrentC: 23.3, t2HvActivePower: 385, t2HvReactivePower: 148,
+    t2LvVoltageA: 398, t2LvVoltageB: 400, t2LvVoltageC: 397, t2LvCurrentA: 130, t2LvCurrentB: 128, t2LvCurrentC: 132, t2Temp: 36, t2LvActivePower: 148, t2LvReactivePower: 48,
+    envTemp: 20, envHumidity: 50, safetyEquipment: 'normal', fireEquipment: 'normal', operator: '李工', remark: ''
   },
   {
-    time: '06:00', hvVoltage: 10380, hvCurrent: 32.5, lvVoltage: 393, lvCurrent: 556,
-    transformerTemp: 45, powerFactor: 0.925, activePower: 380, reactivePower: 156,
-    envTemp: 21, envHumidity: 48, deviceStatus: 'normal', remark: ''
+    time: '06:00',
+    t1HvVoltageA: 10.38, t1HvVoltageB: 10.39, t1HvVoltageC: 10.37, t1HvCurrentA: 32.5, t1HvCurrentB: 31.8, t1HvCurrentC: 33.2, t1HvActivePower: 550, t1HvReactivePower: 218,
+    t1LvVoltageA: 393, t1LvVoltageB: 395, t1LvVoltageC: 392, t1LvCurrentA: 186, t1LvCurrentB: 182, t1LvCurrentC: 188, t1Temp: 45, t1LvActivePower: 212, t1LvReactivePower: 85,
+    t2HvVoltageA: 10.40, t2HvVoltageB: 10.41, t2HvVoltageC: 10.39, t2HvCurrentA: 30.2, t2HvCurrentB: 29.6, t2HvCurrentC: 30.8, t2HvActivePower: 510, t2HvReactivePower: 198,
+    t2LvVoltageA: 395, t2LvVoltageB: 397, t2LvVoltageC: 394, t2LvCurrentA: 172, t2LvCurrentB: 170, t2LvCurrentC: 175, t2Temp: 43, t2LvActivePower: 195, t2LvReactivePower: 72,
+    envTemp: 21, envHumidity: 48, safetyEquipment: 'normal', fireEquipment: 'normal', operator: '李工', remark: ''
   },
   {
-    time: '08:00', hvVoltage: 10320, hvCurrent: 52.8, lvVoltage: 388, lvCurrent: 895,
-    transformerTemp: 58, powerFactor: 0.918, activePower: 598, reactivePower: 258,
-    envTemp: 23, envHumidity: 45, deviceStatus: 'normal', remark: ''
+    time: '08:00',
+    t1HvVoltageA: 10.32, t1HvVoltageB: 10.33, t1HvVoltageC: 10.31, t1HvCurrentA: 52.8, t1HvCurrentB: 51.5, t1HvCurrentC: 54.1, t1HvActivePower: 880, t1HvReactivePower: 365,
+    t1LvVoltageA: 388, t1LvVoltageB: 390, t1LvVoltageC: 387, t1LvCurrentA: 298, t1LvCurrentB: 295, t1LvCurrentC: 302, t1Temp: 58, t1LvActivePower: 338, t1LvReactivePower: 142,
+    t2HvVoltageA: 10.34, t2HvVoltageB: 10.35, t2HvVoltageC: 10.33, t2HvCurrentA: 48.5, t2HvCurrentB: 47.3, t2HvCurrentC: 49.7, t2HvActivePower: 815, t2HvReactivePower: 328,
+    t2LvVoltageA: 390, t2LvVoltageB: 392, t2LvVoltageC: 389, t2LvCurrentA: 275, t2LvCurrentB: 272, t2LvCurrentC: 278, t2Temp: 55, t2LvActivePower: 312, t2LvReactivePower: 125,
+    envTemp: 23, envHumidity: 45, safetyEquipment: 'normal', fireEquipment: 'normal', operator: '张工', remark: ''
   },
   {
-    time: '10:00', hvVoltage: 10280, hvCurrent: 68.5, lvVoltage: 385, lvCurrent: 1158,
-    transformerTemp: 65, powerFactor: 0.912, activePower: 756, reactivePower: 328,
-    envTemp: 25, envHumidity: 42, deviceStatus: 'normal', remark: ''
+    time: '10:00',
+    t1HvVoltageA: 10.28, t1HvVoltageB: 10.29, t1HvVoltageC: 10.27, t1HvCurrentA: 68.5, t1HvCurrentB: 66.8, t1HvCurrentC: 70.2, t1HvActivePower: 1140, t1HvReactivePower: 478,
+    t1LvVoltageA: 385, t1LvVoltageB: 387, t1LvVoltageC: 384, t1LvCurrentA: 386, t1LvCurrentB: 382, t1LvCurrentC: 390, t1Temp: 65, t1LvActivePower: 438, t1LvReactivePower: 185,
+    t2HvVoltageA: 10.30, t2HvVoltageB: 10.31, t2HvVoltageC: 10.29, t2HvCurrentA: 62.3, t2HvCurrentB: 60.8, t2HvCurrentC: 63.8, t2HvActivePower: 1045, t2HvReactivePower: 432,
+    t2LvVoltageA: 387, t2LvVoltageB: 389, t2LvVoltageC: 386, t2LvCurrentA: 355, t2LvCurrentB: 352, t2LvCurrentC: 358, t2Temp: 62, t2LvActivePower: 402, t2LvReactivePower: 165,
+    envTemp: 25, envHumidity: 42, safetyEquipment: 'normal', fireEquipment: 'normal', operator: '张工', remark: ''
   },
   {
-    time: '12:00', hvVoltage: 10260, hvCurrent: 72.3, lvVoltage: 384, lvCurrent: 1225,
-    transformerTemp: 68, powerFactor: 0.908, activePower: 798, reactivePower: 352,
-    envTemp: 26, envHumidity: 40, deviceStatus: 'normal', remark: ''
+    time: '12:00',
+    t1HvVoltageA: 10.26, t1HvVoltageB: 10.27, t1HvVoltageC: 10.25, t1HvCurrentA: 72.3, t1HvCurrentB: 70.5, t1HvCurrentC: 74.1, t1HvActivePower: 1210, t1HvReactivePower: 515,
+    t1LvVoltageA: 384, t1LvVoltageB: 386, t1LvVoltageC: 383, t1LvCurrentA: 408, t1LvCurrentB: 405, t1LvCurrentC: 412, t1Temp: 68, t1LvActivePower: 465, t1LvReactivePower: 198,
+    t2HvVoltageA: 10.28, t2HvVoltageB: 10.29, t2HvVoltageC: 10.27, t2HvCurrentA: 66.8, t2HvCurrentB: 65.2, t2HvCurrentC: 68.4, t2HvActivePower: 1115, t2HvReactivePower: 465,
+    t2LvVoltageA: 386, t2LvVoltageB: 388, t2LvVoltageC: 385, t2LvCurrentA: 378, t2LvCurrentB: 375, t2LvCurrentC: 380, t2Temp: 65, t2LvActivePower: 428, t2LvReactivePower: 178,
+    envTemp: 26, envHumidity: 40, safetyEquipment: 'normal', fireEquipment: 'normal', operator: '张工', remark: ''
   },
   {
-    time: '14:00', hvVoltage: 10240, hvCurrent: 78.6, lvVoltage: 382, lvCurrent: 1332,
-    transformerTemp: 72, powerFactor: 0.905, activePower: 856, reactivePower: 385,
-    envTemp: 27, envHumidity: 38, deviceStatus: 'warning', remark: '负荷较高'
+    time: '14:00',
+    t1HvVoltageA: 10.24, t1HvVoltageB: 10.25, t1HvVoltageC: 10.23, t1HvCurrentA: 78.6, t1HvCurrentB: 76.5, t1HvCurrentC: 80.7, t1HvActivePower: 1315, t1HvReactivePower: 565,
+    t1LvVoltageA: 382, t1LvVoltageB: 384, t1LvVoltageC: 381, t1LvCurrentA: 445, t1LvCurrentB: 440, t1LvCurrentC: 447, t1Temp: 72, t1LvActivePower: 505, t1LvReactivePower: 218,
+    t2HvVoltageA: 10.26, t2HvVoltageB: 10.27, t2HvVoltageC: 10.25, t2HvCurrentA: 72.5, t2HvCurrentB: 70.8, t2HvCurrentC: 74.2, t2HvActivePower: 1210, t2HvReactivePower: 508,
+    t2LvVoltageA: 384, t2LvVoltageB: 386, t2LvVoltageC: 383, t2LvCurrentA: 410, t2LvCurrentB: 408, t2LvCurrentC: 412, t2Temp: 69, t2LvActivePower: 465, t2LvReactivePower: 195,
+    envTemp: 27, envHumidity: 38, safetyEquipment: 'normal', fireEquipment: 'warning', operator: '张工', remark: '灭火器需检查'
   },
   {
-    time: '16:00', hvVoltage: 10280, hvCurrent: 71.2, lvVoltage: 385, lvCurrent: 1206,
-    transformerTemp: 69, powerFactor: 0.910, activePower: 785, reactivePower: 342,
-    envTemp: 26, envHumidity: 40, deviceStatus: 'normal', remark: ''
+    time: '16:00',
+    t1HvVoltageA: 10.28, t1HvVoltageB: 10.29, t1HvVoltageC: 10.27, t1HvCurrentA: 71.2, t1HvCurrentB: 69.5, t1HvCurrentC: 72.9, t1HvActivePower: 1190, t1HvReactivePower: 498,
+    t1LvVoltageA: 385, t1LvVoltageB: 387, t1LvVoltageC: 384, t1LvCurrentA: 402, t1LvCurrentB: 398, t1LvCurrentC: 406, t1Temp: 69, t1LvActivePower: 458, t1LvReactivePower: 192,
+    t2HvVoltageA: 10.30, t2HvVoltageB: 10.31, t2HvVoltageC: 10.29, t2HvCurrentA: 65.8, t2HvCurrentB: 64.2, t2HvCurrentC: 67.4, t2HvActivePower: 1098, t2HvReactivePower: 448,
+    t2LvVoltageA: 387, t2LvVoltageB: 389, t2LvVoltageC: 386, t2LvCurrentA: 372, t2LvCurrentB: 370, t2LvCurrentC: 375, t2Temp: 66, t2LvActivePower: 422, t2LvReactivePower: 172,
+    envTemp: 26, envHumidity: 40, safetyEquipment: 'normal', fireEquipment: 'normal', operator: '张工', remark: ''
   },
   {
-    time: '18:00', hvVoltage: 10320, hvCurrent: 62.5, lvVoltage: 388, lvCurrent: 1058,
-    transformerTemp: 63, powerFactor: 0.915, activePower: 695, reactivePower: 295,
-    envTemp: 25, envHumidity: 43, deviceStatus: 'normal', remark: ''
+    time: '18:00',
+    t1HvVoltageA: 10.32, t1HvVoltageB: 10.33, t1HvVoltageC: 10.31, t1HvCurrentA: 62.5, t1HvCurrentB: 61.0, t1HvCurrentC: 64.0, t1HvActivePower: 1045, t1HvReactivePower: 435,
+    t1LvVoltageA: 388, t1LvVoltageB: 390, t1LvVoltageC: 387, t1LvCurrentA: 353, t1LvCurrentB: 350, t1LvCurrentC: 355, t1Temp: 63, t1LvActivePower: 402, t1LvReactivePower: 168,
+    t2HvVoltageA: 10.34, t2HvVoltageB: 10.35, t2HvVoltageC: 10.33, t2HvCurrentA: 58.2, t2HvCurrentB: 56.8, t2HvCurrentC: 59.6, t2HvActivePower: 972, t2HvReactivePower: 395,
+    t2LvVoltageA: 390, t2LvVoltageB: 392, t2LvVoltageC: 389, t2LvCurrentA: 328, t2LvCurrentB: 325, t2LvCurrentC: 330, t2Temp: 60, t2LvActivePower: 372, t2LvReactivePower: 152,
+    envTemp: 25, envHumidity: 43, safetyEquipment: 'normal', fireEquipment: 'normal', operator: '张工', remark: ''
   },
   {
-    time: '20:00', hvVoltage: 10350, hvCurrent: 48.2, lvVoltage: 391, lvCurrent: 818,
-    transformerTemp: 55, powerFactor: 0.922, activePower: 545, reactivePower: 228,
-    envTemp: 24, envHumidity: 45, deviceStatus: 'normal', remark: ''
+    time: '20:00',
+    t1HvVoltageA: 10.35, t1HvVoltageB: 10.36, t1HvVoltageC: 10.34, t1HvCurrentA: 48.2, t1HvCurrentB: 47.0, t1HvCurrentC: 49.4, t1HvActivePower: 808, t1HvReactivePower: 332,
+    t1LvVoltageA: 391, t1LvVoltageB: 393, t1LvVoltageC: 390, t1LvCurrentA: 273, t1LvCurrentB: 270, t1LvCurrentC: 275, t1Temp: 55, t1LvActivePower: 312, t1LvReactivePower: 128,
+    t2HvVoltageA: 10.37, t2HvVoltageB: 10.38, t2HvVoltageC: 10.36, t2HvCurrentA: 44.5, t2HvCurrentB: 43.4, t2HvCurrentC: 45.6, t2HvActivePower: 745, t2HvReactivePower: 298,
+    t2LvVoltageA: 393, t2LvVoltageB: 395, t2LvVoltageC: 392, t2LvCurrentA: 252, t2LvCurrentB: 250, t2LvCurrentC: 255, t2Temp: 52, t2LvActivePower: 285, t2LvReactivePower: 115,
+    envTemp: 24, envHumidity: 45, safetyEquipment: 'normal', fireEquipment: 'normal', operator: '李工', remark: ''
   },
   {
-    time: '22:00', hvVoltage: 10380, hvCurrent: 35.8, lvVoltage: 393, lvCurrent: 608,
-    transformerTemp: 48, powerFactor: 0.928, activePower: 405, reactivePower: 168,
-    envTemp: 23, envHumidity: 47, deviceStatus: 'normal', remark: ''
+    time: '22:00',
+    t1HvVoltageA: 10.38, t1HvVoltageB: 10.39, t1HvVoltageC: 10.37, t1HvCurrentA: 35.8, t1HvCurrentB: 34.9, t1HvCurrentC: 36.7, t1HvActivePower: 602, t1HvReactivePower: 248,
+    t1LvVoltageA: 393, t1LvVoltageB: 395, t1LvVoltageC: 392, t1LvCurrentA: 203, t1LvCurrentB: 200, t1LvCurrentC: 205, t1Temp: 48, t1LvActivePower: 232, t1LvReactivePower: 95,
+    t2HvVoltageA: 10.40, t2HvVoltageB: 10.41, t2HvVoltageC: 10.39, t2HvCurrentA: 32.5, t2HvCurrentB: 31.7, t2HvCurrentC: 33.3, t2HvActivePower: 548, t2HvReactivePower: 218,
+    t2LvVoltageA: 395, t2LvVoltageB: 397, t2LvVoltageC: 394, t2LvCurrentA: 185, t2LvCurrentB: 182, t2LvCurrentC: 188, t2Temp: 45, t2LvActivePower: 210, t2LvReactivePower: 82,
+    envTemp: 23, envHumidity: 47, safetyEquipment: 'normal', fireEquipment: 'normal', operator: '李工', remark: ''
   }
 ])
 
@@ -642,12 +823,23 @@ const filteredRecords = computed((): DutyRecord[] => {
 })
 
 // ========== 列表视图筛选 ==========
+// 获取综合状态（基于安全用具和消防器材）- 用于计算属性
+const getRecordStatus = (record: DutyRecord) => {
+  if (record.safetyEquipment === 'error' || record.fireEquipment === 'error') {
+    return 'error'
+  }
+  if (record.safetyEquipment === 'warning' || record.fireEquipment === 'warning') {
+    return 'warning'
+  }
+  return 'normal'
+}
+
 const listFilteredRecords = computed((): DutyRecord[] => {
   return filteredRecords.value.filter(record => {
     const matchKeyword = !listSearchKeyword.value ||
       record.time.includes(listSearchKeyword.value) ||
       (record.remark && record.remark.includes(listSearchKeyword.value))
-    const matchStatus = !listStatusFilter.value || record.deviceStatus === listStatusFilter.value
+    const matchStatus = !listStatusFilter.value || getRecordStatus(record) === listStatusFilter.value
     return matchKeyword && matchStatus
   })
 })
@@ -691,6 +883,17 @@ const isCurrentTime = (time: string) => {
   const recordHour = getHourFromTime(time)
   // 当前时间在该记录时段内（2小时范围）
   return currentHour >= recordHour && currentHour < recordHour + 2
+}
+
+// 获取综合状态（基于安全用具和消防器材）
+const getOverallStatus = (record: DutyRecord) => {
+  if (record.safetyEquipment === 'error' || record.fireEquipment === 'error') {
+    return 'error'
+  }
+  if (record.safetyEquipment === 'warning' || record.fireEquipment === 'warning') {
+    return 'warning'
+  }
+  return 'normal'
 }
 
 const getCellClass = (value: number | undefined, type: string) => {
@@ -1017,6 +1220,17 @@ onUnmounted(() => {
 .group-header.hv { background: rgba(255, 107, 107, 0.15); color: #ff6b6b; }
 .group-header.lv { background: rgba(0, 230, 118, 0.15); color: var(--status-success); }
 .group-header.env { background: rgba(96, 165, 250, 0.15); color: #60a5fa; }
+.group-header.transformer1 { background: rgba(255, 165, 0, 0.15); color: #ffa500; }
+.group-header.transformer2 { background: rgba(138, 43, 226, 0.15); color: #a78bfa; }
+
+.temp-col, .env-col, .power-col {
+  font-size: 11px !important;
+}
+
+.power-cell {
+  color: var(--tech-primary) !important;
+  font-weight: 600;
+}
 
 .sub-header {
   background: rgba(0, 240, 255, 0.05) !important;
@@ -1055,6 +1269,40 @@ onUnmounted(() => {
   font-size: 11px;
   color: var(--text-sub) !important;
   text-align: left !important;
+  padding: 4px 8px !important;
+}
+
+.remark-input {
+  width: 100%;
+  min-width: 100px;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  color: var(--text-bright);
+  font-size: 11px;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.remark-input:hover {
+  border-color: rgba(0, 240, 255, 0.4);
+}
+
+.remark-input:focus {
+  border-color: var(--tech-primary);
+  background: rgba(0, 240, 255, 0.05);
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+}
+
+.remark-input::placeholder {
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+.operator-cell {
+  font-size: 12px;
+  color: var(--tech-primary) !important;
+  white-space: nowrap;
 }
 
 .cell-warning {
@@ -1346,6 +1594,40 @@ onUnmounted(() => {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+}
+
+.list-card .card-body-dual {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+}
+
+.transformer-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transformer-title {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 10px;
+  background: rgba(0, 240, 255, 0.1);
+  border-left: 3px solid var(--tech-primary);
+  color: var(--tech-primary);
+}
+
+.transformer-group:first-child .transformer-title {
+  border-left-color: #ffa500;
+  color: #ffa500;
+}
+
+.transformer-group:nth-child(2) .transformer-title {
+  border-left-color: #a78bfa;
+  color: #a78bfa;
+}
+
+.env-section {
+  grid-column: 1 / -1;
 }
 
 .card-section {
